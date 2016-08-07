@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './App.css'
 import { range } from 'lodash'
-import Pull from '..'
+import Pull from './Pull'
 
 class App extends Component {
 	constructor(props) {
