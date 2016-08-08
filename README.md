@@ -1,4 +1,4 @@
-react-pull.js
+react-pullrefresh.js
 ============
 
 Pull to reflesh navigation helper.
@@ -8,13 +8,13 @@ Pull to reflesh navigation helper.
 Install
 =======
 
-`npm install react-pull`
+`npm install react-pullrefresh`
 
 Usage
 =====
 
 ```javascript
-import Pull from 'react-pull'
+import Pull from 'react-pullrefresh'
 
 class App extends Component {
 	constructor(props) {
@@ -52,7 +52,7 @@ export default App
 
 Demo
 ====
-[https://yusukeshibata.github.io/react-pull/](https://yusukeshibata.github.io/react-pull/)
+[https://yusukeshibata.github.io/react-pullrefresh/](https://yusukeshibata.github.io/react-pullrefresh/)
 
 
 License
