@@ -55,7 +55,6 @@ class Pull extends Component {
 		let { pulling,loading,pulled } = this.state
 		let maxPull = this.props.max || MAX_DEFAULT
 		let style = this.props.style || {}
-		console.log(pulling)
 		return (
 			<div>
 				<div style={{

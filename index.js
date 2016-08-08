@@ -153,7 +153,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				var maxPull = this.props.max || MAX_DEFAULT;
 				var style = this.props.style || {};
-				console.log(pulling);
 				return _react2.default.createElement(
 					'div',
 					null,
