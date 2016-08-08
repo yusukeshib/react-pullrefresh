@@ -1,7 +1,7 @@
 {
   "name": "react-pullrefresh",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.3",
+  "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
     "start": "react-scripts start",
@@ -13,7 +13,12 @@
     "type": "git",
     "url": "git+https://github.com/yusukeshibata/react-pullrefresh.git"
   },
-  "keywords": [],
+  "keywords": [
+     "pull",
+     "refresh",
+     "react",
+     "component"
+  ],
   "author": "Yusuke Shibata <shibata@fata.io> (https://github.com/yusukeshibata)",
   "license": "MIT",
   "bugs": {
