@@ -1,4 +1,4 @@
-pullhelper.js
+react-pull.js
 ============
 
 Pull to reflesh navigation helper.
@@ -8,31 +8,51 @@ Pull to reflesh navigation helper.
 Install
 =======
 
-`npm install pullhelper`
+`npm install react-pull`
 
 Usage
 =====
 
 ```javascript
-var pullhelper = require('pullhelper')
-pullhelper
-.on('step',function(step) {
-})
-.on('pull',function(step,next) {
-	if(step < 100) {
-		next()
-		return
+import Pull from 'react-pull'
+
+class App extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+		}
+		this.onPull = this.onPull.bind(this)
 	}
-	//...
-	next()
-})
-.init()
+	onPull(next) {
+		// some async process...
+		setTimeout(_ => {
+			next()
+		},2000)
+	}
+	componentDidMount() {
+	}
+	render() {
+		return (
+			<div className='App'>
+				<Pull max={100} onPull={this.onPull} />
+				<div className='rows'>
+					{range(100).map(i => {
+						return (
+							<div key={i} className='row'>{i}</div>
+						)
+					})}
+				</div>
+			</div>
+		)
+	}
+}
+
+export default App
 ```
 
 Demo
 ====
-Demo using with react.js.  
-[https://yusukeshibata.github.io/pullhelper/](https://yusukeshibata.github.io/pullhelper/)
+[https://yusukeshibata.github.io/react-pull/](https://yusukeshibata.github.io/react-pull/)
 
 
 License

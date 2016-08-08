@@ -8,13 +8,19 @@ class App extends Component {
 		super(props)
 		this.state = {
 		}
+		this.onPull = this.onPull.bind(this)
+	}
+	onPull(next) {
+		setTimeout(_ => {
+			next()
+		},2000)
 	}
 	componentDidMount() {
 	}
 	render() {
 		return (
 			<div className='App'>
-				<Pull/>
+				<Pull max={100} onPull={this.onPull} />
 				<div className='rows'>
 					{range(100).map(i => {
 						return (
