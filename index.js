@@ -4281,6 +4281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _exports = {
 		y: 0,
+		cnt: 0,
 		step: 0,
 		touch: false,
 		lock: false
@@ -4300,9 +4301,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			return;
 		}
 		this.y = evt.touches ? evt.touches[0].clientY : evt.clientY;
+		this.cnt = 0;
 		this.step = -document.scrollingElement.scrollTop;
 		this.touch = true;
-		emitter.emit('start');
 	}.bind(_exports);
 
 	var end = function (evt) {
@@ -4328,8 +4329,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		var step = this.touch ? this.step + y - this.y : 0;
 		if (step > 0) evt.preventDefault();
 		if (this.touch && step !== this.step) {
+			this.cnt++;
 			this.step = step;
 			this.y = y;
+			if (this.cnt === 1) {
+				emitter.emit('start');
+			}
 			emitter.emit('step', Math.max(0, this.step));
 		}
 	}.bind(_exports);
