@@ -1,5 +1,5 @@
 {
-  "name": "react-pull",
+  "name": "react-pullrefresh",
   "version": "1.0.1",
   "description": "",
   "main": "lib/index.js",
@@ -10,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yusukeshibata/react-pull.git"
+    "url": "git+https://github.com/yusukeshibata/react-pullrefresh.git"
   },
   "keywords": [],
   "author": "Yusuke Shibata <shibata@fata.io> (https://github.com/yusukeshibata)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yusukeshibata/react-pull/issues"
+    "url": "https://github.com/yusukeshibata/react-pullrefresh/issues"
   },
-  "homepage": "https://github.com/yusukeshibata/react-pull#readme",
+  "homepage": "https://github.com/yusukeshibata/react-pullrefresh#readme",
   "dependencies": {
     "lodash": "^4.14.1",
     "pullhelper": "^1.0.3",
