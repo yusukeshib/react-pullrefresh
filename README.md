@@ -3,6 +3,8 @@ pullhelper.js
 
 Pull to reflesh navigation helper.
 
+![](/2016_08_08_12_25_46_12_27_22.gif?raw=true)
+
 Install
 =======
 
