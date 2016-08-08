@@ -52,7 +52,7 @@ export default App
 
 Demo
 ====
-[https://yusukeshibata.github.io/react-pullrefresh/](https://yusukeshibata.github.io/react-pullrefresh/)
+[https://yusukeshibata.github.io/react-pullrefresh/test/build/](https://yusukeshibata.github.io/react-pullrefresh/test/build/)
 
 
 License
