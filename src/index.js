@@ -38,7 +38,10 @@ class Pull extends Component {
 				next()
 			})
 		})
-		.init()
+		.load()
+	}
+	componentWillUnmount() {
+		pullhelper.unload()
 	}
 	render() {
 		let { loading,pulled } = this.state

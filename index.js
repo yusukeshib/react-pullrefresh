@@ -129,7 +129,12 @@ return /******/ (function(modules) { // webpackBootstrap
 						});
 						next();
 					});
-				}).init();
+				}).load();
+			}
+		}, {
+			key: 'componentWillUnmount',
+			value: function componentWillUnmount() {
+				_pullhelper2.default.unload();
 			}
 		}, {
 			key: 'render',
@@ -4308,13 +4313,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		emitter.on(type, listener);
 		return _exports;
 	};
-	_exports.init = function () {
+	_exports.load = function () {
 		document.body.addEventListener('touchstart', start);
 		document.body.addEventListener('touchmove', move);
 		document.body.addEventListener('touchend', end);
 		document.body.addEventListener('mousedown', start);
 		document.body.addEventListener('mousemove', move);
 		document.body.addEventListener('mouseup', end);
+		return _exports;
+	};
+	_exports.unload = function () {
+		document.body.removeEventListener('touchstart', start);
+		document.body.removeEventListener('touchmove', move);
+		document.body.removeEventListener('touchend', end);
+		document.body.removeEventListener('mousedown', start);
+		document.body.removeEventListener('mousemove', move);
+		document.body.removeEventListener('mouseup', end);
 		return _exports;
 	};
 
