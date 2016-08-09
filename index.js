@@ -4352,6 +4352,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		return _exports;
 	};
 	_exports.unload = function () {
+		emitter.removeAllListeners();
 		document.body.removeEventListener('touchstart', start);
 		document.body.removeEventListener('touchmove', move);
 		document.body.removeEventListener('touchend', end);
