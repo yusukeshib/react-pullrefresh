@@ -70,13 +70,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _pullhelper2 = _interopRequireDefault(_pullhelper);
 
-	__webpack_require__(52);
+	__webpack_require__(55);
 
-	var _pull = __webpack_require__(56);
+	var _pull = __webpack_require__(59);
 
 	var _pull2 = _interopRequireDefault(_pull);
 
-	var _lodash = __webpack_require__(57);
+	var _lodash = __webpack_require__(60);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4275,8 +4275,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	var EventEmitter = __webpack_require__(36);
+	var allOff = __webpack_require__(51);
 	var emitter = new EventEmitter();
-	__webpack_require__(51);
+	__webpack_require__(54);
 
 	var _exports = {
 		y: 0,
@@ -4352,7 +4353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		return _exports;
 	};
 	_exports.unload = function () {
-		emitter.allOff();
+		allOff(emitter);
 		document.body.removeEventListener('touchstart', start);
 		document.body.removeEventListener('touchmove', move);
 		document.body.removeEventListener('touchend', end);
@@ -4754,6 +4755,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var value = __webpack_require__(52),
+	    hasOwnProperty = Object.prototype.hasOwnProperty;
+
+	module.exports = function (emitter /*, type*/) {
+		var type = arguments[1],
+		    data;
+
+		value(emitter);
+
+		if (type !== undefined) {
+			data = hasOwnProperty.call(emitter, '__ee__') && emitter.__ee__;
+			if (!data) return;
+			if (data[type]) delete data[type];
+			return;
+		}
+		if (hasOwnProperty.call(emitter, '__ee__')) delete emitter.__ee__;
+	};
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var isObject = __webpack_require__(53);
+
+	module.exports = function (value) {
+		if (!isObject(value)) throw new TypeError(value + " is not an Object");
+		return value;
+	};
+
+/***/ },
+/* 53 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var map = { function: true, object: true };
+
+	module.exports = function (x) {
+		return x != null && map[typeof x === 'undefined' ? 'undefined' : _typeof(x)] || false;
+	};
+
+/***/ },
+/* 54 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4871,16 +4923,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	})();
 
 /***/ },
-/* 52 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(53);
+	var content = __webpack_require__(56);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(55)(content, {});
+	var update = __webpack_require__(58)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -4897,10 +4949,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 53 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(54)();
+	exports = module.exports = __webpack_require__(57)();
 	// imports
 
 
@@ -4911,7 +4963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 54 */
+/* 57 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4966,7 +5018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 55 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -5218,13 +5270,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 56 */
+/* 59 */
 /***/ function(module, exports) {
 
 	module.exports = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHdpZHRoPSIzMHB4IiBoZWlnaHQ9IjMwcHgiIHZpZXdCb3g9IjAgMCAzMCAzMCIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgMzAgMzA7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4KPHN0eWxlIHR5cGU9InRleHQvY3NzIj4KCS5zdDB7ZmlsbDpub25lO30KPC9zdHlsZT4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTI3LDN2MjRIM1YzIi8+CjxwYXRoIGQ9Ik0xNSw5Yy0zLjMsMC02LDIuNy02LDZzMi43LDYsNiw2czYtMi43LDYtNmgyYzAsNC40LTMuNiw4LTgsOHMtOC0zLjYtOC04czMuNi04LDgtOCIvPgo8L3N2Zz4K"
 
 /***/ },
-/* 57 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {'use strict';var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol?"symbol":typeof obj;};/**
@@ -14479,7 +14531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	lodash.prototype.at=wrapperAt;lodash.prototype.chain=wrapperChain;lodash.prototype.commit=wrapperCommit;lodash.prototype.next=wrapperNext;lodash.prototype.plant=wrapperPlant;lodash.prototype.reverse=wrapperReverse;lodash.prototype.toJSON=lodash.prototype.valueOf=lodash.prototype.value=wrapperValue;// Add lazy aliases.
 	lodash.prototype.first=lodash.prototype.head;if(iteratorSymbol){lodash.prototype[iteratorSymbol]=wrapperToIterator;}return lodash;}/*--------------------------------------------------------------------------*/// Export lodash.
 	var _=runInContext();// Some AMD build optimizers, like r.js, check for condition patterns like:
-	if("function"=='function'&&_typeof(__webpack_require__(59))=='object'&&__webpack_require__(59)){// Expose Lodash on the global object to prevent errors when Lodash is
+	if("function"=='function'&&_typeof(__webpack_require__(62))=='object'&&__webpack_require__(62)){// Expose Lodash on the global object to prevent errors when Lodash is
 	// loaded by a script tag in the presence of an AMD loader.
 	// See http://requirejs.org/docs/errors.html#mismatch for more details.
 	// Use `_.noConflict` to remove Lodash from the global object.
@@ -14490,10 +14542,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	(freeModule.exports=_)._=_;// Export for CommonJS support.
 	freeExports._=_;}else{// Export to the global object.
 	root._=_;}}).call(undefined);
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(58)(module)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(61)(module)))
 
 /***/ },
-/* 58 */
+/* 61 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -14510,7 +14562,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 59 */
+/* 62 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(__webpack_amd_options__) {module.exports = __webpack_amd_options__;
