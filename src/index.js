@@ -14,7 +14,7 @@ class Pull extends Component {
 		}
 	}
 	componentDidMount() {
-		let { disabled,onPull,max } = this.props
+		let { disabled,onRefresh,max } = this.props
 		let maxPull = max || MAX_DEFAULT
 		let that= this
 		pullhelper
@@ -32,14 +32,14 @@ class Pull extends Component {
 			that.setState({
 				pulling:false
 			})
-			if(!onPull || pulled < maxPull) {
+			if(!onRefresh || pulled < maxPull) {
 				next()
 				return
 			}
 			that.setState({
 				loading:true
 			})
-			onPull(_ => {
+			onRefresh(_ => {
 				that.setState({
 					loading:false
 				})

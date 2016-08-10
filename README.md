@@ -18,9 +18,9 @@ class App extends Component {
 		super(props)
 		this.state = {
 		}
-		this.onPull = this.onPull.bind(this)
+		this.onRefresh = this.onRefresh.bind(this)
 	}
-	onPull(next) {
+	onRefresh(next) {
 		// some async process...
 		setTimeout(_ => {
 			next()
@@ -29,7 +29,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className='App'>
-				<Pull zIndex={10000} size={30} max={100} onPull={this.onPull} />
+				<Pull zIndex={10000} size={30} max={100} onRefresh={this.onRefresh} />
 				<div className='rows'>
 					{range(100).map(i => {
 						return (
@@ -67,13 +67,13 @@ default: `100`
 
 max pull down distance.
 
-##### onPull
+##### onRefresh
 
 pull event will be fired on touchend,mouseup.  
 first argument is callback function, so must be called.  
 
 ```javascript
-function onPull(callback) {
+function onRefresh(callback) {
 	//...some async function
 	callback()
 }

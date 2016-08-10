@@ -8,9 +8,9 @@ class App extends Component {
 		super(props)
 		this.state = {
 		}
-		this.onPull = this.onPull.bind(this)
+		this.onRefresh = this.onRefresh.bind(this)
 	}
-	onPull(next) {
+	onRefresh(next) {
 		setTimeout(_ => {
 			next()
 		},2000)
@@ -21,7 +21,7 @@ class App extends Component {
 		let { disabled } = this.state
 		return (
 			<div className='App'>
-				<Pull disabled={disabled} size={40} zIndex={1000} max={160} onPull={this.onPull} />
+				<Pull disabled={disabled} size={40} zIndex={1000} max={160} onRefresh={this.onRefresh} />
 				<button onClick={_=>{
 					this.setState({
 						disabled:!disabled
