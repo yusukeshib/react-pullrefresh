@@ -20,11 +20,7 @@ class App extends Component {
 	render() {
 		return (
 			<div className='App'>
-				<Pull style={{
-					width:40,
-					height:40,
-					zIndex:10
-				}} max={160} onPull={this.onPull} />
+				<Pull size={40} zIndex={1000} max={160} onPull={this.onPull} />
 				<div className='rows'>
 					{range(100).map(i => {
 						return (

@@ -54,6 +54,7 @@ class Pull extends Component {
 	render() {
 		let { pulling,loading,pulled } = this.state
 		let maxPull = this.props.max || MAX_DEFAULT
+		let size = this.props.size || 30
 		let style = this.props.style || {}
 		return (
 			<div>
@@ -64,18 +65,18 @@ class Pull extends Component {
 					left:0,
 					right:0,
 					bottom:0,
-					zIndex:style.zIndex,
+					zIndex:this.props.zIndex,
 					userSelect:'none'
 				}} />
 				<div style={assign({
 					background:'white',
-					width: 30,
-					height: 30,
+					width: size,
+					height: size,
 					position:'fixed',
-					zIndex:style.zIndex,
-					top:-30+Math.min(pulled,maxPull),
+					zIndex:this.props.zIndex,
+					top:-size+Math.min(pulled,maxPull),
 					left:'50%',
-					borderRadius:(style.width||30)/2,
+					borderRadius:size/2,
 					transform:'translate(-50%,-50%)',
 					boxShadow:'0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)',
 					userSelect:'none'
