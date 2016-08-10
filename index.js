@@ -106,6 +106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				var _props = this.props;
+				var disabled = _props.disabled;
 				var onPull = _props.onPull;
 				var max = _props.max;
 
@@ -137,6 +138,22 @@ return /******/ (function(modules) { // webpackBootstrap
 						next();
 					});
 				}).load();
+				if (disabled) {
+					_pullhelper2.default.pause();
+				}
+			}
+		}, {
+			key: 'componentWillReceiveProps',
+			value: function componentWillReceiveProps(nextProps) {
+				var disabled = this.props.disabled;
+
+				if (disabled !== nextProps.disabled) {
+					if (nextProps.disabled) {
+						_pullhelper2.default.pause();
+					} else {
+						_pullhelper2.default.resume();
+					}
+				}
 			}
 		}, {
 			key: 'componentWillUnmount',
@@ -4285,7 +4302,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		cnt: 0,
 		step: 0,
 		touch: false,
-		lock: false
+		lock: false,
+		paused: false
 	};
 
 	var loop = function () {
@@ -4297,6 +4315,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.bind(_exports);
 
 	var start = function (evt) {
+		if (this.paused) return;
 		if (this.lock) {
 			evt.preventDefault();
 			return;
@@ -4308,6 +4327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.bind(_exports);
 
 	var end = function (evt) {
+		if (this.paused) return;
 		if (this.lock) {
 			evt.preventDefault();
 			return;
@@ -4322,6 +4342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}.bind(_exports);
 
 	var move = function (evt) {
+		if (this.paused) return;
 		if (this.lock) {
 			evt.preventDefault();
 			return;
@@ -4344,6 +4365,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		emitter.on(type, listener);
 		return _exports;
 	};
+
+	_exports.isPaused = function () {
+		return this.paused;
+	}.bind(_exports);
+
+	_exports.pause = function () {
+		this.paused = true;
+		return this;
+	}.bind(_exports);
+
+	_exports.resume = function () {
+		this.paused = false;
+		return this;
+	}.bind(_exports);
+
 	_exports.load = function () {
 		document.body.addEventListener('touchstart', start);
 		document.body.addEventListener('touchmove', move);

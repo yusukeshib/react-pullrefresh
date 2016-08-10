@@ -18,9 +18,15 @@ class App extends Component {
 	componentDidMount() {
 	}
 	render() {
+		let { disabled } = this.state
 		return (
 			<div className='App'>
-				<Pull size={40} zIndex={1000} max={160} onPull={this.onPull} />
+				<Pull disabled={disabled} size={40} zIndex={1000} max={160} onPull={this.onPull} />
+				<button onClick={_=>{
+					this.setState({
+						disabled:!disabled
+					})
+				}}>Toggle:{disabled?'disabled':'enabled'}</button>
 				<div className='rows'>
 					{range(100).map(i => {
 						return (

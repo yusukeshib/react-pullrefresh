@@ -47,6 +47,11 @@ export default App
 
 #### Props
 
+##### disabled
+default: `false`
+
+Disable component
+
 ##### zIndex
 default: `undefined`
 

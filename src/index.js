@@ -14,7 +14,7 @@ class Pull extends Component {
 		}
 	}
 	componentDidMount() {
-		let { onPull,max } = this.props
+		let { disabled,onPull,max } = this.props
 		let maxPull = max || MAX_DEFAULT
 		let that= this
 		pullhelper
@@ -47,6 +47,19 @@ class Pull extends Component {
 			})
 		})
 		.load()
+		if(disabled) {
+			pullhelper.pause()
+		}
+	}
+	componentWillReceiveProps(nextProps) {
+		let { disabled } = this.props
+		if(disabled !== nextProps.disabled) {
+			if(nextProps.disabled) {
+				pullhelper.pause()
+			} else {
+				pullhelper.resume()
+			}
+		}
 	}
 	componentWillUnmount() {
 		pullhelper.unload()

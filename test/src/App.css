@@ -5,3 +5,11 @@
 	border-bottom:1px solid #ccc;
 	user-select:none;
 }
+button {
+	position:fixed;
+	bottom:10px;
+	left:10px;
+	background:black;
+	color:white;
+	border:0;
+}
