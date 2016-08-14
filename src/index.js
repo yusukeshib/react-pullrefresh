@@ -23,6 +23,13 @@ class Pull extends Component {
 				pulling:true
 			})
 		})
+		.on('stepback',function(pulled,next) {
+			that.setState({
+				pulled:pulled
+			})
+			let nextPulled = Math.min(pulled - Math.min(pulled/2,10),max)
+			next(nextPulled)
+		})
 		.on('step',function(pulled) {
 			that.setState({
 				pulled:pulled

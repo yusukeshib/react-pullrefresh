@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function componentDidMount() {
 				var _props = this.props;
 				var disabled = _props.disabled;
-				var onPull = _props.onPull;
+				var onRefresh = _props.onRefresh;
 				var max = _props.max;
 
 				var maxPull = max || MAX_DEFAULT;
@@ -116,6 +116,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					that.setState({
 						pulling: true
 					});
+				}).on('stepback', function (pulled, next) {
+					that.setState({
+						pulled: pulled
+					});
+					var nextPulled = Math.min(pulled - Math.min(pulled / 2, 10), max);
+					next(nextPulled);
 				}).on('step', function (pulled) {
 					that.setState({
 						pulled: pulled
@@ -124,14 +130,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					that.setState({
 						pulling: false
 					});
-					if (!onPull || pulled < maxPull) {
+					if (!onRefresh || pulled < maxPull) {
 						next();
 						return;
 					}
 					that.setState({
 						loading: true
 					});
-					onPull(function (_) {
+					onRefresh(function (_) {
 						that.setState({
 							loading: false
 						});
@@ -4307,10 +4313,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var loop = function () {
-		if (!this.touch && this.step > 0) {
-			this.step = Math.floor(this.step - Math.min(10, this.step / 2));
-			emitter.emit('step', this.step);
-			window.requestAnimationFrame(loop);
+		var that = this;
+		if (!that.touch && that.step > 0) {
+			emitter.emit('stepback', that.step, function (nextStep) {
+				that.step = nextStep;
+				emitter.emit('step', that.step);
+				window.requestAnimationFrame(loop);
+			});
 		}
 	}.bind(_exports);
 
@@ -4361,7 +4370,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 	}.bind(_exports);
 
+	var defaultHandler = {};
+	defaultHandler['pull'] = function (next) {
+		next();
+	}.bind(_exports);
+	defaultHandler['stepback'] = function (step, next) {
+		var nextStep = Math.floor(step - Math.min(10, step / 2));
+		next(nextStep);
+	}.bind(_exports);
+
+	emitter.on('pull', defaultHandler['pull']);
+	emitter.on('stepback', defaultHandler['stepback']);
+
 	_exports.on = function (type, listener) {
+		if (defaultHandler[type]) {
+			emitter.off(type, defaultHandler[type]);
+		}
 		emitter.on(type, listener);
 		return _exports;
 	};
@@ -4386,6 +4410,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		document.body.addEventListener('touchend', end);
 		document.body.addEventListener('mousedown', start);
 		document.body.addEventListener('mousemove', move);
+		document.body.addEventListener('mouseleave', end);
 		document.body.addEventListener('mouseup', end);
 		return _exports;
 	};
@@ -4396,6 +4421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		document.body.removeEventListener('touchend', end);
 		document.body.removeEventListener('mousedown', start);
 		document.body.removeEventListener('mousemove', move);
+		document.body.removeEventListener('mouseleave', end);
 		document.body.removeEventListener('mouseup', end);
 		return _exports;
 	};
