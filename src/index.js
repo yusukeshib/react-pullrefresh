@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import pullhelper from 'pullhelper'
 import './rotate.less'
 import image from './pull.svg'
-import { assign } from 'lodash'
 
 const MAX_DEFAULT = 100
 
 class Pull extends Component {
+  static defaultProps = {
+    max: MAX_DEFAULT
+  }
+
 	constructor(props) {
 		super(props)
 		this.state = {
@@ -88,7 +91,7 @@ class Pull extends Component {
 					zIndex:this.props.zIndex,
 					userSelect:'none'
 				}} />
-				<div style={assign({
+				<div style={Object.assign({
 					background:'white',
 					width: size,
 					height: size,
