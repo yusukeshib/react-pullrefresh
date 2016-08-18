@@ -35,5 +35,13 @@ module.exports = {
 	},
 	resolve: {
 		modulesDirectories: ['node_modules']
-	}
+  },
+  externals: {
+    react: {
+      root: 'React',
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+    }
+  }
 }
