@@ -25,7 +25,7 @@ module.exports = {
 			},
 			{
 				test: /\.less/,
-				loader: 'style-loader!css-loader!less-loader'
+				loader: 'css-loader!less-loader'
 			},
 			{
 				test: /\.(svg)$/,
@@ -35,13 +35,13 @@ module.exports = {
 	},
 	resolve: {
 		modulesDirectories: ['node_modules']
-  },
-  externals: {
-    react: {
-      root: 'React',
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react',
-    }
-  }
+	},
+	externals: {
+		react: {
+			root: 'React',
+			commonjs: 'react',
+			commonjs2: 'react',
+			amd: 'react'
+		}
+	}
 }

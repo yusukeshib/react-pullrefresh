@@ -6,3 +6,7 @@ node_modules
 # misc
 .DS_Store
 npm-debug.log
+
+# build files
+index.js
+*.tgz

@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import pullhelper from 'pullhelper'
 import './rotate.less'
 import image from './pull.svg'
 
 const MAX_DEFAULT = 100
 
 class Pull extends Component {
-  static defaultProps = {
-    max: MAX_DEFAULT
-  }
+	static defaultProps = {
+		max: MAX_DEFAULT
+	}
 
 	constructor(props) {
 		super(props)
@@ -16,11 +15,15 @@ class Pull extends Component {
 			pulled:0
 		}
 	}
+
 	componentDidMount() {
+		this.pullhelper = require('pullhelper')
+
 		let { disabled,onRefresh,max } = this.props
 		let maxPull = max || MAX_DEFAULT
 		let that= this
-		pullhelper
+
+		this.pullhelper
 		.on('start',function(pulled) {
 			that.setState({
 				pulling:true
@@ -58,21 +61,21 @@ class Pull extends Component {
 		})
 		.load()
 		if(disabled) {
-			pullhelper.pause()
+			this.pullhelper.pause()
 		}
 	}
 	componentWillReceiveProps(nextProps) {
 		let { disabled } = this.props
 		if(disabled !== nextProps.disabled) {
 			if(nextProps.disabled) {
-				pullhelper.pause()
+				this.pullhelper.pause()
 			} else {
-				pullhelper.resume()
+				this.pullhelper.resume()
 			}
 		}
 	}
 	componentWillUnmount() {
-		pullhelper.unload()
+		this.pullhelper.unload()
 	}
 	render() {
 		let { pulling,loading,pulled } = this.state
@@ -111,7 +114,7 @@ class Pull extends Component {
 						height:'100%',
 						opacity:pulled/maxPull,
 						transform:`rotate(${pulled/maxPull*360}deg)`,
-						animation:loading ? 'rotating 2s linear infinite' : 'none',
+						animation:loading ? 'rotating 2s linear infinite' : 'none'
 					}} />
 				</div>
 			</div>
@@ -119,4 +122,4 @@ class Pull extends Component {
 	}
 }
 
-export default Pull
+export default Pull;
