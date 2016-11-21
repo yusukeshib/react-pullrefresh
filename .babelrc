@@ -4,5 +4,13 @@
     "react",
     "stage-1"
   ],
-  "plugins": ["transform-object-assign"]
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  },
+  "plugins": [
+    "transform-object-assign",
+    "react-hot-loader/babel"
+  ]
 }

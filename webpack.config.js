@@ -29,7 +29,7 @@ module.exports = {
       },
       {
         test: /\.(svg)$/,
-        loader: 'url-loader?limit=8192'
+        loader: 'url-loader'
       }
     ]
   },
