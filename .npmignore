@@ -1,2 +1,4 @@
 test/
 *.gif
+*.tgz
+webpack.config.js
