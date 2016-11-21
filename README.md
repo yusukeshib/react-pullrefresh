@@ -14,32 +14,32 @@ Pull to reflesh navigation helper.
 import Pull from 'react-pullrefresh'
 
 class App extends Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-		}
-		this.onRefresh = this.onRefresh.bind(this)
-	}
-	onRefresh(next) {
-		// some async process...
-		setTimeout(_ => {
-			next()
-		},2000)
-	}
-	render() {
-		return (
-			<div className='App'>
-				<Pull zIndex={10000} size={30} max={100} onRefresh={this.onRefresh} />
-				<div className='rows'>
-					{range(100).map(i => {
-						return (
-							<div key={i} className='row'>{i}</div>
-						)
-					})}
-				</div>
-			</div>
-		)
-	}
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+    this.onRefresh = this.onRefresh.bind(this)
+  }
+  onRefresh(next) {
+    // some async process...
+    setTimeout(_ => {
+      next()
+    },2000)
+  }
+  render() {
+    return (
+      <div className='App'>
+        <Pull zIndex={10000} size={30} max={100} onRefresh={this.onRefresh} />
+        <div className='rows'>
+          {range(100).map(i => {
+            return (
+              <div key={i} className='row'>{i}</div>
+            )
+          })}
+        </div>
+      </div>
+    )
+  }
 }
 
 export default App
@@ -74,8 +74,8 @@ first argument is callback function, so must be called.
 
 ```javascript
 function onRefresh(callback) {
-	//...some async function
-	callback()
+  //...some async function
+  callback()
 }
 ```
 
