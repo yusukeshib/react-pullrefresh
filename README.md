@@ -1,4 +1,4 @@
-# react-pullrefresh.js
+# react-pullrefresh
 
 Pull to reflesh navigation helper.
 
@@ -81,7 +81,7 @@ function onRefresh(callback) {
 
 #### Demo
 
-[https://yusukeshibata.github.io/react-pullrefresh/test/build/](https://yusukeshibata.github.io/react-pullrefresh/test/build/)
+[https://yusukeshibata.github.io/react-pullrefresh/](https://yusukeshibata.github.io/react-pullrefresh/)
 
 
 #### License
