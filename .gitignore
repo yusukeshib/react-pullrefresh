@@ -8,5 +8,4 @@ node_modules
 npm-debug.log
 
 # build files
-index.js
 *.tgz
