@@ -19,29 +19,29 @@ class Pull extends Component {
   componentDidMount() {
     this.pullhelper = require('pullhelper')
 
-    let { disabled,onRefresh,max } = this.props
+    let { disabled, onRefresh, max } = this.props
     let maxPull = max || MAX_DEFAULT
-    let that= this
+    let that = this
 
     this.pullhelper
-    .on('start',function(pulled) {
+    .on('start', function(pulled) {
       that.setState({
         pulling:true
       })
     })
-    .on('stepback',function(pulled,next) {
+    .on('stepback', function(pulled, next) {
       that.setState({
         pulled:pulled
       })
-      let nextPulled = Math.min(pulled - Math.min(pulled/2,10),max)
+      let nextPulled = Math.min(pulled - Math.min(pulled / 2, 10), max)
       next(nextPulled)
     })
-    .on('step',function(pulled) {
+    .on('step', function(pulled) {
       that.setState({
         pulled:pulled
       })
     })
-    .on('pull',function(pulled,next) {
+    .on('pull', function(pulled, next) {
       that.setState({
         pulling:false
       })
@@ -78,7 +78,7 @@ class Pull extends Component {
     this.pullhelper.unload()
   }
   render() {
-    let { pulling,loading,pulled } = this.state
+    let { pulling, loading, pulled } = this.state
     let maxPull = this.props.max || MAX_DEFAULT
     let size = this.props.size || 30
     let style = this.props.style || {}
@@ -100,20 +100,20 @@ class Pull extends Component {
           height: size,
           position:'fixed',
           zIndex:this.props.zIndex,
-          top:-size+Math.min(pulled,maxPull),
+          top:-size + Math.min(pulled, maxPull),
           left:'50%',
-          borderRadius:size/2,
+          borderRadius:size / 2,
           transform:'translate(-50%,-50%)',
           boxShadow:'0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)',
           userSelect:'none'
-        },style)}>
+        }, style)}>
           <div style={{
             background:`url(${image}) center center no-repeat`,
             backgroundSize:'100% 100%',
             width:'100%',
             height:'100%',
-            opacity:pulled/maxPull,
-            transform:`rotate(${pulled/maxPull*360}deg)`,
+            opacity:pulled / maxPull,
+            transform:`rotate(${pulled / maxPull * 360}deg)`,
             animation:loading ? 'rotating 2s linear infinite' : 'none'
           }} />
         </div>
@@ -122,4 +122,4 @@ class Pull extends Component {
   }
 }
 
-export default Pull;
+export default Pull

@@ -3,7 +3,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const srcPath = path.join(__dirname, '..', 'src')
-const port = 8000
+const port = 8080
 const publicPath = '/'
 
 module.exports = {
