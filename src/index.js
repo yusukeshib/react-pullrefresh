@@ -17,7 +17,8 @@ class Pull extends Component {
   }
 
   componentDidMount() {
-    this.pullhelper = require('pullhelper')
+    const PullHelper = require('pullhelper')
+    this.pullhelper = new PullHelper()
 
     let { disabled, onRefresh, max } = this.props
     let maxPull = max || MAX_DEFAULT
