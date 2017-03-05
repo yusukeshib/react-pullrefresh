@@ -10,7 +10,7 @@ export default class Pull extends Component {
     }
   }
   componentDidMount() {
-    const PullHelper = require('pullhelper')
+    const PullHelper = require('./pullhelper')
     this.pullhelper = new PullHelper()
 
     const { disabled, onRefresh, max } = this.props
@@ -20,7 +20,7 @@ export default class Pull extends Component {
       .on('start', function(step) {
         that.setState({
           pulled: false,
-          pulling:true
+          pulling: true
         })
       })
       .on('stepback', function(step, next) {

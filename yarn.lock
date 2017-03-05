@@ -3041,9 +3041,9 @@ prr@~0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/prr/-/prr-0.0.0.tgz#1a84b85908325501411853d0081ee3fa86e2926a"
 
-pullhelper@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/pullhelper/-/pullhelper-1.1.7.tgz#32c0590c317200ad73fa441fa78207581092e4c1"
+pullhelper@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/pullhelper/-/pullhelper-1.1.8.tgz#794181b92ac6363346330d676d06e2fb93abd410"
   dependencies:
     event-emitter "^0.3.4"
     scrollingelement "^1.5.1"

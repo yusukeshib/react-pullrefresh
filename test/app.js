@@ -15,7 +15,13 @@ class App extends Component {
     return (
       <div className='App'>
         <Pull zIndex={10000} onRefresh={this.onRefresh} />
-        <div className='rows'>
+        <div
+          className='rows'
+          style={{
+            overflow: 'auto',
+            height: window.innerHeight
+          }}
+        >
           {range(100).map(i => {
             return (
               <div key={i} style={{
