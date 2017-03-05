@@ -90,7 +90,7 @@ export default class Pull extends Component {
             borderRadius: size / 2,
             transform: `scale(${scale}, ${scale})`,
             zIndex: zIndex,
-            ...({ top: pulled ? max - size * 2 : Math.min(step, max) - size * 2 })
+            ...({ top: pulled ? max - size -6 : Math.min(step, max) - size -6 })
           }}
         >
           <svg
