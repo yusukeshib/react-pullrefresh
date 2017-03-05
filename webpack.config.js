@@ -24,8 +24,8 @@ module.exports = {
         loader: 'babel-loader'
       },
       {
-        test: /\.less/,
-        loader: 'css-loader!less-loader'
+        test: /\.(css)$/,
+        loader: 'style-loader!css-loader'
       },
       {
         test: /\.(svg)$/,

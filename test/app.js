@@ -4,10 +4,17 @@ import Pull from '../src'
 import { range } from 'lodash'
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.onRefresh = this.onRefresh.bind(this)
+  }
+  onRefresh(next) {
+    setTimeout(next, 2000)
+  }
   render() {
     return (
       <div className='App'>
-        <Pull zIndex={10000} size={30} max={100} onRefresh={this.onRefresh} />
+        <Pull zIndex={10000} onRefresh={this.onRefresh} />
         <div className='rows'>
           {range(100).map(i => {
             return (

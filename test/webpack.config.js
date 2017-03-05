@@ -50,8 +50,8 @@ module.exports = {
     ],
     loaders: [
       {
-        test: /\.less/,
-        loader: 'css-loader!less-loader'
+        test: /\.(css)$/,
+        loader: 'style-loader!css-loader'
       },
       {
         test: /\.(svg)$/,
