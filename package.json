@@ -1,13 +1,13 @@
 {
   "name": "react-pullrefresh",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
     "prepare": "npm run build",
     "build": "webpack",
     "test": "cd test && node index.js",
-    "test:build": "cd test && webpack",
+    "test:build": "cd test && webpack --config webpack.config.release.js",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix"
   },
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/yusukeshibata/react-pullrefresh#readme",
   "dependencies": {
-    "pullhelper": "^1.1.5",
+    "pullhelper": "^1.1.6",
     "react": "^15.4.2"
   },
   "devDependencies": {

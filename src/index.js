@@ -72,7 +72,6 @@ export default class Pull extends Component {
     const { zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
     const scale = pulled ? Math.min(1, step / max) : 1
-    console.log(scale)
     return (
       <div>
         { pulling && <div
@@ -88,9 +87,9 @@ export default class Pull extends Component {
             width: size,
             height: size,
             borderRadius: size / 2,
-            transform: `scale(${scale}, ${scale})`,
+            transform: `translate(-${size / 2 + 10}px, -${size / 2 + 10}px) scale(${scale}, ${scale})`,
             zIndex: zIndex,
-            ...({ top: pulled ? max - size -6 : Math.min(step, max) - size -6 })
+            ...({ top: pulled ? max - size - 6 : Math.min(step, max) - size - 6 })
           }}
         >
           <svg
