@@ -10,7 +10,6 @@ const defaultHandler = {
 
 class ScrollElement {
   constructor(element) {
-    console.log('ScrollElement:', element)
     this._element = element
     this._enabled = true
   }
