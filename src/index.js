@@ -35,16 +35,16 @@ export default class PullRefresh extends Component {
         that.setState({
           pulling:false
         })
-        if(!onRefresh || step < max) {
+        if(!onRefresh || step * 0.6 < max) {
           next()
           return
         }
         that.setState({
+          pulled: true,
           loading:true
         })
         onRefresh(_ => {
           that.setState({
-            pulled: true,
             loading:false
           })
           next()
@@ -69,10 +69,10 @@ export default class PullRefresh extends Component {
     this.pullhelper.unload()
   }
   render() {
-    const { children, zIndex, style, size, max } = this.props
+    const { base, children, zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
     const scale = pulled ? Math.min(1, step / max) : 1
-    const top = pulled ? max - size - 6 : Math.min(step, max) - size - 6
+    const top = pulled ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
       <div>
         { pulling && <div
@@ -88,9 +88,10 @@ export default class PullRefresh extends Component {
             width: size,
             height: size,
             borderRadius: size / 2,
-            transform: `translate(-${size / 2}px, 0px) scale(${scale}, ${scale})`,
+            transform: `translate(-${size / 2}px, ${pulled ? -30 : 0}px) scale(${scale}, ${scale})`,
             zIndex: zIndex,
-            ...({ top: top })
+            ...({ top: top }),
+            ...(pulled && defaultStyle.pulled)
           }}
         >
           <svg
@@ -135,6 +136,6 @@ PullRefresh.propTypes = {
 
 PullRefresh.defaultProps = {
   size: 40,
-  max: 100,
+  max: 120,
   style: {}
 }
