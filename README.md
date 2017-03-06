@@ -1,17 +1,19 @@
 # react-pullrefresh
 
-Pull to reflesh navigation helper.
+Pull to reflesh material design component.
 
 ![](/2017_03_06_13_09_14.gif?raw=true)
 
 #### Install
 
-`npm install react-pullrefresh`
+```sh
+npm install react-pullrefresh
+```
 
 #### Usage
 
 ```javascript
-import Pull from 'react-pullrefresh'
+import PullRefresh from 'react-pullrefresh'
 
 class App extends Component {
   constructor(props) {
@@ -26,18 +28,32 @@ class App extends Component {
       next()
     },2000)
   }
+  // Without children PullRefresh element observe document.body's scroll
   render() {
     return (
       <div className='App'>
-        <Pull zIndex={10000} size={30} max={100} onRefresh={this.onRefresh} />
-        <div className='rows'>
+        <PullRefresh zIndex={10000} size={40} max={100} onRefresh={this.onRefresh}/>
+        {range(100).map(i => {
+          return (
+            <div key={i} className='row'>{i}</div>
+          )
+        })}
+      </div>
+    )
+  }
+  // With scrollable element children, observe children's scrolling.
+  render() {
+    return (
+      <PullRefresh zIndex={10000} size={40} max={100} onRefresh={this.onRefresh}>
+        <!-- scrollable child element -->
+        <div className='App' style={{ overflow: 'auto', height: '100%' }}>
           {range(100).map(i => {
             return (
               <div key={i} className='row'>{i}</div>
             )
           })}
         </div>
-      </div>
+      </PullRefresh>
     )
   }
 }
@@ -58,7 +74,7 @@ default: `undefined`
 specify css z-index.
 
 ##### size
-default: `30`
+default: `40`
 
 indicator size.
 
