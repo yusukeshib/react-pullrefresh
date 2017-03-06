@@ -86,12 +86,12 @@ export default class PullHelper {
       })
     }
   }
-  pull() {
+  pull(step) {
     if(this._lock) return
     this._emitter.emit('start')
     this._lock = true
     this._cnt = 3
-    this._step = 200
+    this._step = step
     this._emitter.emit('step', this._step)
     this._emitter.emit('pull', this._step, () => {
       this._lock = false
