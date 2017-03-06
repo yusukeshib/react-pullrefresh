@@ -15,7 +15,7 @@ export default class PullRefresh extends Component {
   }
   refresh() {
     const { max } = this.props
-    this.pullhelper.pull(max * 100)
+    this.pullhelper.pull(max / 0.6 + 1)
   }
   componentDidMount() {
     this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
