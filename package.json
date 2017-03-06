@@ -10,7 +10,7 @@
     "test:build": "cd test && webpack --config webpack.config.release.js",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "update:github": "git checkout gh-pages && git merge master && npm run test:build && git commit -am updates && git push origin gh-pages && git checkout master"
+    "update:github": "git checkout gh-pages && git merge develop && npm run test:build && git commit -am updates && git push origin gh-pages && git checkout develop"
   },
   "repository": {
     "type": "git",
