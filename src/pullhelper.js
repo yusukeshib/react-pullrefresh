@@ -10,7 +10,6 @@ const defaultHandler = {
 
 class ScrollElement {
   constructor(element) {
-    console.log('ScrollElement:', element)
     this._element = element
     this._enabled = true
   }
@@ -26,10 +25,12 @@ class ScrollElement {
     this._element.style.overflow = overflow
   }
   get dispatcher() {
-    if(this._element === document.body) return document
+    if(document && document.body === this._element) return document
     return this._element
   }
   set scrollEnabled(enabled) {
+    if(!this._element) return
+    if(this._enabled === enabled) return
     this._enabled = enabled
     if(enabled) {
       this._restoreStyle()
@@ -39,22 +40,25 @@ class ScrollElement {
     }
   }
   get scrollTop() {
+    if(!this._element) return 0
     return this._element.scrollTop
   }
   get scrollEnabled() {
     return this._enabled
   }
   addScrollEventListener(listener) {
+    if(!this.dispatcher) return
     this.dispatcher.addEventListener('scroll', listener)
   }
   removeScrollEventListener(listener) {
+    if(!this.dispatcher) return
     this.dispatcher.removeEventListener('scroll', listener)
   }
 }
 
 export default class PullHelper {
   constructor(scrollElement) {
-    this._scrollElement = new ScrollElement(scrollElement || document.body)
+    this._scrollElement = new ScrollElement(scrollElement || (document ? document.body : null))
     this._emitter = new EventEmitter()
     this._emitter.on('pull', defaultHandler.pull)
     this._emitter.on('stepback', defaultHandler.stepback)
