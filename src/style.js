@@ -1,11 +1,13 @@
 export default {
+  container: {
+  },
   cover: {
     position:'absolute',
     top:0,
     left:0,
     right:0,
     bottom:0,
-    userSelect:'none'
+    touchAction:'none'
   },
   pulled: {
     transition: 'transform 0.4s ease-out'

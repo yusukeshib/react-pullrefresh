@@ -23,6 +23,7 @@ class ScrollElement {
     this._element.style.overflowX = overflowX
     this._element.style.overflowY = overflowY
     this._element.style.overflow = overflow
+    this._overflowStyle = null
   }
   get dispatcher() {
     if(document && document.body === this._element) return document
@@ -85,10 +86,7 @@ export default class PullHelper {
     }
   }
   onScroll(evt) {
-    if(this._cnt > 2) {
-      evt.preventDefault()
-      return
-    }
+    if(this._cnt > 2) return
     this._cnt = 0
     this._step = 0
     this._emitter.emit('step', 0)
@@ -106,7 +104,7 @@ export default class PullHelper {
     if(this._lock) return
     let that = this
     that._lock = true
-    this._scrollElement.scrollEnabled = true
+    //this._scrollElement.scrollEnabled = true
     this._emitter.emit('pull', that._step, () => {
       that._lock = false
       that._touch = false
@@ -123,7 +121,7 @@ export default class PullHelper {
       this._step = step
       this._y = y
       if(this._cnt > 2 && this._scrollElement.scrollTop === 0) {
-        this._scrollElement.scrollEnabled = false
+        //this._scrollElement.scrollEnabled = false
         this._emitter.emit('start')
       }
       this._emitter.emit('step', Math.max(0, this._step))
@@ -151,7 +149,7 @@ export default class PullHelper {
     return this
   }
   load() {
-    this._scrollElement.addScrollEventListener(this.onScroll)
+    this._scrollElement.addScrollEventListener(this.onScroll, { passive: true })
     window.addEventListener('touchstart', this.onTouchStart, { passive: true })
     window.addEventListener('touchmove', this.onTouchMove, { passive: true })
     window.addEventListener('touchend', this.onTouchEnd, { passive: true })

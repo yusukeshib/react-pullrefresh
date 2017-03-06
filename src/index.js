@@ -74,7 +74,7 @@ export default class PullRefresh extends Component {
     const scale = pulled ? Math.min(1, step / max) : 1
     const top = pulled ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
-      <div style={style}>
+      <div style={{ ...defaultStyle.container, ...style }}>
         { pulling && <div
           style={{
             ...defaultStyle.cover,
