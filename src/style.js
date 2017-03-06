@@ -14,8 +14,7 @@ export default {
     left:0,
     right:0,
     bottom:0,
-    userSelect:'none',
-    background: 'rgba(255,0,0,0.5)'
+    touchAction:'none'
   },
   component: {
     background:'white',
