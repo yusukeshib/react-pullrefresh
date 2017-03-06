@@ -1,22 +1,24 @@
 import React, { Component } from 'react'
+import { View } from 'react-native'
+import Svg, { Path, Circle } from 'react-native-svg'
 
 export class div extends Component {
   render() {
-    return (<div {...this.props}/>)
+    return (<View {...this.props}/>)
   }
 }
 export class svg extends Component {
   render() {
-    return (<svg {...this.props}/>)
+    return (<Svg {...this.props}/>)
   }
 }
 export class path extends Component {
   render() {
-    return (<path {...this.props}/>)
+    return (<Path {...this.props}/>)
   }
 }
 export class circle extends Component {
   render() {
-    return (<circle {...this.props}/>)
+    return (<Circle {...this.props}/>)
   }
 }

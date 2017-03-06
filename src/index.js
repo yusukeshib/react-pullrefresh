@@ -111,7 +111,8 @@ export default class PullRefresh extends Component {
                 ]),
                 ...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
               }}
-              width={30} height={30}
+              width={30}
+              height={30}
               viewBox='0 0 30 30'
             >
               { !pulled &&
@@ -122,12 +123,12 @@ export default class PullRefresh extends Component {
               }
               <circle
                 style={{
-                  stroke: '#000',
-                  strokeDasharray: Math.PI * 8,
-                  strokeDashoffset: 0,
                   transformOrigin: 'center',
                   ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
                 }}
+                stroke='#000'
+                strokeDasharray={Math.PI * 8}
+                strokeDashoffset={0}
                 fill='none'
                 strokeWidth={2}
                 cx={15}

@@ -29,7 +29,9 @@
   },
   "homepage": "https://github.com/yusukeshibata/react-pullrefresh#readme",
   "peerDependencies": {
-    "react": "^15.4.2"
+    "react": "^15.4.2",
+    "react-native-svg": "^5.1.5",
+    "react-native": "^0.42.0"
   },
   "devDependencies": {
     "babel-core": "^6.23.1",
@@ -48,6 +50,8 @@
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
     "react-hot-loader": "^3.0.0-beta.6",
+    "react-native": "^0.42.0",
+    "react-native-svg": "^5.1.5",
     "style-loader": "^0.13.2",
     "url-loader": "^0.5.7",
     "webpack": "1.14.0",
