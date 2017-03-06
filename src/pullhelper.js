@@ -10,8 +10,20 @@ const defaultHandler = {
 
 class ScrollElement {
   constructor(element) {
+    console.log('ScrollElement:', element)
     this._element = element
     this._enabled = true
+  }
+  _saveStyle() {
+    const { overflowX, overflowY, overflow } = this._element.style
+    this._overflowStyle = { overflowX, overflowY, overflow }
+  }
+  _restoreStyle() {
+    if(!this._overflowStyle) return
+    const { overflowX, overflowY, overflow } = this._overflowStyle
+    this._element.style.overflowX = overflowX
+    this._element.style.overflowY = overflowY
+    this._element.style.overflow = overflow
   }
   get dispatcher() {
     if(this._element === document.body) return document
@@ -19,7 +31,12 @@ class ScrollElement {
   }
   set scrollEnabled(enabled) {
     this._enabled = enabled
-    this._element.style.overflow = enabled ? 'auto' : 'hidden'
+    if(enabled) {
+      this._restoreStyle()
+    } else {
+      this._saveStyle()
+      this._element.style.overflow = 'hidden'
+    }
   }
   get scrollTop() {
     return this._element.scrollTop
