@@ -1,4 +1,13 @@
+import shadow from './shadow'
+
 export default {
+  container: {
+    width: '100%',
+    position: 'fixed',
+    display: 'flex',
+    left: 0,
+    justifyContent: 'center'
+  },
   cover: {
     position:'fixed',
     top:0,
@@ -7,14 +16,9 @@ export default {
     bottom:0,
     userSelect:'none'
   },
-  pulled: {
-    transition: 'transform 0.4s ease-out'
-  },
   component: {
     background:'white',
-    position: 'fixed',
-    left: '50%',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)',
-    userSelect:'none'
+    userSelect:'none',
+    ...shadow(2)
   }
 }
