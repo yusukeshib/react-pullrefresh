@@ -13,23 +13,23 @@ class App extends Component {
   }
   render() {
     return (
-      <div className='App'>
-        <Pull zIndex={10000} onRefresh={this.onRefresh} />
-        <div
-          className='rows'
-          style={{
-            overflow: 'auto',
-            height: window.innerHeight
-          }}
-        >
-          {range(100).map(i => {
-            return (
-              <div key={i} style={{
-                borderBottom: '1px solid #ccc'
-              }}>{i}</div>
-            )
-          })}
-        </div>
+      <div>
+        <Pull zIndex={10000} onRefresh={this.onRefresh}>
+          <div
+            style={{
+              overflow: 'auto',
+              height: window.innerHeight
+            }}
+          >
+            {range(100).map(i => {
+              return (
+                <div key={i} style={{
+                  borderBottom: '1px solid #ccc'
+                }}>{i}</div>
+              )
+            })}
+          </div>
+        </Pull>
       </div>
     )
   }
