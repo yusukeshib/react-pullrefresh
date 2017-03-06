@@ -7,6 +7,9 @@ export default {
     bottom:0,
     userSelect:'none'
   },
+  pulled: {
+    transition: 'transform 0.4s ease-out'
+  },
   component: {
     background:'white',
     position: 'fixed',

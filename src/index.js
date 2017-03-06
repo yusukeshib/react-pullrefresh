@@ -1,8 +1,10 @@
 import React, { PropTypes, Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import './animation.css'
 import defaultStyle from './style'
+import PullHelper from './pullhelper'
 
-export default class Pull extends Component {
+export default class PullRefresh extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -10,9 +12,7 @@ export default class Pull extends Component {
     }
   }
   componentDidMount() {
-    const PullHelper = require('pullhelper')
-    this.pullhelper = new PullHelper()
-
+    this.pullhelper = new PullHelper(this.refs.scrollElement)
     const { disabled, onRefresh, max } = this.props
     let that = this
 
@@ -20,7 +20,7 @@ export default class Pull extends Component {
       .on('start', function(step) {
         that.setState({
           pulled: false,
-          pulling:true
+          pulling: true
         })
       })
       .on('stepback', function(step, next) {
@@ -35,16 +35,16 @@ export default class Pull extends Component {
         that.setState({
           pulling:false
         })
-        if(!onRefresh || step < max) {
+        if(!onRefresh || step * 0.6 < max) {
           next()
           return
         }
         that.setState({
+          pulled: true,
           loading:true
         })
         onRefresh(_ => {
           that.setState({
-            pulled: true,
             loading:false
           })
           next()
@@ -69,9 +69,10 @@ export default class Pull extends Component {
     this.pullhelper.unload()
   }
   render() {
-    const { zIndex, style, size, max } = this.props
+    const { base, children, zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
     const scale = pulled ? Math.min(1, step / max) : 1
+    const top = pulled ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
       <div>
         { pulling && <div
@@ -87,9 +88,10 @@ export default class Pull extends Component {
             width: size,
             height: size,
             borderRadius: size / 2,
-            transform: `translate(-${size / 2 + 10}px, -${size / 2 + 10}px) scale(${scale}, ${scale})`,
+            transform: `translate(-${size / 2}px, ${pulled ? -30 : 0}px) scale(${scale}, ${scale})`,
             zIndex: zIndex,
-            ...({ top: pulled ? max - size - 6 : Math.min(step, max) - size - 6 })
+            ...({ top: top }),
+            ...(pulled && defaultStyle.pulled)
           }}
         >
           <svg
@@ -118,19 +120,22 @@ export default class Pull extends Component {
             />
           </svg>
         </div>
+        {children && React.cloneElement(React.Children.only(children), {
+          ref: 'scrollElement'
+        })}
       </div>
     )
   }
 }
 
-Pull.propTypes = {
+PullRefresh.propTypes = {
   size: PropTypes.number,
   max: PropTypes.number,
   style: PropTypes.object
 }
 
-Pull.defaultProps = {
+PullRefresh.defaultProps = {
   size: 40,
-  max: 100,
+  max: 120,
   style: {}
 }
