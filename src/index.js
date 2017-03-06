@@ -14,7 +14,7 @@ export default class PullRefresh extends Component {
     }
   }
   componentDidMount() {
-    this.pullhelper = new PullHelper(this.refs.scrollElement)
+    this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
     const { disabled, onRefresh, max } = this.props
     let that = this
 
@@ -76,7 +76,10 @@ export default class PullRefresh extends Component {
     const scale = pulled ? Math.min(1, step / max) : 1
     const top = pulled && step > 0 ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
-      <div>
+      <div style={style}>
+        {children && React.cloneElement(React.Children.only(children), {
+          ref: 'scrollElement'
+        })}
         { pulling && <div
           style={{
             ...defaultStyle.cover,
@@ -138,9 +141,6 @@ export default class PullRefresh extends Component {
             </svg>
           </div>
         </div>
-        {children && React.cloneElement(React.Children.only(children), {
-          ref: 'scrollElement'
-        })}
       </div>
     )
   }
