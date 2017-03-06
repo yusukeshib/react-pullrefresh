@@ -104,19 +104,23 @@ export default class PullRefresh extends Component {
             width={30} height={30}
             viewBox='0 0 30 30'
           >
+            { !pulled && <path
+              fill='#787878'
+              d='M13.3,15L7.1,8.9L0.9,15'
+            /> }
             <circle
               style={{
                 stroke: '#787878',
-                strokeDasharray: 2 * Math.PI * 10,
-                strokeDashoffset: 15,
+                strokeDasharray: Math.PI * 8,
+                strokeDashoffset: 0,
                 transformOrigin: 'center',
                 ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
               }}
               fill='none'
-              strokeWidth={2.5}
+              strokeWidth={2}
               cx={15}
               cy={15}
-              r={10}
+              r={8}
             />
           </svg>
         </div>
