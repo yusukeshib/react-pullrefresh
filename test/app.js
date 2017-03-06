@@ -7,13 +7,21 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.onRefresh = this.onRefresh.bind(this)
+    this.onClick = this.onClick.bind(this)
+  }
+  onClick() {
+    this.refs.pull.refresh()
   }
   onRefresh(next) {
+    console.log('onRefresh called')
     setTimeout(next, 2000)
+  }
+  componentDidMount() {
+    this.refs.pull.refresh()
   }
   render() {
     return (
-      <Pull zIndex={10000} onRefresh={this.onRefresh}>
+      <Pull ref='pull' zIndex={10000} onRefresh={this.onRefresh}>
         <div
           style={{
             overflow: 'auto',
@@ -27,6 +35,19 @@ class App extends Component {
               }}>{i}</div>
             )
           })}
+          <div
+            onClick={this.onClick}
+            style={{
+              position: 'fixed',
+              right: 40,
+              top: 20,
+              background: '#ccc',
+              color: '#000',
+              fontSize: 12,
+              padding: 10
+            }}>
+            Click to refresh
+          </div>
         </div>
       </Pull>
     )

@@ -13,6 +13,9 @@ export default class PullRefresh extends Component {
       step: 0
     }
   }
+  refresh() {
+    this.pullhelper.pull()
+  }
   componentDidMount() {
     this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
     const { disabled, onRefresh, max } = this.props
@@ -89,7 +92,7 @@ export default class PullRefresh extends Component {
         <div style={{
           ...defaultStyle.container,
           zIndex: zIndex,
-          top: top,
+          top: top
         }}>
           <div
             style={{
@@ -98,11 +101,11 @@ export default class PullRefresh extends Component {
               height: size,
               borderRadius: size / 2,
               transform: transform([
-                { translateY: pulled && !loading ? -30 : 0 },
+                //{ translateY: pulled && !loading ? -30 : 0 },
                 { scaleX: scale },
                 { scaleY: scale }
-              ]),
-              ...(pulled && loading && { animation: 'pulled 0.4s ease-out forwards' })
+              ])
+              //...(pulled && loading && { animation: 'pulled 0.4s ease-out forwards' })
             }}
           >
             <svg

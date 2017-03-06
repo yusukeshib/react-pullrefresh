@@ -86,6 +86,19 @@ export default class PullHelper {
       })
     }
   }
+  pull() {
+    if(this._lock) return
+    this._emitter.emit('start')
+    this._lock = true
+    this._cnt = 3
+    this._step = 200
+    this._emitter.emit('step', this._step)
+    this._emitter.emit('pull', this._step, () => {
+      this._lock = false
+      this._touch = false
+      this._loop()
+    })
+  }
   onScroll(evt) {
     if(this._cnt > 2) return
     this._cnt = 0
