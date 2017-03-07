@@ -15,7 +15,7 @@ export default class PullRefresh extends Component {
   }
   refresh() {
     const { max } = this.props
-    this.pullhelper.pull(max + 20)
+    this.pullhelper.pull(max / 0.6 + 1)
   }
   componentDidMount() {
     this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
@@ -75,9 +75,9 @@ export default class PullRefresh extends Component {
     this.pullhelper.unload()
   }
   render() {
-    const { base, children, zIndex, style, size, max } = this.props
+    const { offset, base, children, zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
-    const scale = pulled ? Math.min(1, step / max) : 1
+    const scale = Math.min(1, step / max)
     const top = pulled && step > 0 ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
       <div style={style}>
@@ -90,14 +90,14 @@ export default class PullRefresh extends Component {
             zIndex: zIndex
           }}
         /> }
+        { step > 0 &&
         <div style={{
           ...defaultStyle.container,
           zIndex: zIndex,
-          top: top
+          top: offset + top
         }}>
           <div
             style={{
-              ...style,
               ...defaultStyle.component,
               height: size,
               borderRadius: size / 2,
@@ -145,19 +145,22 @@ export default class PullRefresh extends Component {
             </svg>
           </div>
         </div>
+        }
       </div>
     )
   }
 }
 
 PullRefresh.propTypes = {
+  offset: PropTypes.number,
   size: PropTypes.number,
   max: PropTypes.number,
   style: PropTypes.object
 }
 
 PullRefresh.defaultProps = {
+  offset: 0,
   size: 40,
-  max: 120,
+  max: 100,
   style: {}
 }
