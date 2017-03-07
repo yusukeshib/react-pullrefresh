@@ -11,42 +11,14 @@ const defaultHandler = {
 class ScrollElement {
   constructor(element) {
     this._element = element
-    this._enabled = true
-  }
-  _saveStyle() {
-    const { overflowX, overflowY, overflow } = this._element.style
-    this._overflowStyle = { overflowX, overflowY, overflow }
-    console.log(this._overflowStyle)
-  }
-  _restoreStyle() {
-    if(!this._overflowStyle) return
-    const { overflowX, overflowY, overflow } = this._overflowStyle
-    this._element.style.overflowX = overflowX
-    this._element.style.overflowY = overflowY
-    this._element.style.overflow = overflow
-    this._overflowStyle = null
   }
   get dispatcher() {
     if(document && document.body === this._element) return document
     return this._element
   }
-  set scrollEnabled(enabled) {
-    if(!this._element) return
-    if(this._enabled === enabled) return
-    this._enabled = enabled
-    if(enabled) {
-      this._restoreStyle()
-    } else {
-      this._saveStyle()
-      this._element.style.overflow = 'hidden'
-    }
-  }
   get scrollTop() {
     if(!this._element) return 0
     return this._element.scrollTop
-  }
-  get scrollEnabled() {
-    return this._enabled
   }
   addScrollEventListener(listener) {
     if(!this.dispatcher) return
@@ -55,6 +27,14 @@ class ScrollElement {
   removeScrollEventListener(listener) {
     if(!this.dispatcher) return
     this.dispatcher.removeEventListener('scroll', listener)
+  }
+  addEventListener() {
+    if(!this._element) return
+    return this._element.addEventListener.apply(this._element, arguments)
+  }
+  removeEventListener() {
+    if(!this._element) return
+    return this._element.removeEventListener.apply(this._element, arguments)
   }
 }
 
@@ -118,12 +98,12 @@ export default class PullHelper {
     if(this._lock) return
     let that = this
     that._lock = true
-    //this._scrollElement.scrollEnabled = true
     this._emitter.emit('pull', that._step, () => {
       that._lock = false
       that._touch = false
       that._loop()
     })
+    return true
   }
   onTouchMove(evt) {
     if(this._paused) return
@@ -135,10 +115,14 @@ export default class PullHelper {
       this._step = step
       this._y = y
       if(this._cnt > 2 && this._scrollElement.scrollTop === 0) {
-        //this._scrollElement.scrollEnabled = false
         this._emitter.emit('start')
       }
       this._emitter.emit('step', Math.max(0, this._step))
+    }
+    if(this._step > 0) {
+      evt.preventDefault()
+      evt.stopPropagation()
+      return false
     }
   }
   on(type, listener) {
@@ -164,25 +148,25 @@ export default class PullHelper {
   }
   load() {
     this._scrollElement.addScrollEventListener(this.onScroll, { passive: true })
-    window.addEventListener('touchstart', this.onTouchStart, { passive: true })
-    window.addEventListener('touchmove', this.onTouchMove, { passive: true })
-    window.addEventListener('touchend', this.onTouchEnd, { passive: true })
-    window.addEventListener('mousedown', this.onTouchStart, { passive: true })
-    window.addEventListener('mousemove', this.onTouchMove, { passive: true })
-    window.addEventListener('mouseleave', this.onTouchEnd, { passive: true })
-    window.addEventListener('mouseup', this.onTouchEnd, { passive: true })
+    this._scrollElement.addEventListener('touchstart', this.onTouchStart)
+    this._scrollElement.addEventListener('touchmove', this.onTouchMove)
+    this._scrollElement.addEventListener('touchend', this.onTouchEnd)
+    this._scrollElement.addEventListener('mousedown', this.onTouchStart)
+    this._scrollElement.addEventListener('mousemove', this.onTouchMove)
+    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd)
+    this._scrollElement.addEventListener('mouseup', this.onTouchEnd)
     return this
   }
   unload() {
     allOff(this._emitter)
     this._scrollElement.removeScrollEventListener(this.onScroll)
-    window.removeEventListener('touchstart', this.onTouchStart)
-    window.removeEventListener('touchmove', this.onTouchMove)
-    window.removeEventListener('touchend', this.onTouchEnd)
-    window.removeEventListener('mousedown', this.onTouchStart)
-    window.removeEventListener('mousemove', this.onTouchMove)
-    window.removeEventListener('mouseleave', this.onTouchEnd)
-    window.removeEventListener('mouseup', this.onTouchEnd)
+    this._scrollElement.removeEventListener('touchstart', this.onTouchStart)
+    this._scrollElement.removeEventListener('touchmove', this.onTouchMove)
+    this._scrollElement.removeEventListener('touchend', this.onTouchEnd)
+    this._scrollElement.removeEventListener('mousedown', this.onTouchStart)
+    this._scrollElement.removeEventListener('mousemove', this.onTouchMove)
+    this._scrollElement.removeEventListener('mouseleave', this.onTouchEnd)
+    this._scrollElement.removeEventListener('mouseup', this.onTouchEnd)
     return this
   }
 }

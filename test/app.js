@@ -21,9 +21,15 @@ class App extends Component {
   }
   render() {
     return (
-      <Pull ref='pull' zIndex={10000} onRefresh={this.onRefresh}>
+      <Pull
+        ref='pull'
+        offset={80}
+        zIndex={10000}
+        onRefresh={this.onRefresh}
+      >
         <div
           style={{
+            marginTop: 80,
             overflow: 'auto',
             height: window.innerHeight
           }}
@@ -31,6 +37,8 @@ class App extends Component {
           {range(100).map(i => {
             return (
               <div key={i} style={{
+                backgroundColor: '#eee',
+                padding: 10,
                 borderBottom: '1px solid #ccc'
               }}>{i}</div>
             )
