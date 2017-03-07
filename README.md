@@ -63,6 +63,11 @@ export default App
 
 #### Props
 
+##### offset
+default: 0
+
+Y-Offset for layout.
+
 ##### disabled
 default: `false`
 
