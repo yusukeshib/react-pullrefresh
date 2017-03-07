@@ -3,6 +3,8 @@ import { findDOMNode } from 'react-dom'
 import './animation.css'
 import defaultStyle from './style'
 import PullHelper from './pullhelper'
+import { view, svg, path, circle } from './components'
+import transform from './transform'
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -11,8 +13,12 @@ export default class PullRefresh extends Component {
       step: 0
     }
   }
+  refresh() {
+    const { max } = this.props
+    this.pullhelper.pull(max / 0.6 + 1)
+  }
   componentDidMount() {
-    this.pullhelper = new PullHelper(this.refs.scrollElement)
+    this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
     const { disabled, onRefresh, max } = this.props
     let that = this
 
@@ -69,77 +75,92 @@ export default class PullRefresh extends Component {
     this.pullhelper.unload()
   }
   render() {
-    const { base, children, zIndex, style, size, max } = this.props
+    const { offset, base, children, zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
-    const scale = pulled ? Math.min(1, step / max) : 1
-    const top = pulled ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
+    const scale = Math.min(1, step / max)
+    const top = pulled && step > 0 ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
-      <div>
+      <div style={style}>
+        {children && React.cloneElement(React.Children.only(children), {
+          ref: 'scrollElement'
+        })}
         { pulling && <div
           style={{
             ...defaultStyle.cover,
             zIndex: zIndex
           }}
         /> }
-        <div
-          style={{
-            ...style,
-            ...defaultStyle.component,
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            transform: `translate(-${size / 2}px, ${pulled ? -30 : 0}px) scale(${scale}, ${scale})`,
-            zIndex: zIndex,
-            ...({ top: top }),
-            ...(pulled && defaultStyle.pulled)
-          }}
-        >
-          <svg
+        { step > 0 &&
+        <div style={{
+          ...defaultStyle.container,
+          zIndex: zIndex,
+          top: offset + top
+        }}>
+          <div
             style={{
-              margin: (size - 30) / 2,
-              opacity: step / max,
-              transform: `rotate(${step / max * 360}deg)`,
-              ...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
+              ...defaultStyle.component,
+              height: size,
+              borderRadius: size / 2,
+              transform: transform([
+                //{ translateY: pulled && !loading ? -30 : 0 },
+                { scaleX: scale },
+                { scaleY: scale }
+              ])
+              //...(pulled && loading && { animation: 'pulled 0.4s ease-out forwards' })
             }}
-            width={30} height={30}
-            viewBox='0 0 30 30'
           >
-            { !pulled && <path
-              fill='#787878'
-              d='M13.3,15L7.1,8.9L0.9,15'
-            /> }
-            <circle
+            <svg
               style={{
-                stroke: '#787878',
-                strokeDasharray: Math.PI * 8,
-                strokeDashoffset: 0,
-                transformOrigin: 'center',
-                ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
+                margin: (size - 30) / 2,
+                opacity: step / max,
+                transform: transform([
+                  { rotate: `${step / max * 360}deg` }
+                ]),
+                ...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
               }}
-              fill='none'
-              strokeWidth={2}
-              cx={15}
-              cy={15}
-              r={8}
-            />
-          </svg>
+              width={30}
+              height={30}
+              viewBox='0 0 30 30'
+            >
+              { !pulled &&
+                  <path
+                    fill='#000'
+                    d='M13.3,15L7.1,8.9L0.9,15'
+                  />
+              }
+              <circle
+                style={{
+                  transformOrigin: 'center',
+                  ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
+                }}
+                stroke='#000'
+                strokeDasharray={Math.PI * 8}
+                strokeDashoffset={0}
+                fill='none'
+                strokeWidth={2}
+                cx={15}
+                cy={15}
+                r={8}
+              />
+            </svg>
+          </div>
         </div>
-        {children && React.cloneElement(React.Children.only(children), {
-          ref: 'scrollElement'
-        })}
+        }
       </div>
     )
   }
 }
 
 PullRefresh.propTypes = {
+  offset: PropTypes.number,
   size: PropTypes.number,
   max: PropTypes.number,
   style: PropTypes.object
 }
 
 PullRefresh.defaultProps = {
+  offset: 0,
   size: 40,
-  max: 120,
+  max: 100,
   style: {}
 }
