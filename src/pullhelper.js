@@ -148,13 +148,13 @@ export default class PullHelper {
   }
   load() {
     this._scrollElement.addScrollEventListener(this.onScroll, { passive: true })
-    this._scrollElement.addEventListener('touchstart', this.onTouchStart)
-    this._scrollElement.addEventListener('touchmove', this.onTouchMove)
-    this._scrollElement.addEventListener('touchend', this.onTouchEnd)
-    this._scrollElement.addEventListener('mousedown', this.onTouchStart)
-    this._scrollElement.addEventListener('mousemove', this.onTouchMove)
-    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd)
-    this._scrollElement.addEventListener('mouseup', this.onTouchEnd)
+    this._scrollElement.addEventListener('touchstart', this.onTouchStart, { passive: false })
+    this._scrollElement.addEventListener('touchmove', this.onTouchMove, { passive: false })
+    this._scrollElement.addEventListener('touchend', this.onTouchEnd, { passive: false })
+    this._scrollElement.addEventListener('mousedown', this.onTouchStart, { passive: false })
+    this._scrollElement.addEventListener('mousemove', this.onTouchMove, { passive: false })
+    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd, { passive: false })
+    this._scrollElement.addEventListener('mouseup', this.onTouchEnd, { passive: false })
     return this
   }
   unload() {
