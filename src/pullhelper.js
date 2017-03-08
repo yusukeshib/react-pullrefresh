@@ -67,6 +67,7 @@ export default class PullHelper {
     if(this._paused) return
     if(this._lock) return
     this._y = evt.touches ? evt.touches[0].clientY : evt.clientY
+    this._started = false
     this._cnt = 0
     this._step = - this._scrollElement.scrollTop
     this._touch = true
