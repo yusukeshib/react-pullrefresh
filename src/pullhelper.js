@@ -1,5 +1,7 @@
 import EventEmitter from 'event-emitter'
 import allOff from 'event-emitter/all-off'
+import AnimationFrame from './animationframe'
+import ScrollElement from './scroll'
 
 const defaultHandler = {
   pull: next => { next() },
@@ -8,39 +10,9 @@ const defaultHandler = {
   }
 }
 
-class ScrollElement {
-  constructor(element) {
-    this._element = element
-  }
-  get dispatcher() {
-    if(document && document.body === this._element) return document
-    return this._element
-  }
-  get scrollTop() {
-    if(!this._element) return 0
-    return this._element.scrollTop
-  }
-  addScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.addEventListener('scroll', listener)
-  }
-  removeScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.removeEventListener('scroll', listener)
-  }
-  addEventListener() {
-    if(!this._element) return
-    return this._element.addEventListener.apply(this._element, arguments)
-  }
-  removeEventListener() {
-    if(!this._element) return
-    return this._element.removeEventListener.apply(this._element, arguments)
-  }
-}
-
 export default class PullHelper {
   constructor(scrollElement) {
-    this._scrollElement = new ScrollElement(scrollElement || (document ? document.body : null))
+    this.scrollElement = scrollElement
     this._emitter = new EventEmitter()
     this._emitter.on('pull', defaultHandler.pull)
     this._emitter.on('stepback', defaultHandler.stepback)
@@ -56,13 +28,19 @@ export default class PullHelper {
     this.onTouchMove = this.onTouchMove.bind(this)
     this.onScroll = this.onScroll.bind(this)
   }
+  set scrollElement(scrollElement) {
+    this._scrollElement = new ScrollElement(scrollElement)
+  }
+  get scrollElement() {
+    return this._scrollElement.element
+  }
   _loop() {
     var that = this
     if(!that._touch && that._step > 0) {
       this._emitter.emit('stepback', that._step, nextStep => {
         that._step = Math.floor(nextStep)
         this._emitter.emit('step', that._step)
-        window.requestAnimationFrame(this._loop)
+        AnimationFrame.request(this._loop)
       })
     }
   }
@@ -98,6 +76,7 @@ export default class PullHelper {
     if(this._lock) return
     let that = this
     that._lock = true
+    this._started = false
     this._emitter.emit('pull', that._step, () => {
       that._lock = false
       that._touch = false
@@ -114,12 +93,15 @@ export default class PullHelper {
       this._cnt++
       this._step = step
       this._y = y
-      if(this._cnt > 2 && this._scrollElement.scrollTop === 0) {
+      if(this._cnt === 2 && this._scrollElement.scrollTop === 0) {
         this._emitter.emit('start')
+        this._started = true
       }
-      this._emitter.emit('step', Math.max(0, this._step))
+      if(this._started) {
+        this._emitter.emit('step', Math.max(0, this._step))
+      }
     }
-    if(this._step > 0) {
+    if(this._started) {
       evt.preventDefault()
       evt.stopPropagation()
       return false
@@ -148,13 +130,13 @@ export default class PullHelper {
   }
   load() {
     this._scrollElement.addScrollEventListener(this.onScroll, { passive: true })
-    this._scrollElement.addEventListener('touchstart', this.onTouchStart)
-    this._scrollElement.addEventListener('touchmove', this.onTouchMove)
-    this._scrollElement.addEventListener('touchend', this.onTouchEnd)
-    this._scrollElement.addEventListener('mousedown', this.onTouchStart)
-    this._scrollElement.addEventListener('mousemove', this.onTouchMove)
-    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd)
-    this._scrollElement.addEventListener('mouseup', this.onTouchEnd)
+    this._scrollElement.addEventListener('touchstart', this.onTouchStart, { passive: true })
+    this._scrollElement.addEventListener('touchmove', this.onTouchMove, { passive: false })
+    this._scrollElement.addEventListener('touchend', this.onTouchEnd, { passive: true })
+    this._scrollElement.addEventListener('mousedown', this.onTouchStart, { passive: true })
+    this._scrollElement.addEventListener('mousemove', this.onTouchMove, { passive: false })
+    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd, { passive: true })
+    this._scrollElement.addEventListener('mouseup', this.onTouchEnd, { passive: true })
     return this
   }
   unload() {
