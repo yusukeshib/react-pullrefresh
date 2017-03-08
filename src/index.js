@@ -12,13 +12,13 @@ export default class PullRefresh extends Component {
     this.state = {
       step: 0
     }
+    this.pullhelper = new PullHelper()
   }
   refresh() {
     const { max } = this.props
     this.pullhelper.pull(max / 0.6 + 1)
   }
   componentDidMount() {
-    this.pullhelper = new PullHelper(findDOMNode(this.refs.scrollElement))
     const { disabled, onRefresh, max } = this.props
     let that = this
 
@@ -62,7 +62,7 @@ export default class PullRefresh extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    let { disabled } = this.props
+    let { children, disabled } = this.props
     if(disabled !== nextProps.disabled) {
       if(nextProps.disabled) {
         this.pullhelper.pause()
@@ -82,7 +82,7 @@ export default class PullRefresh extends Component {
     return (
       <div style={style}>
         {children && React.cloneElement(React.Children.only(children), {
-          ref: 'scrollElement'
+          ref: c => this.pullhelper.scrollElement = findDOMNode(c)
         })}
         { pulling && <div
           style={{
