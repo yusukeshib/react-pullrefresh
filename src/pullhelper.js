@@ -1,43 +1,12 @@
 import EventEmitter from 'event-emitter'
 import allOff from 'event-emitter/all-off'
+import AnimationFrame from './animationframe'
+import ScrollElement from './scroll'
 
 const defaultHandler = {
   pull: next => { next() },
   stepback: (step, next) => {
     next(step / 2)
-  }
-}
-
-class ScrollElement {
-  constructor(element) {
-    this._element = element
-  }
-  get element() {
-    return this._element
-  }
-  get dispatcher() {
-    if(document && document.body === this._element) return document
-    return this._element
-  }
-  get scrollTop() {
-    if(!this._element) return 0
-    return this._element.scrollTop
-  }
-  addScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.addEventListener('scroll', listener)
-  }
-  removeScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.removeEventListener('scroll', listener)
-  }
-  addEventListener() {
-    if(!this._element) return
-    return this._element.addEventListener.apply(this._element, arguments)
-  }
-  removeEventListener() {
-    if(!this._element) return
-    return this._element.removeEventListener.apply(this._element, arguments)
   }
 }
 
@@ -60,7 +29,7 @@ export default class PullHelper {
     this.onScroll = this.onScroll.bind(this)
   }
   set scrollElement(scrollElement) {
-    this._scrollElement = new ScrollElement(scrollElement || (document ? document.body : null))
+    this._scrollElement = new ScrollElement(scrollElement)
   }
   get scrollElement() {
     return this._scrollElement.element
@@ -71,7 +40,7 @@ export default class PullHelper {
       this._emitter.emit('stepback', that._step, nextStep => {
         that._step = Math.floor(nextStep)
         this._emitter.emit('step', that._step)
-        window.requestAnimationFrame(this._loop)
+        AnimationFrame.request(this._loop)
       })
     }
   }
@@ -98,6 +67,7 @@ export default class PullHelper {
     if(this._paused) return
     if(this._lock) return
     this._y = evt.touches ? evt.touches[0].clientY : evt.clientY
+    this._started = false
     this._cnt = 0
     this._step = - this._scrollElement.scrollTop
     this._touch = true

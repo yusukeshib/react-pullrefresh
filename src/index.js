@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import './animation.css'
 import defaultStyle from './style'
 import PullHelper from './pullhelper'
@@ -82,7 +81,7 @@ export default class PullRefresh extends Component {
     return (
       <div style={style}>
         {children && React.cloneElement(React.Children.only(children), {
-          ref: c => this.pullhelper.scrollElement = findDOMNode(c)
+          ref: c => this.pullhelper.scrollElement = c
         })}
         { pulling && <div
           style={{
