@@ -29,7 +29,9 @@ export default class PullHelper {
     this.onScroll = this.onScroll.bind(this)
   }
   set scrollElement(scrollElement) {
+    //this.unload()
     this._scrollElement = new ScrollElement(scrollElement)
+    //this.load()
   }
   get scrollElement() {
     return this._scrollElement.element
@@ -43,6 +45,12 @@ export default class PullHelper {
         AnimationFrame.request(this._loop)
       })
     }
+  }
+  abort() {
+    this._lock = false
+    this._cnt = 0
+    this._step = 0
+    this._touch = false
   }
   pull(step) {
     if(this._lock) return
@@ -141,6 +149,7 @@ export default class PullHelper {
     return this
   }
   unload() {
+    if(!this._scrollElement) return this
     allOff(this._emitter)
     this._scrollElement.removeScrollEventListener(this.onScroll)
     this._scrollElement.removeEventListener('touchstart', this.onTouchStart)

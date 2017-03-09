@@ -13,6 +13,9 @@ export default class PullRefresh extends Component {
     }
     this.pullhelper = new PullHelper()
   }
+  abort() {
+    this.pullhelper.abort()
+  }
   refresh() {
     const { max } = this.props
     this.pullhelper.pull(max / 0.6 + 1)
