@@ -38,13 +38,15 @@ export default class PullHelper {
   }
   _loop() {
     var that = this
-    if(!that._touch && that._step > 0) {
-      this._emitter.emit('stepback', that._step, nextStep => {
-        that._step = Math.floor(nextStep)
-        this._emitter.emit('step', that._step)
-        AnimationFrame.request(this._loop)
-      })
+    if(that._step <= 0) {
+      this._lock = false
+      return
     }
+    this._emitter.emit('stepback', that._step, nextStep => {
+      that._step = Math.floor(nextStep)
+      this._emitter.emit('step', that._step)
+      AnimationFrame.request(this._loop)
+    })
   }
   abort() {
     this._lock = false
@@ -55,13 +57,12 @@ export default class PullHelper {
   pull(step) {
     if(this._lock) return
     this._emitter.emit('start')
-    this._lock = true
     this._cnt = 3
     this._step = step
     this._emitter.emit('step', this._step)
+    this._lock = true
     this._emitter.emit('pull', this._step, () => {
-      this._lock = false
-      this._touch = false
+      this._touch = true
       this._loop()
     })
   }
@@ -84,10 +85,9 @@ export default class PullHelper {
     if(this._paused) return
     if(this._lock) return
     let that = this
-    that._lock = true
     this._started = false
+    this._lock = true
     this._emitter.emit('pull', that._step, () => {
-      that._lock = false
       that._touch = false
       that._loop()
     })
