@@ -22,6 +22,7 @@ class App extends Component {
   render() {
     return (
       <Pull
+        color='#f00'
         ref='pull'
         offset={80}
         zIndex={10000}

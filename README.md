@@ -68,6 +68,9 @@ default: 0
 
 Y-Offset for layout.
 
+##### color 
+default: `#000`
+
 ##### disabled
 default: `false`
 

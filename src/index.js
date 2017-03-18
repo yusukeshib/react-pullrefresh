@@ -77,7 +77,7 @@ export default class PullRefresh extends Component {
     this.pullhelper.unload()
   }
   render() {
-    const { offset, base, children, zIndex, style, size, max } = this.props
+    const { color, offset, base, children, zIndex, style, size, max } = this.props
     const { pulled, stepback, pulling, loading, step } = this.state
     const scale = Math.min(1, step / max)
     const top = pulled && step > 0 ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
@@ -126,7 +126,7 @@ export default class PullRefresh extends Component {
             >
               { !pulled &&
                   <path
-                    fill='#000'
+                    fill={color}
                     d='M13.3,15L7.1,8.9L0.9,15'
                   />
               }
@@ -135,7 +135,7 @@ export default class PullRefresh extends Component {
                   transformOrigin: 'center',
                   ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
                 }}
-                stroke='#000'
+                stroke={color}
                 strokeDasharray={Math.PI * 8}
                 strokeDashoffset={0}
                 fill='none'
@@ -157,10 +157,12 @@ PullRefresh.propTypes = {
   offset: PropTypes.number,
   size: PropTypes.number,
   max: PropTypes.number,
-  style: PropTypes.object
+  style: PropTypes.object,
+  color: PropTypes.string
 }
 
 PullRefresh.defaultProps = {
+  color: '#000',
   offset: 0,
   size: 40,
   max: 100,
