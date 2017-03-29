@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "react-native-stage-0"
+  ],
+  "env": {
+    "development": {
+      "sourceMaps": "inline"
+    }
+  },
+  "plugins": [
+    "transform-object-assign"
+  ]
+}

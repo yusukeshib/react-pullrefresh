@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react'
-import './animation.css'
+//import './animation.css'
 import defaultStyle from './style'
 import PullHelper from './pullhelper'
-import { view, svg, path, circle } from './components'
+import { Div, Svg, Path, Circle } from './components'
 import transform from './transform'
 
 export default class PullRefresh extends Component {
@@ -82,25 +82,24 @@ export default class PullRefresh extends Component {
     const scale = Math.min(1, step / max)
     const top = pulled && step > 0 ? max - size - 6 : Math.min(step * 0.6, max) - size - 6
     return (
-      <div style={style}>
-        {children && React.cloneElement(React.Children.only(children), {
-          ref: c => this.pullhelper.scrollElement = c
-        })}
-        { pulling && <div
+      <Div style={style}>
+        { this.pullhelper.render(children) }
+        { pulling && <Div
           style={{
             ...defaultStyle.cover,
             zIndex: zIndex
           }}
         /> }
         { step > 0 &&
-        <div style={{
+        <Div style={{
           ...defaultStyle.container,
           zIndex: zIndex,
           top: offset + top
         }}>
-          <div
+          <Div
             style={{
               ...defaultStyle.component,
+              width: size,
               height: size,
               borderRadius: size / 2,
               transform: transform([
@@ -111,32 +110,32 @@ export default class PullRefresh extends Component {
               //...(pulled && loading && { animation: 'pulled 0.4s ease-out forwards' })
             }}
           >
-            <svg
+            <Svg
               style={{
                 margin: (size - 30) / 2,
                 opacity: step / max,
                 transform: transform([
                   { rotate: `${step / max * 360}deg` }
                 ]),
-                ...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
+                //...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
               }}
               width={30}
               height={30}
               viewBox='0 0 30 30'
             >
               { !pulled &&
-                  <path
+                  <Path
                     fill={color}
                     d='M13.3,15L7.1,8.9L0.9,15'
                   />
               }
-              <circle
+              <Circle
                 style={{
                   transformOrigin: 'center',
-                  ...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
+                  //...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
                 }}
                 stroke={color}
-                strokeDasharray={Math.PI * 8}
+                strokeDasharray={[Math.PI * 8]}
                 strokeDashoffset={0}
                 fill='none'
                 strokeWidth={2}
@@ -144,11 +143,11 @@ export default class PullRefresh extends Component {
                 cy={15}
                 r={8}
               />
-            </svg>
-          </div>
-        </div>
+            </Svg>
+          </Div>
+        </Div>
         }
-      </div>
+      </Div>
     )
   }
 }

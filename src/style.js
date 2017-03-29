@@ -4,9 +4,11 @@ export default {
   container: {
     width: '100%',
     position: 'absolute',
-    display: 'flex',
+    //display: 'flex',
     left: 0,
-    justifyContent: 'center'
+    flexDirection: 'column',
+    alignItems: 'center',
+    //justifyContent: 'center'
   },
   cover: {
     position:'absolute',
@@ -14,11 +16,11 @@ export default {
     left:0,
     right:0,
     bottom:0,
-    touchAction:'none'
+    //touchAction:'none'
   },
   component: {
-    background:'white',
-    userSelect:'none',
+    backgroundColor:'white',
+    //userSelect:'none',
     ...shadow(2)
   }
 }

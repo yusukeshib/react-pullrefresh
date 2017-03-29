@@ -1,15 +1,16 @@
 import { findDOMNode } from 'react-dom'
+const global = global || window
 
 export default class ScrollElement {
   constructor(element) {
-    if(!element) element = document ? document.body : null
+    if(!element) element = global.document ? global.document.body : null
     if(element) this._element = findDOMNode(element)
   }
   get element() {
     return this._element
   }
   get dispatcher() {
-    if(document && document.body === this._element) return document
+    if(global.document && global.document.body === this._element) return global.document
     return this._element
   }
   get scrollTop() {

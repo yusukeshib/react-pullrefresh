@@ -1,9 +1,14 @@
-var webpack = require('webpack')
-var WebpackDevServer = require('webpack-dev-server')
-var config = require('./webpack.config')
+import 'regenerator-runtime/runtime'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Main from './main'
 
-new WebpackDevServer(webpack(config), config)
-.listen(config.port, '0.0.0.0', function(err) {
-  if (err) console.error(err)
-  console.log('Listening at localhost:' + config.port)
-})
+if (module.hot) module.hot.accept()
+
+class Test extends React.Component {
+  render() {
+    return <Main />
+  }
+}
+
+ReactDOM.render(<Main/>, document.getElementById('app'))
