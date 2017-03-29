@@ -2,26 +2,23 @@
 
 const path = require('path')
 const webpack = require('webpack')
-const srcPath = path.join(__dirname, '..', 'src')
+const srcPath = __dirname
 const port = 8080
 const publicPath = '/'
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://0.0.0.0:' + port,
+    'webpack-dev-server/client?http://0.0.0.0:'+port,
     'webpack/hot/only-dev-server',
-    './app.js'
+    './index.js'
   ],
   cache: true,
-  devtool: 'eval-source-map',
+  devtool: 'eval',
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new webpack.LoaderOptionsPlugin({ debug: true }),
+    new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin()
   ],
-  port: port,
-  debug: true,
-  devtool: 'eval',
   output: {
     path: __dirname,
     filename: 'built.js',
@@ -38,29 +35,33 @@ module.exports = {
     noInfo: false
   },
   resolve: {
-    extensions: ['', '.js', 'jsx']
+    extensions: ['.js', 'jsx'],
+    alias: {
+      'react-pullrefresh':  `${srcPath}/src`
+    }
   },
   module: {
-    preLoaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
+        enforce: 'pre',
         include: srcPath,
         loader: 'eslint-loader'
-      }
-    ],
-    loaders: [
+      },
       {
         test: /\.(css)$/,
         loader: 'style-loader!css-loader'
       },
       {
-        test: /\.(svg)$/,
-        loader: 'url-loader'
-      },
-      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel'
+        loader: 'babel-loader',
+        query: {
+          presets: ["es2015", "stage-1", "react"],
+          plugins: [
+            "react-hot-loader/babel",
+          ]
+        }
       }
     ]
   }

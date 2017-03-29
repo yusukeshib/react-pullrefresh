@@ -1,7 +1,8 @@
+import React from 'react'
 import EventEmitter from 'event-emitter'
 import allOff from 'event-emitter/all-off'
-import AnimationFrame from './animationframe'
-import ScrollElement from './scroll'
+import AnimationFrame from '../animationframe'
+import ScrollElement from '../scroll'
 
 const defaultHandler = {
   pull: next => { next() },
@@ -29,9 +30,8 @@ export default class PullHelper {
     this.onScroll = this.onScroll.bind(this)
   }
   set scrollElement(scrollElement) {
-    //this.unload()
+    //allOff(this._emitter)
     this._scrollElement = new ScrollElement(scrollElement)
-    //this.load()
   }
   get scrollElement() {
     return this._scrollElement.element
@@ -72,10 +72,11 @@ export default class PullHelper {
     this._step = 0
     this._emitter.emit('step', 0)
   }
-  onTouchStart(evt) {
+  onTouchStart(_evt) {
     if(this._paused) return
     if(this._lock) return
-    this._y = evt.touches ? evt.touches[0].clientY : evt.clientY
+    const evt = _evt.nativeEvent
+    this._y = evt.touches ? evt.touches[0].pageY : evt.pageY
     this._started = false
     this._cnt = 0
     this._step = - this._scrollElement.scrollTop
@@ -93,10 +94,11 @@ export default class PullHelper {
     })
     return true
   }
-  onTouchMove(evt) {
+  onTouchMove(_evt) {
     if(this._paused) return
     if(this._lock) return
-    let y = evt.touches ? evt.touches[0].clientY : evt.clientY
+    const evt = _evt.nativeEvent
+    let y = evt.touches ? evt.touches[0].pageY : evt.pageY
     let step = this._touch ? this._step + y - this._y : 0
     if(this._touch && step !== this._step) {
       this._cnt++
@@ -111,8 +113,8 @@ export default class PullHelper {
       }
     }
     if(this._started) {
-      evt.preventDefault()
-      evt.stopPropagation()
+      _evt.preventDefault()
+      _evt.stopPropagation()
       return false
     }
   }
@@ -138,27 +140,25 @@ export default class PullHelper {
     return this
   }
   load() {
-    this._scrollElement.addScrollEventListener(this.onScroll, { passive: true })
-    this._scrollElement.addEventListener('touchstart', this.onTouchStart, { passive: true })
-    this._scrollElement.addEventListener('touchmove', this.onTouchMove, { passive: false })
-    this._scrollElement.addEventListener('touchend', this.onTouchEnd, { passive: true })
-    this._scrollElement.addEventListener('mousedown', this.onTouchStart, { passive: true })
-    this._scrollElement.addEventListener('mousemove', this.onTouchMove, { passive: false })
-    this._scrollElement.addEventListener('mouseleave', this.onTouchEnd, { passive: true })
-    this._scrollElement.addEventListener('mouseup', this.onTouchEnd, { passive: true })
-    return this
   }
   unload() {
-    if(!this._scrollElement) return this
-    allOff(this._emitter)
-    this._scrollElement.removeScrollEventListener(this.onScroll)
-    this._scrollElement.removeEventListener('touchstart', this.onTouchStart)
-    this._scrollElement.removeEventListener('touchmove', this.onTouchMove)
-    this._scrollElement.removeEventListener('touchend', this.onTouchEnd)
-    this._scrollElement.removeEventListener('mousedown', this.onTouchStart)
-    this._scrollElement.removeEventListener('mousemove', this.onTouchMove)
-    this._scrollElement.removeEventListener('mouseleave', this.onTouchEnd)
-    this._scrollElement.removeEventListener('mouseup', this.onTouchEnd)
-    return this
+  }
+  render(children) {
+    if(!children) return false
+    if(this._children !== children) {
+      this._children = children
+      console.log('update render:', this._children, '->', children)
+      this._rendered = React.cloneElement(React.Children.only(children), {
+        ref: c => this.scrollElement = c,
+        onTouchStart: this.onTouchStart,
+        onTouchMove: this.onTouchMove,
+        onTouchEnd: this.onTouchEnd,
+        onMouseDown: this.onTouchStart,
+        onMouseMove: this.onTouchMove,
+        onMouseLeave: this.onTouchEnd,
+        onMouseUp: this.onTouchEnd
+      })
+    }
+    return this._rendered
   }
 }

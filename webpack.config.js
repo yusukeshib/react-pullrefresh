@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   entry: {
     index:'./src/index'
@@ -11,14 +13,13 @@ module.exports = {
     libraryTarget: 'umd'
   },
   module:{
-    preLoaders: [
+    rules: [
       {
         test: /\.(js|jsx)$/,
-        include: 'src',
+        include: path.join(__dirname, 'src'),
+        enforce: 'pre',
         loader: 'eslint-loader'
-      }
-    ],
-    loaders: [
+      },
       {
         test: /\.(js|jsx)$/,
         loader: 'babel-loader'
@@ -34,7 +35,7 @@ module.exports = {
     ]
   },
   resolve: {
-    modulesDirectories: ['node_modules']
+    modules: ['node_modules']
   },
   externals: {
     react: {

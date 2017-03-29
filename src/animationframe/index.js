@@ -3,9 +3,11 @@ import ee from 'event-emitter'
 export default class AnimationFrame {
   static request(fn) {
     return requestAnimationFrame(fn)
+    //return setTimeout(fn, 1000/60)
   }
   static cancel(id) {
     return cancelAnimationFrame(id)
+    //return clearTimeout(id)
   }
   constructor() {
     this._lastTime = 0
