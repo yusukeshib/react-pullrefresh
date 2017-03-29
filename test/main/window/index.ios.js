@@ -1,8 +1,8 @@
-import { Dimension } from 'react-native'
+import { Dimensions } from 'react-native'
 
 class Window {
   constructor() {
-    const { width, height } = Dimension.get('window')
+    const { width, height } = Dimensions.get('window')
     this._width = width
     this._height = height
   }
