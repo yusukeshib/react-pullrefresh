@@ -1,9 +1,9 @@
 import React, { PropTypes, Component } from 'react'
-import './animation'
 import defaultStyle from './style'
 import PullHelper from './pullhelper'
 import { Div, Svg, Path, Circle } from './components'
 import transform from './transform'
+import animation from './animation'
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -53,6 +53,7 @@ export default class PullRefresh extends Component {
         })
         onRefresh(_ => {
           that.setState({
+            pulled: false,
             loading:false
           })
           next()
@@ -103,7 +104,6 @@ export default class PullRefresh extends Component {
               height: size,
               borderRadius: size / 2,
               transform: transform([
-                //{ translateY: pulled && !loading ? -30 : 0 },
                 { scaleX: scale },
                 { scaleY: scale }
               ])
@@ -115,8 +115,8 @@ export default class PullRefresh extends Component {
                 opacity: step / max,
                 transform: transform([
                   { rotate: `${step / max * 360}deg` }
-                ])
-                //...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
+                ]),
+                ...animation(loading && 'rotating 1.4s ease-in-out infinite')
               }}
               width={30}
               height={30}
@@ -130,8 +130,8 @@ export default class PullRefresh extends Component {
               }
               <Circle
                 style={{
-                  transformOrigin: 'center'
-                  //...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
+                  transformOrigin: 'center',
+                  ...animation(loading && 'dash 1.4s ease-in-out infinite')
                 }}
                 stroke={color}
                 strokeDasharray={[Math.PI * 8]}

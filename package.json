@@ -4,7 +4,6 @@
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
-    "start": "node server",
     "prepare": "npm run build",
     "build": "webpack",
     "build:test": "cd test && webpack --config webpack.config.release.js",

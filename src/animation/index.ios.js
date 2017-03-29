@@ -1,1 +1,3 @@
-{}
+module.exports = animation => {
+  return {}
+}

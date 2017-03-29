@@ -104,7 +104,6 @@ export default class PullHelper {
       this._cnt++
       this._step = step
       this._y = y
-      console.log(this._scrollElement.scrollTop)
       if(this._cnt === 2 && this._scrollElement.scrollTop === 0) {
         //this._emitter.emit('start')
         this._started = true
