@@ -160,7 +160,7 @@ PullRefresh.propTypes = {
 }
 
 PullRefresh.defaultProps = {
-  color: '#000',
+  color: '#000000',
   offset: 0,
   size: 40,
   max: 100,
