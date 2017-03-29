@@ -8,8 +8,8 @@
     "prepare": "npm run build",
     "build": "webpack",
     "build:test": "cd test && webpack --config webpack.config.release.js",
-    "lint": "eslint src test",
-    "lint:fix": "eslint src test --fix",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
     "update:github": "git checkout gh-pages && git merge develop && npm run build:test && git commit -am updates && git push origin gh-pages && git checkout develop"
   },
   "repository": {

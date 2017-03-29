@@ -35,7 +35,7 @@ module.exports = {
     ]
   },
   resolve: {
-    moduless: ['node_modules']
+    modules: ['node_modules']
   },
   externals: {
     react: {

@@ -115,7 +115,7 @@ export default class PullRefresh extends Component {
                 opacity: step / max,
                 transform: transform([
                   { rotate: `${step / max * 360}deg` }
-                ]),
+                ])
                 //...(loading && { animation: 'rotating 1.4s ease-in-out infinite' })
               }}
               width={30}
@@ -130,7 +130,7 @@ export default class PullRefresh extends Component {
               }
               <Circle
                 style={{
-                  transformOrigin: 'center',
+                  transformOrigin: 'center'
                   //...(loading && { animation: 'dash 1.4s ease-in-out infinite' })
                 }}
                 stroke={color}
