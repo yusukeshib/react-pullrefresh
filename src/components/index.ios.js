@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View } from 'react-native'
-import Svg, { Path, Circle } from 'react-native-svg'
+import NativeSvg, { Path as NativePath, Circle as NativeCircle } from 'react-native-svg'
 
 export class Div extends Component {
   render() {
@@ -9,16 +9,16 @@ export class Div extends Component {
 }
 export class Svg extends Component {
   render() {
-    return (<Svg {...this.props}/>)
+    return (<NativeSvg {...this.props}/>)
   }
 }
 export class Path extends Component {
   render() {
-    return (<Path {...this.props}/>)
+    return (<NativePath {...this.props}/>)
   }
 }
 export class Circle extends Component {
   render() {
-    return (<Circle {...this.props}/>)
+    return (<NativeCircle {...this.props}/>)
   }
 }
