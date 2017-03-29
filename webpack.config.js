@@ -7,6 +7,7 @@ module.exports = {
   watch: false,
   context: __dirname,
   output: {
+    path: path.join(__dirname, 'lib'),
     filename: '[name].js',
     pathinfo: false,
     library: 'index',
