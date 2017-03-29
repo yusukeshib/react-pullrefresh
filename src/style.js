@@ -2,13 +2,13 @@ import shadow from './shadow'
 
 export default {
   container: {
-    width: '100%',
+    //width: '100%',
     position: 'absolute',
     //display: 'flex',
     left: 0,
+    right: 0,
     flexDirection: 'column',
-    alignItems: 'center',
-    //justifyContent: 'center'
+    alignItems: 'center'
   },
   cover: {
     position:'absolute',

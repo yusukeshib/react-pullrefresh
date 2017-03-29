@@ -4,6 +4,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "start": "node server",
     "android:start": "rm -rf $TMPDIR/react-* && watchman watch-del-all adb reverse tcp:8081 tcp:8081 && ./node_modules/react-native/packager/packager.sh",
     "ios:start": "rm -rf $TMPDIR/react-* && watchman watch-del-all adb reverse tcp:8081 tcp:8081 && ./node_modules/react-native/packager/packager.sh",
     "android:log": "$ANDROID_HOME/platform-tools/adb logcat *:S ReactNative:V ReactNativeJS:V",

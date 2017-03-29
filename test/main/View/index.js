@@ -1,14 +1,10 @@
 import React, { Component, PropTypes } from 'react'
-import layout from '../layout'
-import Style from '../style'
 
 class View extends Component {
   render() {
-    let { style, children, ...other } = this.props
-    const s = { ...layout.default, ...style}
-    let o = Style(s)
+    let { children, ...other } = this.props
     return (
-      <div style={o} {...other}>
+      <div {...other}>
         { children }
       </div>
     )

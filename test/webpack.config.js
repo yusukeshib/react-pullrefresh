@@ -10,7 +10,7 @@ module.exports = {
   entry: [
     'webpack-dev-server/client?http://0.0.0.0:'+port,
     'webpack/hot/only-dev-server',
-    './test/index.js'
+    './index.js'
   ],
   cache: true,
   devtool: 'eval',
@@ -49,13 +49,15 @@ module.exports = {
         loader: 'eslint-loader'
       },
       {
-        test: /\.(mp3|png)$/,
-        loader: 'url-loader'
-      },
-      {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        query: {
+          presets: ["es2015", "stage-1", "react"],
+          plugins: [
+            "react-hot-loader/babel",
+          ]
+        }
       }
     ]
   }

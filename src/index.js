@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-//import './animation.css'
+import './animation'
 import defaultStyle from './style'
 import PullHelper from './pullhelper'
 import { Div, Svg, Path, Circle } from './components'
@@ -107,7 +107,6 @@ export default class PullRefresh extends Component {
                 { scaleX: scale },
                 { scaleY: scale }
               ])
-              //...(pulled && loading && { animation: 'pulled 0.4s ease-out forwards' })
             }}
           >
             <Svg

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import View from './View'
 import PullRefresh from '../src'
-import { Dimensions } from 'react-native'
+import Window from './window'
 
 export default class Main extends Component {
   constructor(props) {
@@ -13,13 +13,12 @@ export default class Main extends Component {
     setTimeout(next, 3000)
   }
   render() {
-    const { width, height } = Dimensions.get('window')
     return (
       <PullRefresh onRefresh={this.onRefresh}>
         <View style={{
           backgroundColor:'#ff0',
-          width: width,
-          height: height
+          width: Window.innerWidth,
+          height: Window.innerHeight
         }}/>
       </PullRefresh>
     )

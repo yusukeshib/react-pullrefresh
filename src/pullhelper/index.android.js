@@ -1,9 +1,8 @@
 import React from 'react'
 import EventEmitter from 'event-emitter'
 import allOff from 'event-emitter/all-off'
-import AnimationFrame from './animationframe'
-import ScrollElement from './scroll'
-// import { withOptions } from 'react-event-listener'
+import AnimationFrame from '../animationframe'
+import ScrollElement from '../scroll'
 
 const defaultHandler = {
   pull: next => { next() },
@@ -141,13 +140,8 @@ export default class PullHelper {
     return this
   }
   load() {
-    this._loaded = true
-    // TODO: listen if element is document.body
   }
   unload() {
-    this._loaded = false
-  }
-  updateChildren(children) {
   }
   render(children) {
     if(!children) return false
