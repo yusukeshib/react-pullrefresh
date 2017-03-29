@@ -2,4 +2,4 @@ test/
 *.gif
 *.tgz
 webpack.config.js
-.babalrc
+.babelrc
