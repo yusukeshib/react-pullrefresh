@@ -6,6 +6,13 @@ export class Div extends Component {
   }
 }
 export class Svg extends Component {
+  shouldComponentUpdate(nextProps) {
+    return false ||
+      this.props.style !== nextProps.style ||
+      this.props.width != nextProps.width ||
+      this.props.height != nextProps.height ||
+      this.props.viewBox != nextProps.viewBox
+  }
   render() {
     return (<svg {...this.props}/>)
   }
@@ -13,8 +20,8 @@ export class Svg extends Component {
 export class Path extends Component {
   shouldComponentUpdate(nextProps) {
     return false ||
-      this.props.fill !== nextProps.fill ||
-      this.props.d !== nextProps.d
+      this.props.fill != nextProps.fill ||
+      this.props.d != nextProps.d
   }
   render() {
     return (<path {...this.props}/>)
@@ -24,14 +31,14 @@ export class Circle extends Component {
   shouldComponentUpdate(nextProps) {
     return false ||
       this.props.style !== nextProps.style ||
-      this.props.stroke !== nextProps.stroke ||
-      this.props.fill !== nextProps.fill ||
-      this.props.cx !== nextProps.cx ||
-      this.props.cy !== nextProps.cy ||
-      this.props.r !== nextProps.r ||
-      this.props.strokeWidth !== nextProps.strokeWidth ||
+      this.props.stroke != nextProps.stroke ||
+      this.props.fill != nextProps.fill ||
+      this.props.cx != nextProps.cx ||
+      this.props.cy != nextProps.cy ||
+      this.props.r != nextProps.r ||
+      this.props.strokeWidth != nextProps.strokeWidth ||
       this.props.strokeDasharray !== nextProps.strokeDasharray ||
-      this.props.strokeDashoffset !== nextProps.strokeDashoffset
+      this.props.strokeDashoffset != nextProps.strokeDashoffset
   }
   render() {
     return (<circle {...this.props}/>)

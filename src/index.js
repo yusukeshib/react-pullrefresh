@@ -190,12 +190,7 @@ export default class PullRefresh extends Component {
                   height={30}
                   viewBox='0 0 30 30'
                 >
-                  { !pulled &&
-                      <Path
-                        fill={color}
-                        d='M13.3,15L7.1,8.9L0.9,15'
-                      />
-                  }
+                  { !pulled && <Path fill={color} d='M13.3,15L7.1,8.9L0.9,15' /> }
                   <Circle
                     style={styleCircle}
                     stroke={color}
