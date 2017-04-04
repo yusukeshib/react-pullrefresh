@@ -22,9 +22,9 @@ export default class Main extends Component {
           height: Window.innerHeight
         }}>
           <View style={{
-            backgroundColor:'#f00',
+            //backgroundColor:'#f00',
             width: Window.innerWidth,
-            height: Window.innerHeight*3
+            height: Window.innerHeight * 3
           }}/>
         </View>
       </PullRefresh>

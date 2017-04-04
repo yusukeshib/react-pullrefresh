@@ -2,12 +2,9 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Main from './main'
+import whyDidYouUpdate from 'why-did-you-update'
 
-if (process.env.NODE_ENV !== 'production') {
-  console.log('why did you update ACTIVATED!')
-  const {whyDidYouUpdate} = require('why-did-you-update')
-  whyDidYouUpdate(React)
-}
+whyDidYouUpdate(React)
 
 if (module.hot) module.hot.accept()
 
