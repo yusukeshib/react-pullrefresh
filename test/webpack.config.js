@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const srcPath = __dirname
 const port = 8080
 const publicPath = '/'
+const fs = require('fs')
 
 module.exports = {
   entry: [
@@ -56,10 +57,16 @@ module.exports = {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query: {
+        options: {
+          babelrc: false,
           presets: ["es2015", "stage-1", "react"],
           plugins: [
-            "react-hot-loader/babel",
+            'react-hot-loader/babel',
+            [ 'module-resolver', {
+              alias: {
+                'react-pullrefresh': fs.realpathSync('../src')
+              }
+            }]
           ]
         }
       }

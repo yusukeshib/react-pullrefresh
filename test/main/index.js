@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import View from './View'
-import PullRefresh from '../src'
+import PullRefresh from 'react-pullrefresh'
 import Window from './window'
 
 export default class Main extends Component {

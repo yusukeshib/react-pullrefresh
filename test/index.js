@@ -3,6 +3,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Main from './main'
 
+if (process.env.NODE_ENV !== 'production') {
+  console.log('why did you update ACTIVATED!')
+  const {whyDidYouUpdate} = require('why-did-you-update')
+  whyDidYouUpdate(React)
+}
+
 if (module.hot) module.hot.accept()
 
 class Test extends React.Component {
