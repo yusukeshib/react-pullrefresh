@@ -18,8 +18,8 @@ export default class Main extends Component {
         <View style={{
           overflow: 'auto',
           backgroundColor:'#ff0',
-          width: Window.innerWidth,
-          height: Window.innerHeight
+          // width: Window.innerWidth,
+          // height: Window.innerHeight
         }}>
           <View style={{
             //backgroundColor:'#f00',

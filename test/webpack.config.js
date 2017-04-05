@@ -64,7 +64,7 @@ module.exports = {
             'react-hot-loader/babel',
             [ 'module-resolver', {
               alias: {
-                'react-pullrefresh': fs.realpathSync('../src')
+                'react-pullrefresh': fs.realpathSync('./src')
               }
             }]
           ]

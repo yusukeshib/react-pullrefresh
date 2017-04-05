@@ -1,26 +1,11 @@
 import shadow from '../shadow'
 
 export default {
-  container: {
-    width: '100%',
-    position: 'absolute',
-    display: 'flex',
-    left: 0,
-    right: 0,
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  cover: {
-    position:'absolute',
-    top:0,
-    left:0,
-    right:0,
-    bottom:0,
-    touchAction:'none'
-  },
   component: {
+    position: 'absolute',
     backgroundColor:'white',
     userSelect:'none',
+    boxSizing: 'border-box',
     ...shadow(2)
   }
 }
