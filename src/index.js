@@ -129,7 +129,7 @@ export default class PullRefresh extends Component {
   }
   refresh() {
     const { max } = this.props
-    this.pullhelper.pull(max / 0.6 + 1)
+    this.pull(max / 0.6 + 1)
   }
   onStep(step) {
     this.setState({ step })

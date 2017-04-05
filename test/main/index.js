@@ -12,9 +12,12 @@ export default class Main extends Component {
   onRefresh(next) {
     setTimeout(next, 3000)
   }
+  componentDidMount() {
+    this.refs.pull.refresh()
+  }
   render() {
     return (
-      <PullRefresh offset={0} onRefresh={this.onRefresh}>
+      <PullRefresh ref='pull' offset={0} onRefresh={this.onRefresh}>
         <View style={{
           overflow: 'auto',
           backgroundColor:'#ff0',

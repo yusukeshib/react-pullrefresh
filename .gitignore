@@ -10,3 +10,4 @@ npm-debug.log
 # build files
 *.tgz
 *.log
+/lib/index.js
