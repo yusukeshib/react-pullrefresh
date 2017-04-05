@@ -4,8 +4,8 @@ import defaultStyle from './style'
 import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
 import transform from './transform'
-import animation from './animation'
 import { Div, Svg, Circle, Path } from './components'
+const global = global || window
 
 const STROKEDASHARRAY = [Math.PI * 8]
 
@@ -13,7 +13,10 @@ export default class PullRefresh extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      step: 0
+      y: 0,
+      step: 0,
+      r: 0,
+      width: 0
     }
     this._y = 0
     this._cnt = 0
@@ -21,23 +24,30 @@ export default class PullRefresh extends Component {
     this._touch = false
     this._lock = false
     this._loop = this._loop.bind(this)
+    this._scrollElement = new ScrollElement()
     this.onTouchStart = this.onTouchStart.bind(this)
     this.onTouchEnd = this.onTouchEnd.bind(this)
     this.onTouchMove = this.onTouchMove.bind(this)
-    this.onScroll = this.onScroll.bind(this)
     this.onStep = this.onStep.bind(this)
+    this._animator = new AnimationFrame()
+    this._animator.on('frame', this._loop)
   }
   _loop() {
-    const { loading } = this.state
+    const { r, loading } = this.state
     if(this._step <= 0) {
       this._lock = false
+      this._animator.stop()
       return
     }
-    if(loading) return
-    const nextStep = this._step * 0.8
-    this._step = Math.floor(nextStep)
-    this.onStep(this._step)
-    AnimationFrame.request(this._loop)
+    if(loading) {
+      this.setState({
+        r:  r + Math.PI * 2 / 60 / 1.4
+      })
+    } else {
+      const nextStep = this._step * 0.8
+      this._step = Math.floor(nextStep)
+      this.onStep(this._step)
+    }
   }
   abort() {
     this._lock = false
@@ -72,14 +82,8 @@ export default class PullRefresh extends Component {
     this._lock = true
     this.onPull(this._step, () => {
       this._touch = true
-      this._loop()
+      this._animator.start()
     })
-  }
-  onScroll(evt) {
-    if(this._cnt > 2) return
-    this._cnt = 0
-    this._step = 0
-    this.onStep(0)
   }
   onTouchStart(evt) {
     const { disabled } = this.props
@@ -88,7 +92,7 @@ export default class PullRefresh extends Component {
     this._y = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.nativeEvent.pageY
     this._started = false
     this._cnt = 0
-    this._step = - this._scrollElement.scrollTop
+    this._step = -this._scrollElement.scrollTop
     this._touch = true
   }
   onTouchEnd(evt) {
@@ -100,7 +104,7 @@ export default class PullRefresh extends Component {
     that._lock = true
     that.onPull(that._step, () => {
       that._touch = false
-      that._loop()
+      this._animator.start()
     })
     return true
   }
@@ -132,7 +136,6 @@ export default class PullRefresh extends Component {
   }
   componentDidMount() {
     this.updateChildren()
-    this.layout()
   }
   componentWillReceiveProps(nextProps, nextState) {
     this.updateChildren(nextProps)
@@ -141,6 +144,7 @@ export default class PullRefresh extends Component {
     const currentProps = this.props
     const currentState = this.state
     return false
+      || nextState.r !== currentState.r
       || nextState.children !== currentState.children
       || nextState.loading !== currentState.loading
       || nextState.step !== currentState.step
@@ -161,7 +165,7 @@ export default class PullRefresh extends Component {
       const props = nextProps || currentProps
       this.setState({
         children: React.cloneElement(React.Children.only(props.children), {
-          ref: c => this._scrollElement = new ScrollElement(c),
+          ref: c => this._scrollElement.element = c,
           onTouchStart: this.onTouchStart,
           onTouchMove: this.onTouchMove,
           onTouchEnd: this.onTouchEnd,
@@ -169,22 +173,21 @@ export default class PullRefresh extends Component {
           onMouseMove: this.onTouchMove,
           onMouseLeave: this.onTouchEnd,
           onMouseUp: this.onTouchEnd,
-          onScroll: this.onScroll
+          onScroll: this._scrollElement.onScroll
         })
       })
     }
   }
-  layout() {
-    const width = findDOMNode(this.refs.component).offsetWidth
-    this.setState({ width })
-  }
   render() {
     const { offset, zIndex, max, color, style, size } = this.props
-    const { width, step, loading, children } = this.state
+    const { r, width, step, loading, children } = this.state
     const top = Math.min(step * 0.6, max) - size - 6
     const scale = Math.min(1, step / max)
     return (
-      <Div ref='component' style={style}>
+      <Div style={{
+        ...style,
+        ...defaultStyle.container
+      }}>
         { children }
         { step > 0 &&
             <Div style={{
@@ -195,7 +198,6 @@ export default class PullRefresh extends Component {
               zIndex: zIndex,
               padding: (size - 30) / 2,
               top: offset + top,
-              left: width / 2 - size / 2,
               transform: transform([
                 { scaleX: scale },
                 { scaleY: scale }
@@ -204,23 +206,26 @@ export default class PullRefresh extends Component {
               <Svg
                 style={{
                   transform: transform([
-                    { rotate: `${step / max * 360}deg` }
-                  ]),
-                  ...animation(loading && 'rotating 1.4s ease-in-out infinite')
+                    { rotate: `${(loading ? r  : step / max) * 360}deg` }
+                  ])
                 }}
                 width={30}
                 height={30}
                 viewBox='0 0 30 30'
               >
-                { !loading && <Path key='path' fill={color} d='M13.3,15L7.1,8.9L0.9,15' /> }
+                { !this._lock && !loading &&
+                    <Path
+                      fill={color}
+                      d='M13.3,15L7.1,8.9L0.9,15'
+                    />
+                }
                 <Circle
                   style={{
-                    transformOrigin: 'center',
-                    ...animation(loading && 'dash 1.4s ease-in-out infinite')
+                    transformOrigin: 'center'
                   }}
                   stroke={color}
                   strokeDasharray={STROKEDASHARRAY}
-                  strokeDashoffset={0}
+                  strokeDashoffset={ loading ? r : 0}
                   fill='none'
                   strokeWidth={2}
                   cx={15}

@@ -3,34 +3,23 @@ const global = global || window
 
 export default class ScrollElement {
   constructor(element) {
+    this.element = element
+    this._scrollTop = 0
+    this.onScroll = this.onScroll.bind(this)
+  }
+  set element(element) {
     if(!element) element = global.document ? global.document.body : null
-    if(element) this._element = findDOMNode(element)
+    this._element = global.document ? findDOMNode(element) : element
   }
   get element() {
     return this._element
   }
-  get dispatcher() {
-    if(global.document && global.document.body === this._element) return global.document
-    return this._element
-  }
   get scrollTop() {
     if(!this._element) return 0
-    return this._element.scrollTop
+    return this._scrollTop || this._element.scrollTop || 0
   }
-  addScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.addEventListener('scroll', listener)
-  }
-  removeScrollEventListener(listener) {
-    if(!this.dispatcher) return
-    this.dispatcher.removeEventListener('scroll', listener)
-  }
-  addEventListener() {
-    if(!this._element) return
-    return this._element.addEventListener.apply(this._element, arguments)
-  }
-  removeEventListener() {
-    if(!this._element) return
-    return this._element.removeEventListener.apply(this._element, arguments)
+  onScroll(evt) {
+    const offset = evt.nativeEvent.contentOffset
+    this._scrollTop = offset.y
   }
 }

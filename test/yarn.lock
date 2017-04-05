@@ -2569,6 +2569,10 @@ get-caller-file@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-1.0.2.tgz#f702e63127e7e231c160a80c1554acb70d5047e5"
 
+get-node-dimensions@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/get-node-dimensions/-/get-node-dimensions-1.2.2.tgz#7a71e8624cf9e1ab74599bb05b7e5116e995e45b"
+
 getpass@^0.1.1:
   version "0.1.6"
   resolved "https://registry.yarnpkg.com/getpass/-/getpass-0.1.6.tgz#283ffd9fc1256840875311c1b60e8c40187110e6"
@@ -4384,6 +4388,13 @@ react-hot-loader@^3.0.0-beta.6:
     redbox-react "^1.2.5"
     source-map "^0.4.4"
 
+react-measure@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/react-measure/-/react-measure-1.4.6.tgz#db3f91bf819922933cc9af34664d098d3242a955"
+  dependencies:
+    get-node-dimensions "^1.2.0"
+    resize-observer-polyfill "^1.4.1"
+
 react-native-svg@^5.1.6:
   version "5.1.6"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-5.1.6.tgz#c9670eb6b3f62b013d8e135ddfaaca07bb0aec27"
@@ -4703,6 +4714,10 @@ require-uncached@^1.0.2:
 requires-port@1.0.x, requires-port@1.x.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+resize-observer-polyfill@^1.4.1:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.4.2.tgz#a37198e6209e888acb1532a9968e06d38b6788e5"
 
 resolve-from@^1.0.0:
   version "1.0.1"
