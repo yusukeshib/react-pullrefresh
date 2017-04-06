@@ -12,13 +12,14 @@ export default class ScrollElement {
     this._element = element
   }
   get element() {
-    return findDOMNode(this._element)
+    return global.document ? findDOMNode(this._element) : this._element
   }
   get scrollTop() {
     if(!this.element) return 0
     return this._scrollTop || this.element.scrollTop || 0
   }
   onScroll(evt) {
-    this._scrollTop = evt.nativeEvent.contentOffset ? evt.nativeEvent.contentOffset.y : evt.target.scrollTop
+    const e = evt.nativeEvent || evt
+    this._scrollTop = e.contentOffset ? e.contentOffset.y : e.target.scrollTop
   }
 }

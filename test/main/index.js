@@ -17,7 +17,7 @@ export default class Main extends Component {
   }
   render() {
     return (
-      <PullRefresh ref='pull' offset={0} onRefresh={this.onRefresh}>
+      <PullRefresh ref='pull' offset={100} onRefresh={this.onRefresh}>
         <View style={{
           overflow: 'auto',
           backgroundColor:'#ff0',
