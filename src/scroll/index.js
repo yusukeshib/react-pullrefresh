@@ -19,7 +19,6 @@ export default class ScrollElement {
     return this._scrollTop || this.element.scrollTop || 0
   }
   onScroll(evt) {
-    const offset = evt.nativeEvent.contentOffset
-    this._scrollTop = offset.y
+    this._scrollTop = evt.nativeEvent.contentOffset ? evt.nativeEvent.contentOffset.y : evt.target.scrollTop
   }
 }
