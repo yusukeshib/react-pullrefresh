@@ -36,7 +36,7 @@ export default class PullRefresh extends Component {
   }
   _loop() {
     const { r, loading } = this.state
-    if(this._step <= 0) {
+    if(!this._mounted || this._step <= 0) {
       this._lock = false
       this._animator.stop()
       return
@@ -68,6 +68,7 @@ export default class PullRefresh extends Component {
       loading:true
     })
     onRefresh(_ => {
+      if(!that._mounted) return
       that.setState({
         loading:false
       })
@@ -135,6 +136,12 @@ export default class PullRefresh extends Component {
   }
   onStep(step) {
     this.setState({ step })
+  }
+  componentDidMount() {
+    this._mounted = true
+  }
+  componentWillUnmount() {
+    this._mounted = false
   }
   shouldComponentUpdate(nextProps, nextState) {
     const currentProps = this.props
