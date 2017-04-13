@@ -1,5 +1,4 @@
 import React, { PropTypes, Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
@@ -15,7 +14,7 @@ export default class PullRefresh extends Component {
   }
   refresh() {
     const { max } = this.props
-    this.refs.main.pull(max / 0.6 + 1)
+    this._main.pull(max / 0.6 + 1)
   }
   componentDidMount() {
     this.updateChildren()
@@ -46,15 +45,15 @@ export default class PullRefresh extends Component {
       const props = nextProps || currentProps
       this.setState({
         children: React.cloneElement(React.Children.only(props.children), {
-          ref: this.refs.main.setElement,
-          onTouchStart: this.refs.main.onTouchStart,
-          onTouchMove: this.refs.main.onTouchMove,
-          onTouchEnd: this.refs.main.onTouchEnd,
-          onMouseDown: this.refs.main.onTouchStart,
-          onMouseMove: this.refs.main.onTouchMove,
-          onMouseLeave: this.refs.main.onTouchEnd,
-          onMouseUp: this.refs.main.onTouchEnd,
-          onScroll: this.refs.main.onScroll
+          ref: this._main.setElement,
+          onTouchStart: this._main.onTouchStart,
+          onTouchMove: this._main.onTouchMove,
+          onTouchEnd: this._main.onTouchEnd,
+          onMouseDown: this._main.onTouchStart,
+          onMouseMove: this._main.onTouchMove,
+          onMouseLeave: this._main.onTouchEnd,
+          onMouseUp: this._main.onTouchEnd,
+          onScroll: this._main.onScroll
         })
       })
     }
@@ -68,7 +67,14 @@ export default class PullRefresh extends Component {
         ...defaultStyle.container
       }}>
         { children }
-        <Main ref='main' offset={offset} size={size} max={max} color={color} onRefresh={onRefresh} />
+        <Main
+          ref={c => this._main = c}
+          offset={offset}
+          size={size}
+          max={max}
+          color={color}
+          onRefresh={onRefresh}
+        />
       </Div>
     )
   }

@@ -5,6 +5,7 @@ import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
 import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
+import Rotatable from './rotatable'
 const global = global || window
 
 const STROKEDASHARRAY = [Math.PI * 8]
@@ -15,7 +16,6 @@ export default class PullRefresh extends Component {
     this.state = {
       y: 0,
       step: 0,
-      r: 0,
       width: 0
     }
     this._y = 0
@@ -35,16 +35,13 @@ export default class PullRefresh extends Component {
     this._animator.on('frame', this._loop)
   }
   _loop() {
-    const { r, loading } = this.state
+    const { loading } = this.state
     if(!this._mounted || this._step <= 0) {
       this._lock = false
       this._animator.stop()
       return
     }
     if(loading) {
-      this.setState({
-        r:  r + Math.PI * 2 / 60 / 1.4
-      })
     } else {
       const nextStep = this._step * 0.8
       this._step = Math.floor(nextStep)
@@ -124,7 +121,6 @@ export default class PullRefresh extends Component {
       this._step = step
       this._y = y
       if(this._cnt === 2 && this._scrollElement.scrollTop === 0) {
-        //this._emitter.emit('start')
         this._started = true
       }
       if(this._started) {
@@ -150,7 +146,6 @@ export default class PullRefresh extends Component {
     const currentProps = this.props
     const currentState = this.state
     return false
-      || nextState.r !== currentState.r
       || nextState.loading !== currentState.loading
       || nextState.step !== currentState.step
       || nextProps.offset !== currentProps.offset
@@ -193,7 +188,7 @@ export default class PullRefresh extends Component {
   }
   render() {
     const { offset, zIndex, max, color, size } = this.props
-    const { r, width, step, loading } = this.state
+    const { width, step, loading } = this.state
     const top = Math.min(step * 0.6, max) - size - 6
     const scale = Math.min(1, step / max)
     if(step <= 0) return false
@@ -211,12 +206,8 @@ export default class PullRefresh extends Component {
           { scaleY: scale }
         ])
       }}>
+      <Rotatable offset={step} disabled={!loading}>
       <Svg
-        style={{
-          transform: transform([
-            { rotate: `${(loading ? r  : step / max) * 360}deg` }
-          ])
-        }}
         width={30}
         height={30}
         viewBox='0 0 30 30'
@@ -233,7 +224,7 @@ export default class PullRefresh extends Component {
           }}
           stroke={color}
           strokeDasharray={STROKEDASHARRAY}
-          strokeDashoffset={ loading ? r : 0}
+          strokeDashoffset={0}
           fill='none'
           strokeWidth={2}
           cx={15}
@@ -241,6 +232,7 @@ export default class PullRefresh extends Component {
           r={8}
         />
       </Svg>
+      </Rotatable>
     </Div>
     )
   }
