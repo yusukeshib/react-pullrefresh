@@ -14,7 +14,7 @@ export default class PullRefresh extends Component {
   }
   refresh() {
     const { max } = this.props
-    this._main.pull(max / 0.6 + 1)
+    if(this._main) this._main.pull(max / 0.6 + 1)
   }
   componentDidMount() {
     this.updateChildren()
@@ -44,7 +44,7 @@ export default class PullRefresh extends Component {
     ) {
       const props = nextProps || currentProps
       this.setState({
-        children: React.cloneElement(React.Children.only(props.children), {
+        children: React.cloneElement(React.Children.only(props.children), this._main && {
           ref: this._main.setElement,
           onTouchStart: this._main.onTouchStart,
           onTouchMove: this._main.onTouchMove,
@@ -59,7 +59,7 @@ export default class PullRefresh extends Component {
     }
   }
   render() {
-    const { onRefresh, offset, zIndex, max, color, style, size } = this.props
+    const { disabled, onRefresh, offset, zIndex, max, color, style, size } = this.props
     const { children } = this.state
     return (
       <Div style={{
@@ -67,7 +67,7 @@ export default class PullRefresh extends Component {
         ...defaultStyle.container
       }}>
         { children }
-        <Main
+        { !disabled && <Main
           ref={c => this._main = c}
           offset={offset}
           size={size}
@@ -75,6 +75,7 @@ export default class PullRefresh extends Component {
           color={color}
           onRefresh={onRefresh}
         />
+        }
       </Div>
     )
   }
@@ -86,7 +87,8 @@ PullRefresh.propTypes = {
   size: PropTypes.number,
   max: PropTypes.number,
   style: PropTypes.object,
-  color: PropTypes.string
+  color: PropTypes.string,
+  disabled: PropTypes.bool
 }
 
 PullRefresh.defaultProps = {
@@ -94,5 +96,6 @@ PullRefresh.defaultProps = {
   offset: 0,
   size: 40,
   max: 100,
-  style: {}
+  style: {},
+  disabled: false
 }
