@@ -1,6 +1,6 @@
 {
   "name": "react-pullrefresh",
-  "version": "1.5.7",
+  "version": "1.5.8",
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
