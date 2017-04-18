@@ -19,7 +19,6 @@ export default class PullRefresh extends Component {
       width: 0
     }
     this._y = 0
-    this._cnt = 0
     this._step = 0
     this._touch = false
     this._lock = false
@@ -50,7 +49,6 @@ export default class PullRefresh extends Component {
   }
   abort() {
     this._lock = false
-    this._cnt = 0
     this._step = 0
     this._touch = false
   }
@@ -58,6 +56,7 @@ export default class PullRefresh extends Component {
     const { max, onRefresh } = this.props
     const that = this
     if(!onRefresh || step * 0.6 < max) {
+      that._lock = false
       next()
       return
     }
@@ -65,6 +64,7 @@ export default class PullRefresh extends Component {
       loading:true
     })
     onRefresh(_ => {
+      that._lock = false
       if(!that._mounted) return
       that.setState({
         loading:false
@@ -76,7 +76,6 @@ export default class PullRefresh extends Component {
   pull(step) {
     if(this._lock) return
 
-    this._cnt = 3
     this._step = step
     this.onStep(this._step)
     this._lock = true
@@ -92,9 +91,15 @@ export default class PullRefresh extends Component {
     const e = evt.nativeEvent || evt
     this._y = e.touches ? e.touches[0].pageY : e.pageY
     this._started = false
-    this._cnt = 0
     this._step = -this._scrollElement.scrollTop
     this._touch = true
+
+    if(this._scrollElement.scrollTop === 0) {
+      this._started = true
+      evt.preventDefault()
+      evt.stopPropagation()
+      return false
+    }
   }
   onTouchEnd(evt) {
     const { disabled } = this.props
@@ -117,10 +122,9 @@ export default class PullRefresh extends Component {
     let y = e.touches ? e.touches[0].pageY : e.pageY
     let step = this._touch ? this._step + y - this._y : 0
     if(this._touch && step !== this._step) {
-      this._cnt++
       this._step = step
       this._y = y
-      if(this._cnt === 2 && this._scrollElement.scrollTop === 0) {
+      if(this._scrollElement.scrollTop === 0) {
         this._started = true
       }
       if(this._started) {
