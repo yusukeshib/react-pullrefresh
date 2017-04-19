@@ -144,7 +144,6 @@ export default class PullRefresh extends Component {
   }
   componentWillUnmount() {
     this._mounted = false
-    this.unload()
   }
   shouldComponentUpdate(nextProps, nextState) {
     const currentProps = this.props
@@ -158,34 +157,8 @@ export default class PullRefresh extends Component {
       || nextProps.color !== currentProps.color
       || nextProps.size !== currentProps.size
   }
-  unload() {
-    if(!this._scrollElement.element) return
-    if(!this._scrollElement.element.removeEventListener) return
-    this._scrollElement.element.removeEventListener('touchstart', this.onTouchStart)
-    this._scrollElement.element.removeEventListener('touchmove', this.onTouchMove)
-    this._scrollElement.element.removeEventListener('touchend', this.onTouchEnd)
-    this._scrollElement.element.removeEventListener('mousedown', this.onTouchStart)
-    this._scrollElement.element.removeEventListener('mousemove', this.onTouchMove)
-    this._scrollElement.element.removeEventListener('mouseup', this.onTouchEnd)
-    this._scrollElement.element.removeEventListener('mouseleave', this.onTouchEnd)
-    this._scrollElement.element.removeEventListener('scroll', this.onScroll)
-  }
-  load() {
-    if(!this._scrollElement.element) return
-    if(!this._scrollElement.element.addEventListener) return
-    this._scrollElement.element.addEventListener('touchstart', this.onTouchStart)
-    this._scrollElement.element.addEventListener('touchmove', this.onTouchMove)
-    this._scrollElement.element.addEventListener('touchend', this.onTouchEnd)
-    this._scrollElement.element.addEventListener('mousedown', this.onTouchStart)
-    this._scrollElement.element.addEventListener('mousemove', this.onTouchMove)
-    this._scrollElement.element.addEventListener('mouseup', this.onTouchEnd)
-    this._scrollElement.element.addEventListener('mouseleave', this.onTouchEnd)
-    this._scrollElement.element.addEventListener('scroll', this.onScroll)
-  }
   setElement(element) {
-    this.unload()
     this._scrollElement.element = element
-    this.load()
   }
   onScroll(evt) {
     this._scrollElement.onScroll(evt)
