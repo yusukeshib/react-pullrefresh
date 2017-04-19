@@ -10,6 +10,7 @@ export default class Main extends Component {
     this.onRefresh = this.onRefresh.bind(this)
   }
   onRefresh(next) {
+    console.log('onRefresh')
     setTimeout(next, 3000)
   }
   componentDidMount() {

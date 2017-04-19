@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { View as NativeView, ScrollView as NativeScrollView } from 'react-native'
+import { Text, View as NativeView, ScrollView as NativeScrollView } from 'react-native'
 
 export default class View extends Component {
   render() {
@@ -11,7 +11,7 @@ export default class View extends Component {
     }, {})
     return (
       <Comp style={st} {...others}>
-        {children}
+        <Text>{children}</Text>
       </Comp>
     )
   }
