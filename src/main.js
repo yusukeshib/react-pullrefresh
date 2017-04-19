@@ -89,6 +89,7 @@ export default class PullRefresh extends Component {
     if(disabled) return
     if(this._lock) return
     const e = evt.nativeEvent || evt
+    if(!e.touches) return
     this._y = e.touches ? e.touches[0].pageY : e.pageY
     this._started = false
     this._step = -this._scrollElement.scrollTop
@@ -105,7 +106,9 @@ export default class PullRefresh extends Component {
     const { disabled } = this.props
     if(disabled) return
     if(this._lock) return
-    let that = this
+    const e = evt.nativeEvent || evt
+    if(!e.touches) return
+    const that = this
     that._started = false
     that._lock = true
     that.onPull(that._step, () => {
@@ -119,6 +122,7 @@ export default class PullRefresh extends Component {
     if(disabled) return
     if(this._lock) return
     const e = evt.nativeEvent || evt
+    if(!e.touches) return
     let y = e.touches ? e.touches[0].pageY : e.pageY
     let step = this._touch ? this._step + y - this._y : 0
     if(this._touch && step !== this._step) {
