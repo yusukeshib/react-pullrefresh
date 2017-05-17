@@ -2,19 +2,16 @@
 
 const path = require('path')
 const webpack = require('webpack')
+const fs = require('fs')
 const srcPath = __dirname
 const port = 8080
 const publicPath = '/'
-const fs = require('fs')
 
 module.exports = {
   entry: [
-    'webpack-dev-server/client?http://0.0.0.0:'+port,
-    'webpack/hot/only-dev-server',
-    './index.js'
+    './test/index.js'
   ],
-  cache: true,
-  devtool: 'eval',
+  devtool: 'source-map',
   plugins: [
     new webpack.LoaderOptionsPlugin({ debug: true }),
     new webpack.NoEmitOnErrorsPlugin(),
@@ -38,7 +35,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', 'jsx'],
     alias: {
-      'react-pullrefresh':  `${srcPath}/../src`
+      'react-pullrefresh': fs.realpathSync(path.resolve('src'))
     }
   },
   module: {
@@ -59,14 +56,18 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           babelrc: false,
-          presets: ["es2015", "stage-1", "react"],
+          presets: [
+            'es2017',
+            'react',
+            'stage-1'
+          ],
+          env: {
+            'development': {
+              'sourceMaps': 'inline'
+            }
+          },
           plugins: [
-            'react-hot-loader/babel',
-            [ 'module-resolver', {
-              alias: {
-                'react-pullrefresh': fs.realpathSync('../src')
-              }
-            }]
+            'transform-regenerator'
           ]
         }
       }

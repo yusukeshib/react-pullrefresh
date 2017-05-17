@@ -1,10 +1,10 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
 import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
-const global = global || window
 import Main from './main'
 
 export default class PullRefresh extends Component {
@@ -59,7 +59,7 @@ export default class PullRefresh extends Component {
     }
   }
   render() {
-    const { disabled, onRefresh, offset, zIndex, max, color, style, size } = this.props
+    const { waitingComponent, pullingComponent, disabled, onRefresh, offset, zIndex, max, color, style, size } = this.props
     const { children } = this.state
     return (
       <Div style={{
@@ -74,6 +74,8 @@ export default class PullRefresh extends Component {
           max={max}
           color={color}
           onRefresh={onRefresh}
+          waitingComponent={waitingComponent}
+          pullingComponent={pullingComponent}
         />
         }
       </Div>
@@ -88,7 +90,9 @@ PullRefresh.propTypes = {
   max: PropTypes.number,
   style: PropTypes.object,
   color: PropTypes.string,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
 }
 
 PullRefresh.defaultProps = {
@@ -97,5 +101,7 @@ PullRefresh.defaultProps = {
   size: 40,
   max: 100,
   style: {},
-  disabled: false
+  disabled: false,
+  waitingComponent: undefined,
+  pullingComponent: undefined,
 }
