@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { findDOMNode } from 'react-dom'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
@@ -6,7 +7,6 @@ import ScrollElement from './scroll'
 import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
 import Rotatable from './rotatable'
-const global = global || window
 
 const STROKEDASHARRAY = [Math.PI * 8]
 

@@ -1,10 +1,10 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
 import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
-const global = global || window
 import Main from './main'
 
 export default class PullRefresh extends Component {
