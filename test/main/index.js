@@ -10,18 +10,32 @@ export default class Main extends Component {
     this.onRefresh = this.onRefresh.bind(this)
   }
   onRefresh(next) {
-    console.log('onRefresh')
     setTimeout(next, 3000)
   }
   componentDidMount() {
     this.refs.pull.refresh()
   }
+  renderWaitingComponent(props) {
+    return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
+  }
+  renderPullingComponent(props, step) {
+    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{step + '/' + props.max}</div>
+  }
   render() {
     return (
-      <PullRefresh ref='pull' offset={0} onRefresh={this.onRefresh}>
+      <PullRefresh
+        ref='pull'
+        max={100}
+        offset={0}
+        onRefresh={this.onRefresh}
+        // waitingComponent={false}
+        waitingComponent={this.renderWaitingComponent}
+        pullingComponent={this.renderPullingComponent}
+      >
         <View
           style={{
             overflow: 'auto',
+            height: 640,
             backgroundColor:'#ff0'
           }}
         >
