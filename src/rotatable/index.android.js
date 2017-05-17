@@ -15,11 +15,11 @@ export default class Rotatable extends Component {
     Animated.timing(this.state.growAnimation, {
       toValue: 1,
       duration: 1000,
-      easing: Easing.linear,
+      easing: Easing.linear
     }).start((animation) => {
       if(animation.finished) this.spin()
     })
-  };
+  }
   shouldComponentUpdate(nextProps) {
     const currentProps = this.props
     return false

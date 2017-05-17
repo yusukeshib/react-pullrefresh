@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { findDOMNode } from 'react-dom'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
@@ -6,9 +7,7 @@ import ScrollElement from './scroll'
 import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
 import Rotatable from './rotatable'
-const global = global || window
-
-const STROKEDASHARRAY = [Math.PI * 8]
+import shadow from './shadow'
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -167,54 +166,103 @@ export default class PullRefresh extends Component {
   onScroll(evt) {
     this._scrollElement.onScroll(evt)
   }
+  renderWaiting() {
+    const { waitingComponent } = this.props
+    if(waitingComponent !== undefined) {
+      return typeof waitingComponent === 'function' ?  waitingComponent(this.props) : waitingComponent
+    }
+    return this.renderDefaultWaiting(this.props)
+  }
+  renderDefaultWaiting(props) {
+    const { max, size, color } = props
+    return (
+      <Div
+        style={{
+          backgroundColor:'white',
+          userSelect:'none',
+          boxSizing: 'border-box',
+          ...shadow(2),
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          padding: (size - 30) / 2
+        }}
+      >
+        <Rotatable>
+          <Svg width={30} height={30} viewBox='0 0 30 30'>
+            <Circle
+              style={{ transformOrigin: 'center' }}
+              stroke={color}
+              strokeDasharray={[Math.PI * 8]}
+              strokeDashoffset={0}
+              fill='none'
+              strokeWidth={2}
+              cx={15}
+              cy={15}
+              r={8}
+            />
+          </Svg>
+        </Rotatable>
+      </Div>
+    )
+  }
+  renderPulling() {
+    const { step } = this.state
+    const { pullingComponent } = this.props
+    if(pullingComponent !== undefined) {
+      return typeof pullingComponent === 'function' ?  pullingComponent(this.props, step) : pullingComponent
+    }
+    return this.renderDefaultPulling(this.props, step)
+  }
+  renderDefaultPulling(props, step) {
+    const { max, size, color } = props
+    return (
+      <Div
+        style={{
+          backgroundColor:'white',
+          userSelect:'none',
+          boxSizing: 'border-box',
+          ...shadow(2),
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          padding: (size - 30) / 2
+        }}
+      >
+        <Rotatable offset={step} disabled>
+          <Svg width={30} height={30} viewBox='0 0 30 30'>
+            <Path fill={color} d='M13.3,15L7.1,8.9L0.9,15' />
+            <Circle
+              style={{ transformOrigin: 'center' }}
+              stroke={color}
+              strokeDasharray={[Math.PI * 8]}
+              strokeDashoffset={0}
+              fill='none'
+              strokeWidth={2}
+              cx={15}
+              cy={15}
+              r={8}
+            />
+          </Svg>
+        </Rotatable>
+      </Div>
+    )
+  }
   render() {
-    const { offset, zIndex, max, color, size } = this.props
+    const { offset, zIndex, max, size } = this.props
     const { width, step, loading } = this.state
-    const top = Math.min(step * 0.6, max) - size - 6
-    const scale = Math.min(1, step / max)
+    const top = Math.min(step, max) - size - 6
     if(step <= 0) return false
     return (
-      <Div style={{
-        ...defaultStyle.component,
-        width: size,
-        height: size,
-        borderRadius: size / 2,
-        zIndex: zIndex,
-        padding: (size - 30) / 2,
-        top: offset + top,
-        transform: transform([
-          { scaleX: scale },
-          { scaleY: scale }
-        ])
-      }}>
-      <Rotatable offset={step} disabled={!loading}>
-      <Svg
-        width={30}
-        height={30}
-        viewBox='0 0 30 30'
+      <Div
+        style={{
+          position: 'absolute',
+          zIndex: zIndex,
+          top: offset + top,
+        }}
       >
-        { !this._lock && !loading &&
-            <Path
-              fill={color}
-              d='M13.3,15L7.1,8.9L0.9,15'
-            />
-        }
-        <Circle
-          style={{
-            transformOrigin: 'center'
-          }}
-          stroke={color}
-          strokeDasharray={STROKEDASHARRAY}
-          strokeDashoffset={0}
-          fill='none'
-          strokeWidth={2}
-          cx={15}
-          cy={15}
-          r={8}
-        />
-      </Svg>
-      </Rotatable>
-    </Div>
+        { !this._lock && !loading ? this.renderPulling() : this.renderWaiting() }
+      </Div>
     )
   }
 }
@@ -223,12 +271,16 @@ PullRefresh.propTypes = {
   offset: PropTypes.number,
   size: PropTypes.number,
   max: PropTypes.number,
-  color: PropTypes.string
+  color: PropTypes.string,
+  waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
 }
 
 PullRefresh.defaultProps = {
   color: '#000000',
   offset: 0,
   size: 40,
-  max: 100
+  max: 60,
+  waitingComponent: undefined,
+  pullingComponent: undefined,
 }
