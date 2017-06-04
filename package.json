@@ -4,6 +4,7 @@
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
+    "prepublishOnly": "npm run build",
     "start": "node server.js",
     "build": "webpack",
     "ios:start": "rm -rf $TMPDIR/react-* && watchman watch-del-all adb reverse tcp:8081 tcp:8081 && ./node_modules/react-native/packager/packager.sh --root test",

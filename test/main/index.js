@@ -31,6 +31,7 @@ export default class Main extends Component {
         // waitingComponent={false}
         waitingComponent={this.renderWaitingComponent}
         pullingComponent={this.renderPullingComponent}
+        supportDesktop={true}
       >
         <View
           style={{

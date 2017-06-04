@@ -84,11 +84,11 @@ export default class PullRefresh extends Component {
     })
   }
   onTouchStart(evt) {
-    const { disabled } = this.props
+    const { supportDesktop, disabled } = this.props
     if(disabled) return
     if(this._lock) return
     const e = evt.nativeEvent || evt
-    if(!e.touches) return
+    if(!supportDesktop && !e.touches) return
     this._y = e.touches ? e.touches[0].pageY : e.pageY
     this._started = false
     this._step = -this._scrollElement.scrollTop
@@ -102,11 +102,11 @@ export default class PullRefresh extends Component {
     }
   }
   onTouchEnd(evt) {
-    const { disabled } = this.props
+    const { supportDesktop, disabled } = this.props
     if(disabled) return
     if(this._lock) return
     const e = evt.nativeEvent || evt
-    if(!e.touches) return
+    if(!supportDesktop && !e.touches) return
     const that = this
     that._started = false
     that._lock = true
@@ -117,11 +117,11 @@ export default class PullRefresh extends Component {
     return true
   }
   onTouchMove(evt) {
-    const { disabled } = this.props
+    const { supportDesktop, disabled } = this.props
     if(disabled) return
     if(this._lock) return
     const e = evt.nativeEvent || evt
-    if(!e.touches) return
+    if(!supportDesktop && !e.touches) return
     let y = e.touches ? e.touches[0].pageY : e.pageY
     let step = this._touch ? this._step + y - this._y : 0
     if(this._touch && step !== this._step) {
@@ -274,6 +274,7 @@ PullRefresh.propTypes = {
   color: PropTypes.string,
   waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  supportDesktop: PropTypes.bool,
 }
 
 PullRefresh.defaultProps = {
@@ -283,4 +284,5 @@ PullRefresh.defaultProps = {
   max: 60,
   waitingComponent: undefined,
   pullingComponent: undefined,
+  supportDesktop: false
 }

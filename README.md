@@ -60,6 +60,7 @@ react-native is supported.
             waitingComponent={false}
             pullingComponent={renderPullingComponent}
             onRefresh={this.onRefresh}
+            supportDesktop={true}
           >
           <!-- scrollable child element -->
           <div className='App' style={{ overflow: 'auto', height: '100%' }}>
@@ -128,6 +129,10 @@ If false is specified, nothing rendered.
 
 Specify component you want to render on waiting state.
 If false is specified, nothing rendered.
+
+##### supportDesktop
+default: `false`
+Enable component on desktop if specified.
 
 #### Demo
 
