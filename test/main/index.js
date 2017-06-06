@@ -29,8 +29,8 @@ export default class Main extends Component {
         offset={0}
         onRefresh={this.onRefresh}
         // waitingComponent={false}
-        waitingComponent={this.renderWaitingComponent}
-        pullingComponent={this.renderPullingComponent}
+        // waitingComponent={this.renderWaitingComponent}
+        // pullingComponent={this.renderPullingComponent}
         supportDesktop={true}
       >
         <View

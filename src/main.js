@@ -75,6 +75,7 @@ export default class PullRefresh extends Component {
   pull(step) {
     if(this._lock) return
 
+    this._scrollElement.update()
     this._step = step
     this.onStep(this._step)
     this._lock = true
@@ -87,6 +88,7 @@ export default class PullRefresh extends Component {
     const { supportDesktop, disabled } = this.props
     if(disabled) return
     if(this._lock) return
+    this._scrollElement.update()
     const e = evt.nativeEvent || evt
     if(!supportDesktop && !e.touches) return
     this._y = e.touches ? e.touches[0].pageY : e.pageY
@@ -185,7 +187,8 @@ export default class PullRefresh extends Component {
           width: size,
           height: size,
           borderRadius: size / 2,
-          padding: (size - 30) / 2
+          padding: (size - 30) / 2,
+          transform: transform([ { translateX: -size / 2 } ])
         }}
       >
         <Rotatable>
@@ -226,7 +229,8 @@ export default class PullRefresh extends Component {
           width: size,
           height: size,
           borderRadius: size / 2,
-          padding: (size - 30) / 2
+          padding: (size - 30) / 2,
+          transform: transform([ { translateX: -size / 2 } ])
         }}
       >
         <Rotatable offset={step} disabled>
@@ -259,6 +263,7 @@ export default class PullRefresh extends Component {
           position: 'absolute',
           zIndex: zIndex,
           top: offset + top,
+          left: this._scrollElement.width / 2
         }}
       >
         { !this._lock && !loading ? this.renderPulling() : this.renderWaiting() }
@@ -274,7 +279,7 @@ PullRefresh.propTypes = {
   color: PropTypes.string,
   waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  supportDesktop: PropTypes.bool,
+  supportDesktop: PropTypes.bool
 }
 
 PullRefresh.defaultProps = {

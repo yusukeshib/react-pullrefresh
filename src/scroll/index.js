@@ -11,8 +11,14 @@ export default class ScrollElement {
     if(!element) element = Global.document ? Global.document.body : null
     this._element = element
   }
+  update() {
+    this._domElement = Global.document ? findDOMNode(this._element) : this._element
+  }
   get element() {
-    return Global.document ? findDOMNode(this._element) : this._element
+    return this._domElement
+  }
+  get width() {
+    return this.element.clientWidth
   }
   get scrollTop() {
     if(!this.element) return 0

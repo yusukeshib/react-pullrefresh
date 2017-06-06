@@ -94,7 +94,7 @@ PullRefresh.propTypes = {
   disabled: PropTypes.bool,
   waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  supportDesktop: PropTypes.bool,
+  supportDesktop: PropTypes.bool
 }
 
 PullRefresh.defaultProps = {
