@@ -5,13 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prepublishOnly": "npm run build",
-    "start": "node server.js",
     "build": "webpack",
-    "ios:start": "rm -rf $TMPDIR/react-* && watchman watch-del-all adb reverse tcp:8081 tcp:8081 && ./node_modules/react-native/packager/packager.sh --root test",
-    "android:start": "rm -rf $TMPDIR/react-* && watchman watch-del-all adb reverse tcp:8081 tcp:8081 && ./node_modules/react-native/packager/packager.sh --root test",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "update:github": "git checkout gh-pages && git merge develop && npm run build:test && git commit -am updates && git push origin gh-pages && git checkout develop"
+    "lint:fix": "eslint src --fix"
   },
   "repository": {
     "type": "git",
