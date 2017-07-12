@@ -55,6 +55,10 @@
     "style-loader": "^0.18.1",
     "url-loader": "^0.5.8",
     "webpack": "2.6.1",
-    "webpack-dev-server": "2.4.5"
+    "webpack-dev-server": "2.4.5",
+    "webpack-node-externals": "^1.6.0"
+  },
+  "dependencies": {
+    "event-emitter": "^0.3.5"
   }
 }

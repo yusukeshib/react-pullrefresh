@@ -1,4 +1,5 @@
 const path = require('path')
+const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
@@ -23,7 +24,20 @@ module.exports = {
       },
       {
         test: /\.(js|jsx)$/,
-        loader: 'babel-loader'
+        loader: 'babel-loader',
+        options: {
+          babelrc: false,
+          presets: [
+            'es2015',
+            'react',
+            'stage-1'
+          ],
+          env: {
+            'development': {
+              'sourceMaps': 'inline'
+            }
+          }
+        }
       },
       {
         test: /\.(css)$/,
@@ -38,12 +52,5 @@ module.exports = {
   resolve: {
     modules: ['node_modules']
   },
-  externals: {
-    react: {
-      root: 'React',
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react'
-    }
-  }
+  externals: [ nodeExternals() ]
 }
