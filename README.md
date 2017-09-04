@@ -23,6 +23,9 @@ react-native is supported.
   const renderPullingComponent = (props, step) => {
     return <div style={{backgroundColor:'#f00', color:'#fff'}}>{step + '/' + props.max}</div>
   }
+  const renderPulledComponent = (props, step) => {
+    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{step + '/' + props.max}</div>
+  }
 
   class App extends Component {
     constructor(props) {
@@ -59,6 +62,7 @@ react-native is supported.
             max={100}
             waitingComponent={false}
             pullingComponent={renderPullingComponent}
+            pulledComponent={renderPulledComponent}
             onRefresh={this.onRefresh}
             supportDesktop={true}
           >
@@ -129,6 +133,12 @@ If false is specified, nothing rendered.
 
 Specify component you want to render on waiting state.
 If false is specified, nothing rendered.
+
+##### pulledComponent
+
+Specify component you want to render on state after pulling.
+If false is specified, nothing rendered.
+If nothing specified, `pullingComponent` will be used.
 
 ##### supportDesktop
 default: `false`
