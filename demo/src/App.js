@@ -12,6 +12,15 @@ class App extends Component {
   componentDidMount() {
     this.refs.pull.refresh()
   }
+  renderWaitingComponent(props) {
+    return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
+  }
+  renderPullingComponent(props, step) {
+    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{step + '/' + props.max}</div>
+  }
+  renderPulledComponent(props, step) {
+    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{step + '/' + props.max}</div>
+  }
   render() {
     return (
       <PullRefresh
@@ -19,9 +28,9 @@ class App extends Component {
         max={100}
         offset={0}
         onRefresh={this.onRefresh}
-        // waitingComponent={false}
-        // waitingComponent={this.renderWaitingComponent}
-        // pullingComponent={this.renderPullingComponent}
+        waitingComponent={this.renderWaitingComponent}
+        pullingComponent={this.renderPullingComponent}
+        pulledComponent={this.renderPulledComponent}
         supportDesktop={true}
       >
         <div

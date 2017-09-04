@@ -53,19 +53,19 @@ export default class PullRefresh extends Component {
   }
   onPull(step, next) {
     const { max, onRefresh } = this.props
-    const that = this
     if(!onRefresh || step * 0.6 < max) {
-      that._lock = false
+      this._lock = false
       next()
       return
     }
-    that.setState({
+    this.setState({
       loading:true
     })
     onRefresh(_ => {
-      that._lock = false
-      if(!that._mounted) return
-      that.setState({
+      this._lock = false
+      this._refreshed = true
+      if(!this._mounted) return
+      this.setState({
         loading:false
       })
       next()
@@ -88,6 +88,7 @@ export default class PullRefresh extends Component {
     const { supportDesktop, disabled } = this.props
     if(disabled) return
     if(this._lock) return
+    this._refreshed = false
     this._scrollElement.update()
     const e = evt.nativeEvent || evt
     if(!supportDesktop && !e.touches) return
@@ -109,11 +110,10 @@ export default class PullRefresh extends Component {
     if(this._lock) return
     const e = evt.nativeEvent || evt
     if(!supportDesktop && !e.touches) return
-    const that = this
-    that._started = false
-    that._lock = true
-    that.onPull(that._step, () => {
-      that._touch = false
+    this._started = false
+    this._lock = true
+    this.onPull(this._step, () => {
+      this._touch = false
       this._animator.start()
     })
     return true
@@ -209,6 +209,17 @@ export default class PullRefresh extends Component {
       </Div>
     )
   }
+  renderPulled() {
+    const { step } = this.state
+    const { pulledComponent } = this.props
+    if(pulledComponent !== undefined) {
+      return typeof pulledComponent === 'function' ?  pulledComponent(this.props, step) : pulledComponent
+    }
+    return this.renderDefaultPulled(this.props, step)
+  }
+  renderDefaultPulled(props, step) {
+    return this.renderDefaultPulling(props, step)
+  }
   renderPulling() {
     const { step } = this.state
     const { pullingComponent } = this.props
@@ -266,7 +277,9 @@ export default class PullRefresh extends Component {
           left: this._scrollElement.width / 2
         }}
       >
-        { !this._lock && !loading ? this.renderPulling() : this.renderWaiting() }
+        { !this._lock && !loading && !this._refreshed && this.renderPulling() }
+        { !this._lock && !loading &&  this._refreshed && this.renderPulled() }
+        { (this._lock || loading ) && this.renderWaiting() }
       </Div>
     )
   }
@@ -279,6 +292,7 @@ PullRefresh.propTypes = {
   color: PropTypes.string,
   waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  pulledComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   supportDesktop: PropTypes.bool
 }
 
@@ -289,5 +303,6 @@ PullRefresh.defaultProps = {
   max: 60,
   waitingComponent: undefined,
   pullingComponent: undefined,
+  pulledComponent: undefined,
   supportDesktop: false
 }
