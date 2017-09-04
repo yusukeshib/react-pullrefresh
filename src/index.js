@@ -76,8 +76,8 @@ export default class PullRefresh extends Component {
     const { children } = this.state
     return (
       <Div style={{
-        ...style,
-        ...defaultStyle.container
+        ...defaultStyle.container,
+        ...style
       }}>
         { children }
         { !disabled && <Main
