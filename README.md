@@ -141,8 +141,21 @@ If false is specified, nothing rendered.
 If nothing specified, `pullingComponent` will be used.
 
 ##### supportDesktop
+
 default: `false`
 Enable component on desktop if specified.
+
+##### style
+
+default:
+```js
+{
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center'
+}
+```
+Overried container style.
 
 #### Demo
 
