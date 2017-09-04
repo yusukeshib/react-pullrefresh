@@ -59,7 +59,20 @@ export default class PullRefresh extends Component {
     }
   }
   render() {
-    const { supportDesktop, waitingComponent, pullingComponent, disabled, onRefresh, offset, zIndex, max, color, style, size } = this.props
+    const {
+      supportDesktop,
+      waitingComponent,
+      pulledComponent,
+      pullingComponent,
+      disabled,
+      onRefresh,
+      offset,
+      zIndex,
+      max,
+      color,
+      style,
+      size
+    } = this.props
     const { children } = this.state
     return (
       <Div style={{
@@ -75,6 +88,7 @@ export default class PullRefresh extends Component {
           color={color}
           onRefresh={onRefresh}
           waitingComponent={waitingComponent}
+          pulledComponent={pulledComponent}
           pullingComponent={pullingComponent}
           supportDesktop={supportDesktop}
         />
@@ -94,6 +108,7 @@ PullRefresh.propTypes = {
   disabled: PropTypes.bool,
   waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  pulledComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   supportDesktop: PropTypes.bool
 }
 
@@ -106,5 +121,6 @@ PullRefresh.defaultProps = {
   disabled: false,
   waitingComponent: undefined,
   pullingComponent: undefined,
+  pulledComponent: undefined,
   supportDesktop: false
 }
