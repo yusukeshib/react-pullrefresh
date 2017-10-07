@@ -1,9 +1,10 @@
 {
   "name": "react-pullrefresh",
-  "version": "1.6.7",
+  "version": "1.6.8",
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
+    "start": "cd demo && npm start",
     "prepublishOnly": "npm run build",
     "build": "webpack",
     "lint:fix": "eslint src --fix"
