@@ -126,19 +126,22 @@ function onRefresh(callback) {
 
 ##### waitingComponent
 
-Specify component you want to render on waiting state.
-If false is specified, nothing rendered.
+Specify component you want to render on waiting state.  
+If false is specified, nothing rendered.  
+Component will be layout at the center of 100% width flex-container.
 
 ##### pullingComponent
 
-Specify component you want to render on waiting state.
-If false is specified, nothing rendered.
+Specify component you want to render on waiting state.  
+If false is specified, nothing rendered.  
+Component will be layout at the center of 100% width flex-container.
 
 ##### pulledComponent
 
-Specify component you want to render on state after pulling.
-If false is specified, nothing rendered.
-If nothing specified, `pullingComponent` will be used.
+Specify component you want to render on state after pulling.  
+If false is specified, nothing rendered.  
+If nothing specified, `pullingComponent` will be used.  
+Component will be layout at the center of 100% width flex-container.
 
 ##### supportDesktop
 
