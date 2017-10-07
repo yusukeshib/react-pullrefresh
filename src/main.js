@@ -4,7 +4,6 @@ import { findDOMNode } from 'react-dom'
 import defaultStyle from './style'
 import AnimationFrame from './animationframe'
 import ScrollElement from './scroll'
-import transform from './transform'
 import { Div, Svg, Circle, Path } from './components'
 import Rotatable from './rotatable'
 import shadow from './shadow'
@@ -187,8 +186,7 @@ export default class PullRefresh extends Component {
           width: size,
           height: size,
           borderRadius: size / 2,
-          padding: (size - 30) / 2,
-          transform: transform([ { translateX: -size / 2 } ])
+          padding: (size - 30) / 2
         }}
       >
         <Rotatable>
@@ -240,8 +238,7 @@ export default class PullRefresh extends Component {
           width: size,
           height: size,
           borderRadius: size / 2,
-          padding: (size - 30) / 2,
-          transform: transform([ { translateX: -size / 2 } ])
+          padding: (size - 30) / 2
         }}
       >
         <Rotatable offset={step} disabled>
@@ -274,7 +271,11 @@ export default class PullRefresh extends Component {
           position: 'absolute',
           zIndex: zIndex,
           top: offset + top,
-          left: this._scrollElement.width / 2
+          left: 0,
+          width: '100%',
+          display: 'flex',
+          pointerEvents: 'none',
+          justifyContent: 'center'
         }}
       >
         { !this._lock && !loading && !this._refreshed && this.renderPulling() }

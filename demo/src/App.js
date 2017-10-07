@@ -10,16 +10,16 @@ class App extends Component {
     setTimeout(next, 2000)
   }
   componentDidMount() {
-    this.refs.pull.refresh()
+    // this.refs.pull.refresh()
   }
   renderWaitingComponent(props) {
     return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
   }
   renderPullingComponent(props, step) {
-    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{step + '/' + props.max}</div>
+    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{parseInt(step) + '/' + props.max}</div>
   }
   renderPulledComponent(props, step) {
-    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{step + '/' + props.max}</div>
+    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{parseInt(step) + '/' + props.max}</div>
   }
   render() {
     return (
@@ -28,15 +28,19 @@ class App extends Component {
         max={100}
         offset={0}
         onRefresh={this.onRefresh}
-        waitingComponent={this.renderWaitingComponent}
-        pullingComponent={this.renderPullingComponent}
-        pulledComponent={this.renderPulledComponent}
+        // waitingComponent={this.renderWaitingComponent}
+        // pullingComponent={this.renderPullingComponent}
+        // pulledComponent={this.renderPulledComponent}
         supportDesktop={true}
       >
         <div
           style={{
             overflow: 'auto',
-            height: '100%',
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
             backgroundColor:'#ff0'
           }}
         >
