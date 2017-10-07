@@ -98,8 +98,6 @@ export default class PullRefresh extends Component {
 
     if(!e.touches && this._scrollElement.scrollTop === 0) {
       this._started = true
-      evt.preventDefault()
-      evt.stopPropagation()
       return false
     }
   }
