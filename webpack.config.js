@@ -28,15 +28,16 @@ module.exports = {
         options: {
           babelrc: false,
           presets: [
-            'es2015',
-            'react',
-            'stage-1'
+            [ 'env' , {
+              targets: {
+                node: '5'
+              }
+            }],
+            'react'
           ],
-          env: {
-            'development': {
-              'sourceMaps': 'inline'
-            }
-          }
+          plugins: [
+            'transform-object-rest-spread'
+          ]
         }
       },
       {
@@ -48,9 +49,6 @@ module.exports = {
         loader: 'url-loader'
       }
     ]
-  },
-  resolve: {
-    modules: ['node_modules']
   },
   externals: [ nodeExternals() ]
 }
