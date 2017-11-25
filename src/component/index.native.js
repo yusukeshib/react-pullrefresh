@@ -1,22 +1,47 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { clamp } from 'lodash'
+
+const styles = StyleSheet.create({
+  comp: {
+    width: '100%',
+    backgroundColor: 'gray',
+    overflow: 'hidden',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  refreshing: {
+    backgroundColor: 'blue'
+  },
+  refreshed: {
+    backgroundColor: 'green'
+  },
+  willRefresh: {
+    backgroundColor: 'red'
+  },
+  text: {
+    color: 'white',
+  }
+})
 
 export default (props, state, children) => [
   <View
     key='pull'
-    style={{
-      width: '100%',
-      height: clamp(state.y, 0, props.max),
-      backgroundColor: state.refreshing ? 'blue' : state.refreshed ? 'green' : state.willRefresh ? 'red' : 'gray',
-      overflow: 'hidden',
-      color: 'white',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}
+    style={Stylesheet.flatten([
+      styles.comp,
+      state.refreshing && styles.refreshing,
+      state.refreshed && styles.refreshed,
+      state.willRefresh && styles.willRefresh,
+      { height: clamp(state.y, 0, props.max) }
+    ])}
   >
-    <Text>{ state.refreshing ? 'refreshing...' : state.refreshed ? 'refreshed' : state.willRefresh ? 'willRefresh' : state.y }</Text>
+    <Text style={styles.text}>
+      { state.refreshing && 'refreshing :' }
+      { state.refreshed && 'refreshed :' }
+      { state.willRefresh && 'willRefresh :' }
+      { parseInt(state.y, 10) }
+    </Text>
   </View>,
   children
 ]
