@@ -26,6 +26,7 @@ class App extends Component {
   render() {
     return (
       <PullRefresh
+        max={100}
         disabled={false}
         onRefresh={this.onRefresh}
         as='div'

@@ -4,6 +4,8 @@ import Spring from './spring'
 import scrollTop from './scrollTop'
 import defaultRender from './component'
 
+export const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
+
 export default class PullRefresh extends Component {
   constructor(props) {
     super(props)
@@ -23,10 +25,12 @@ export default class PullRefresh extends Component {
   }
   async onUp(evt) {
     const { refreshed, refreshing, willRefresh } = this.state
-    const { onRefresh } = this.props
+    const { max, onRefresh } = this.props
     if(refreshed || refreshing) return
     this._down = false
     if(willRefresh) {
+      this._spring.endValue = max
+      await sleep(400)
       this._spring.pause()
       this.setState({ willRefresh: false, refreshing: true })
       await onRefresh()
