@@ -1,27 +1,9 @@
 import React, { Component } from 'react'
-import { findDOMNode } from 'react-dom'
 import PropTypes from 'prop-types'
 import Spring from './spring'
 import { clamp } from 'lodash'
-
-const defaultRender = (props, state, children) => [
-  <div
-    key='pull'
-    style={{
-      width: '100%',
-      height: clamp(state.y, 0, props.max),
-      backgroundColor: state.refreshing ? 'blue' : state.refreshed ? 'green' : state.willRefresh ? 'red' : 'gray',
-      overflow: 'hidden',
-      color: 'white',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}
-  >
-    {state.refreshing ? 'refreshing...' : state.refreshed ? 'refreshed' : state.willRefresh ? 'willRefresh' : state.y}
-  </div>,
-  children
-]
+import scrollTop from './scrollTop'
+import defaultRender from './component'
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -62,9 +44,7 @@ export default class PullRefresh extends Component {
     const { refreshed, refreshing } = this.state
     if(!this._down || refreshed || refreshing) return
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
-    // this._reactInternalInstance._currentElement._owner._instance
-    // contentOffset.y
-    if(this._node.scrollTop <= 0) {
+    if(scrollTop(this) <= 0) {
       this._y = clamp(this._y + ey - this._py, 0, max + 10)
       this._spring.endValue = this._y
     }
@@ -82,13 +62,12 @@ export default class PullRefresh extends Component {
     }
   }
   componentDidMount() {
-    this._node = findDOMNode(this)
     this._y = 0
     this._spring = new Spring(60, 10)
     this._spring.onUpdate = ::this.onSpringUpdate
   }
   render() {
-    const { disabled, as, children, ...props } = this.props
+    const { onRefresh, disabled, as, children, ...props } = this.props
     const Container = as
     return (
       <Container
