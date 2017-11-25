@@ -3,7 +3,10 @@ const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
-    index:'./src/index'
+    index: [
+      'regenerator-runtime/runtime',
+      './src/index'
+    ]
   },
   watch: false,
   context: __dirname,
