@@ -18,7 +18,7 @@ const defaultRender = (props, state, children) => [
       justifyContent: 'center'
     }}
   >
-    {state.refreshing ? 'refreshing...' : state.refreshed ? 'refreshed' : state.y}
+    {state.refreshing ? 'refreshing...' : state.refreshed ? 'refreshed' : state.willRefresh ? 'willRefresh' : state.y}
   </div>,
   children
 ]
@@ -58,13 +58,14 @@ export default class PullRefresh extends Component {
     }
   }
   onMove(evt) {
+    const { max } = this.props
     const { refreshed, refreshing } = this.state
     if(!this._down || refreshed || refreshing) return
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
     // this._reactInternalInstance._currentElement._owner._instance
     // contentOffset.y
     if(this._node.scrollTop <= 0) {
-      this._y += ey - this._py
+      this._y = clamp(this._y + ey - this._py, 0, max + 10)
       this._spring.endValue = this._y
     }
     this._py = ey
@@ -76,7 +77,7 @@ export default class PullRefresh extends Component {
     this.setState({ y })
     if(refreshed && y === 0) this.setState({ refreshed: false })
     if(!refreshed && !refreshing) {
-      const refresh = y > max
+      const refresh = y >= max
       if(refresh !== willRefresh) this.setState({ willRefresh: refresh })
     }
   }
