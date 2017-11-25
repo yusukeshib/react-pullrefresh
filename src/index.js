@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Spring from './spring'
-import { clamp } from 'lodash'
 import scrollTop from './scrollTop'
 import defaultRender from './component'
 
@@ -40,12 +39,11 @@ export default class PullRefresh extends Component {
     }
   }
   onMove(evt) {
-    const { max } = this.props
     const { refreshed, refreshing } = this.state
     if(!this._down || refreshed || refreshing) return
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
     if(scrollTop(this) <= 0) {
-      this._y = clamp(this._y + ey - this._py, 0, max + 10)
+      this._y = this._y + ey - this._py
       this._spring.endValue = this._y
     }
     this._py = ey

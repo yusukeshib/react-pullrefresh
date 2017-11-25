@@ -1,5 +1,4 @@
 import React from 'react'
-import { clamp } from 'lodash'
 import { StyleSheet, css } from 'aphrodite'
 
 const styles = StyleSheet.create({
@@ -23,25 +22,28 @@ const styles = StyleSheet.create({
   }
 })
 
-export default (props, state, children) => [
-  <div
-    key='pull'
-    className={css(
-      styles.comp,
-      state.refreshing && styles.refreshing,
-      state.refreshed && styles.refreshed,
-      state.willRefresh && styles.willRefresh
-    )}
-    style={{
-      height: clamp(state.y, 0, props.max)
-    }}
-  >
-    { state.refreshing && 'refreshing :' }
-    { state.refreshed && 'refreshed :' }
-    { state.willRefresh && 'willRefresh :' }
-    { parseInt(state.y, 10) }
-  </div>,
-  children
-]
+export default (props, state, children) => {
+  const p = Math.atan(state.y / props.max)
+  return [
+    <div
+      key='pull'
+      className={css(
+        styles.comp,
+        state.refreshing && styles.refreshing,
+        state.refreshed && styles.refreshed,
+        state.willRefresh && styles.willRefresh
+      )}
+      style={{
+        height: Math.max(p * props.max, 0)
+      }}
+    >
+      { state.refreshing && 'refreshing :' }
+      { state.refreshed && 'refreshed :' }
+      { state.willRefresh && 'willRefresh :' }
+      { parseInt(state.y, 10) }
+    </div>,
+    children
+  ]
+}
 
 
