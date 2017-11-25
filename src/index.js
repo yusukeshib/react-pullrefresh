@@ -1,126 +1,135 @@
 import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import PropTypes from 'prop-types'
-import defaultStyle from './style'
-import AnimationFrame from './animationframe'
-import ScrollElement from './scroll'
-import transform from './transform'
-import { Div, Svg, Circle, Path } from './components'
-import Main from './main'
+import Spring from './spring'
+import { clamp } from 'lodash'
+
+const defaultRender = (props, state, children) => [
+  <div
+    key='pull'
+    style={{
+      width: '100%',
+      height: clamp(state.y, 0, props.max),
+      backgroundColor: state.refreshing ? 'blue' : state.refreshed ? 'green' : state.willRefresh ? 'red' : 'gray',
+      overflow: 'hidden',
+      color: 'white',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
+    {state.refreshing ? 'refreshing...' : state.refreshed ? 'refreshed' : state.y}
+  </div>,
+  children
+]
 
 export default class PullRefresh extends Component {
   constructor(props) {
     super(props)
-    this.state = {}
-  }
-  refresh() {
-    const { max } = this.props
-    if(this._main) this._main.pull(max / 0.6 + 1)
-  }
-  componentDidMount() {
-    this.updateChildren()
-  }
-  componentWillReceiveProps(nextProps, nextState) {
-    this.updateChildren(nextProps)
-  }
-  shouldComponentUpdate(nextProps, nextState) {
-    const currentProps = this.props
-    const currentState = this.state
-    return false
-      || nextState.children !== currentState.children
-      || nextProps.onRefresh !== currentProps.onRefresh
-      || nextProps.offset !== currentProps.offset
-      || nextProps.zIndex !== currentProps.zIndex
-      || nextProps.max !== currentProps.max
-      || nextProps.color !== currentProps.color
-      || nextProps.size !== currentProps.size
-      || nextProps.style !== currentProps.style
-  }
-  updateChildren(nextProps) {
-    const currentProps = this.props
-    if(
-      !nextProps ||
-      nextProps.children &&
-      nextProps.children !== currentProps.children
-    ) {
-      const props = nextProps || currentProps
-      this.setState({
-        children: React.cloneElement(React.Children.only(props.children), this._main && {
-          ref: this._main.setElement,
-          onTouchStart: this._main.onTouchStart,
-          onTouchMove: this._main.onTouchMove,
-          onTouchEnd: this._main.onTouchEnd,
-          onMouseDown: this._main.onTouchStart,
-          onMouseMove: this._main.onTouchMove,
-          onMouseLeave: this._main.onTouchEnd,
-          onMouseUp: this._main.onTouchEnd,
-          onScroll: this._main.onScroll
-        })
-      })
+    this.state = {
+      y: 0,
+      willRefresh: false,
+      refreshing: false,
+      refreshed: false
     }
   }
+  onDown(evt) {
+    const { refreshed, refreshing } = this.state
+    if(refreshed || refreshing) return
+    this._down = true
+    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
+    this._py = ey
+  }
+  async onUp(evt) {
+    const { refreshed, refreshing, willRefresh } = this.state
+    const { onRefresh } = this.props
+    if(refreshed || refreshing) return
+    this._down = false
+    if(willRefresh) {
+      this._spring.pause()
+      this.setState({ willRefresh: false, refreshing: true })
+      await onRefresh()
+      this.setState({ refreshed: true, refreshing: false })
+      this._spring.resume()
+    }
+    if(this._y !== 0) {
+      this._y = 0
+      this._spring.endValue = this._y
+    }
+  }
+  onMove(evt) {
+    const { refreshed, refreshing } = this.state
+    if(!this._down || refreshed || refreshing) return
+    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
+    // this._reactInternalInstance._currentElement._owner._instance
+    // contentOffset.y
+    if(this._node.scrollTop <= 0) {
+      this._y += ey - this._py
+      this._spring.endValue = this._y
+    }
+    this._py = ey
+  }
+  onSpringUpdate(spring) {
+    const { willRefresh, refreshing, refreshed } = this.state
+    const { max } = this.props
+    const y = spring.currentValue
+    this.setState({ y })
+    if(refreshed && y === 0) this.setState({ refreshed: false })
+    if(!refreshed && !refreshing) {
+      const refresh = y > max
+      if(refresh !== willRefresh) this.setState({ willRefresh: refresh })
+    }
+  }
+  componentDidMount() {
+    this._node = findDOMNode(this)
+    this._y = 0
+    this._spring = new Spring(60, 10)
+    this._spring.onUpdate = ::this.onSpringUpdate
+  }
   render() {
-    const {
-      supportDesktop,
-      waitingComponent,
-      pulledComponent,
-      pullingComponent,
-      disabled,
-      onRefresh,
-      offset,
-      zIndex,
-      max,
-      color,
-      style,
-      size
-    } = this.props
-    const { children } = this.state
+    const { disabled, as, children, ...props } = this.props
+    const Container = as
     return (
-      <Div style={{
-        ...defaultStyle.container,
-        ...style
-      }}>
-        { children }
-        { !disabled && <Main
-          ref={c => this._main = c}
-          offset={offset}
-          size={size}
-          max={max}
-          color={color}
-          onRefresh={onRefresh}
-          waitingComponent={waitingComponent}
-          pulledComponent={pulledComponent}
-          pullingComponent={pullingComponent}
-          supportDesktop={supportDesktop}
-        />
-        }
-      </Div>
+      <Container
+        {...props}
+        onMouseDown ={!disabled && ::this.onDown}
+        onMouseUp   ={!disabled && ::this.onUp}
+        onMouseMove ={!disabled && ::this.onMove}
+        onTouchStart={!disabled && ::this.onDown}
+        onTouchEnd  ={!disabled && ::this.onUp}
+        onTouchMove ={!disabled && ::this.onMove}
+      >
+        { defaultRender(this.props, this.state, children) }
+      </Container>
     )
   }
 }
 
 PullRefresh.propTypes = {
+  as: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
   onRefresh: PropTypes.func,
-  offset: PropTypes.number,
-  size: PropTypes.number,
   max: PropTypes.number,
   style: PropTypes.object,
-  color: PropTypes.string,
   disabled: PropTypes.bool,
-  waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  pulledComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  supportDesktop: PropTypes.bool
+  // offset: PropTypes.number,
+  // color: PropTypes.string,
+  // size: PropTypes.number,
+  // waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  // pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  // pulledComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
+  // supportDesktop: PropTypes.bool
 }
 
 PullRefresh.defaultProps = {
-  color: '#000000',
-  offset: 0,
-  size: 40,
+  as: 'div',
   max: 100,
   style: {},
   disabled: false,
-  waitingComponent: undefined,
-  pullingComponent: undefined,
-  pulledComponent: undefined,
-  supportDesktop: false
+  // color: '#000000',
+  // offset: 0,
+  // size: 40,
+  // waitingComponent: undefined,
+  // pullingComponent: undefined,
+  // pulledComponent: undefined,
+  // supportDesktop: false
 }

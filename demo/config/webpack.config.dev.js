@@ -34,6 +34,7 @@ module.exports = {
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
   entry: [
+    require.resolve('regenerator-runtime/runtime'),
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
     // When you save a file, the client will either apply hot updates (in case
@@ -93,7 +94,8 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-      'react-pullrefresh': fs.realpathSync('../src')
+      // 'react-pullrefresh': fs.realpathSync('../src')
+      'react-pullrefresh': '../src/react-pullrefresh'
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -135,7 +137,8 @@ module.exports = {
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
-        include: [ paths.appSrc, fs.realpathSync('../src') ],
+        // include: [ paths.appSrc, fs.realpathSync('../src') ],
+        include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         options: {
 
@@ -154,6 +157,8 @@ module.exports = {
             'react'
           ],
           plugins: [
+            'transform-regenerator',
+            'transform-function-bind',
             'transform-object-rest-spread'
           ]
         },

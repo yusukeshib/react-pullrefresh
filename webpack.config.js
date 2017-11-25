@@ -30,12 +30,13 @@ module.exports = {
           presets: [
             [ 'env' , {
               targets: {
-                node: '5'
+                browsers: ['last 2 versions', 'safari >= 7']
               }
             }],
             'react'
           ],
           plugins: [
+            'transform-function-bind',
             'transform-object-rest-spread'
           ]
         }
