@@ -90,7 +90,7 @@ PullRefresh.propTypes = {
   onRefresh: PropTypes.func,
   max: PropTypes.number,
   style: PropTypes.object,
-  disabled: PropTypes.bool,
+  disabled: PropTypes.bool
   // offset: PropTypes.number,
   // color: PropTypes.string,
   // size: PropTypes.number,
@@ -104,7 +104,7 @@ PullRefresh.defaultProps = {
   as: 'div',
   max: 100,
   style: {},
-  disabled: false,
+  disabled: false
   // color: '#000000',
   // offset: 0,
   // size: 40,

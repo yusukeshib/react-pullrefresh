@@ -40,10 +40,10 @@ export default class Spring {
     this._loop = true
 
     await loop(async () => {
-      await sleep(1000/60)
+      await sleep(1000 / 60)
       if(this._paused) return true
       // dummy -> use tention,friction
-      const dv = (this._endValue - this._value)/5
+      const dv = (this._endValue - this._value) / 5
       this.setValue(this._value + dv)
       return Math.abs(dv) > 0.1
     })

@@ -21,14 +21,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   text: {
-    color: 'white',
+    color: 'white'
   }
 })
 
 export default (props, state, children) => [
   <View
     key='pull'
-    style={Stylesheet.flatten([
+    style={StyleSheet.flatten([
       styles.comp,
       state.refreshing && styles.refreshing,
       state.refreshed && styles.refreshed,
