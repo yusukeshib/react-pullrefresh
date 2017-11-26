@@ -1,49 +1,102 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
-import { clamp } from 'lodash'
+import styled, { keyframes } from 'styled-components/native'
+import { View } from 'react-native'
+import { Svg as NativeSvg, Circle as NativeCircle, Polygon as NativePolygon } from 'react-native-svg'
 
-const styles = StyleSheet.create({
-  comp: {
-    width: '100%',
-    backgroundColor: 'gray',
-    overflow: 'hidden',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  refreshing: {
-    backgroundColor: 'blue'
-  },
-  refreshed: {
-    backgroundColor: 'green'
-  },
-  willRefresh: {
-    backgroundColor: 'red'
-  },
-  text: {
-    color: 'white'
+const rotating = keyframes`
+  0% {
+    transform: rotate(0deg);
   }
-})
+  100% {
+    transform: rotate(270deg);
+  }
+`
+const dashed = keyframes`
+  0% {
+    stroke-dashoffset: 62px;
+  }
+  50% {
+    stroke-dashoffset: ${62 / 4}px;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 62px;
+    transform: rotate(450deg);
+  }
+`
 
-export default (props, state, children) => [
-  <View
-    key='pull'
-    style={StyleSheet.flatten([
-      styles.comp,
-      state.refreshing && styles.refreshing,
-      state.refreshed && styles.refreshed,
-      state.willRefresh && styles.willRefresh,
-      { height: clamp(state.y, 0, props.max) }
-    ])}
-  >
-    <Text style={styles.text}>
-      { state.refreshing && 'refreshing :' }
-      { state.refreshed && 'refreshed :' }
-      { state.willRefresh && 'willRefresh :' }
-      { parseInt(state.y, 10) }
-    </Text>
-  </View>,
-  children
-]
+const Component = styled(View)`
+  position: absolute;
+  left: 50%;
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+`
+
+const RotatingSvg = styled(NativeSvg)`
+  transform-origin: center;
+  animation: ${rotating} 1.4s linear infinite;
+`
+
+const DashedCircle = styled(NativeCircle)`
+  stroke-dasharray: 62px;
+  transform-origin: center;
+  animation: ${dashed} 1.4s ease-in-out infinite;
+`
+
+export default (props, state, children) => {
+  const { max, yRefreshing, y, phase } = state
+  const { color, bgColor } = props
+  const p = Math.atan(y / max)
+  const pMax = Math.atan(yRefreshing / max)
+  const r = Math.PI * 10 * 2
+  const Svg = phase === 'refreshing' ? RotatingSvg : NativeSvg
+  const Circle = phase === 'refreshing' ? DashedCircle : NativeCircle
+  const refreshed = phase === 'refreshed'
+  return [
+    <Component
+      key='pull'
+      style={{
+        top: Math.max(refreshed ? Math.atan(1) : p, 0) * max - 10,
+        transform: `translate(-50%, -100%) scale(${refreshed ? p : 1},${refreshed ? p : 1})`,
+        backgroundColor: bgColor
+      }}
+    >
+      <Svg
+        style={{
+          transform:`rotate(${yRefreshing}deg)`
+        }}
+        width={40}
+        height={40}
+        viewBox='0 0 40 40'
+      >
+        <Circle
+          style={{ opacity:pMax }}
+          stroke={color}
+          strokeWidth={2.5}
+          strokeDasharray={[r * pMax * 0.6, r * (1 - pMax * 0.6)]}
+          strokeDashoffset={-r * (1 - pMax * 0.6)}
+          fill='none'
+          cx={20}
+          cy={20}
+          r={10}
+        />
+        { phase !== 'refreshing' &&
+            <NativePolygon
+              style={{
+                opacity: pMax,
+                transformOrigin: '50% 0%',
+                transform: `scale(${Math.min(pMax, 1)}, ${Math.min(pMax, 1)})`
+              }}
+              fill={color}
+              points='30,24 26,20 34,20'
+            />
+        }
+      </Svg>
+    </Component>,
+    children
+  ]
+}
 
 

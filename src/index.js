@@ -5,6 +5,7 @@ import scrollTop from './scrollTop'
 import renderDefault from './component'
 
 const MAX = 100
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -13,47 +14,55 @@ export default class PullRefresh extends Component {
       y: 0,
       yRefreshing: 0,
       max: MAX,
-      refreshing: false,
-      refreshed: false
+      phase: ''
     }
   }
-  onDown(evt) {
-    const { refreshed, refreshing } = this.state
-    if(this._willRefresh || refreshed || refreshing) return
-    this._down = true
-    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
-    this._py = ey
+  async refresh() {
+    this.setState({
+      phase: 'willRefresh'
+    })
+    await sleep(0)
+    await this._refresh()
   }
-  async onUp(evt) {
-    const { max, willRefresh, refreshed, refreshing } = this.state
+  async _refresh() {
+    const { max, phase } = this.state
     const { onRefresh } = this.props
-    if(refreshed || refreshing) return
-    this._down = false
-    if(willRefresh) {
+    if(phase === 'willRefresh') {
       this._willRefresh = true
       await this._spring.to(max)
       this._spring.pause()
       this._willRefresh = false
       this.setState({
-        willRefresh: false,
-        refreshing: true
+        phase: 'refreshing'
       })
       await onRefresh()
       this.setState({
         yRefreshing: 0,
-        refreshed: true,
-        refreshing: false
+        phase: 'refreshed'
       })
       this._spring.resume()
     }
-    if(this._y !== 0) {
-      this._y = 0
-      this._spring.endValue = this._y
-    }
+    this._y = 0
+    this._spring.endValue = this._y
+  }
+  onDown(evt) {
+    const { phase } = this.state
+    if(this._willRefresh) return
+    if(phase === 'refreshed' || phase === 'refreshing') return
+    this._down = true
+    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
+    this._py = ey
+  }
+  async onUp(evt) {
+    const { phase } = this.state
+    if(phase === 'refreshed' || phase === 'refreshing') return
+    this._down = false
+    await this._refresh()
   }
   onMove(evt) {
-    const { refreshed, refreshing } = this.state
-    if(this._willRefresh || !this._down || refreshed || refreshing) return
+    const { phase } = this.state
+    if(this._willRefresh || !this._down) return
+    if(phase === 'refreshed' || phase === 'refreshing') return
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
     if(scrollTop(this) <= 0) {
       this._y = this._y + ey - this._py
@@ -62,14 +71,19 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   onSpringUpdate(spring) {
-    const { max, yRefreshing, refreshed } = this.state
+    const { max, yRefreshing, phase } = this.state
     const y = spring.currentValue
     this.setState({
       y,
-      willRefresh: y >= max,
       yRefreshing: this._willRefresh ? Math.max(y, yRefreshing) : y
     })
-    if(refreshed && y === 0) this.setState({ refreshed: false })
+    if(phase !== 'refreshed' && phase !== 'refreshing') {
+      const newPhase =  y >= max ? 'willRefresh' : ''
+      if(phase !== newPhase) this.setState({ phase: newPhase })
+    }
+    if(phase === 'refreshed' && y === 0) {
+      this.setState({ phase: '' })
+    }
   }
   componentDidMount() {
     this._y = 0

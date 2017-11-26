@@ -15,19 +15,17 @@ const Comp = styled.div`
 `
 
 const render = (props, state, children) => {
-  const { max, y, willRefresh, refreshed, refreshing } = state
+  const { max, y, phase } = state
   const p = Math.atan(y / max)
   return [
     <Comp
       key='pull'
       style={{
-        backgroundColor: refreshing ? 'blue' : refreshed ? 'green' : 'gray',
+        backgroundColor: phase === 'refreshing' ? 'blue' : phase === 'refreshed' ? 'green' : 'gray',
         height: Math.max(p * max, 0)
       }}
     >
-      { refreshing && 'refreshing :' }
-      { refreshed && 'refreshed :' }
-      { willRefresh && 'willRefresh :' }
+      { phase } :
       { parseInt(y, 10) }
     </Comp>,
     children
@@ -43,7 +41,7 @@ class App extends Component {
     await sleep(2000)
   }
   componentDidMount() {
-    // this.refs.pull.refresh()
+    this.refs.pull.refresh()
   }
   renderWaitingComponent(props) {
     return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
@@ -57,6 +55,7 @@ class App extends Component {
   render() {
     return (
       <PullRefresh
+        ref='pull'
         // render={render}
         color='#787878'
         bgColor='#fff'

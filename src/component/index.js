@@ -44,19 +44,21 @@ const DashedCircle = styled.circle`
 `
 
 export default (props, state, children) => {
-  const { max, yRefreshing, y, refreshing, refreshed } = state
+  const { max, yRefreshing, y, phase } = state
+  const { color, bgColor } = props
   const p = Math.atan(y / max)
   const pMax = Math.atan(yRefreshing / max)
   const r = Math.PI * 10 * 2
-  const Svg = refreshing ? RotatingSvg : 'svg'
-  const Circle = refreshing ? DashedCircle : 'circle'
+  const Svg = phase === 'refreshing' ? RotatingSvg : 'svg'
+  const Circle = phase === 'refreshing' ? DashedCircle : 'circle'
+  const refreshed = phase === 'refreshed'
   return [
     <Component
       key='pull'
       style={{
         top: Math.max(refreshed ? Math.atan(1) : p, 0) * max - 10,
         transform: `translate(-50%, -100%) scale(${refreshed ? p : 1},${refreshed ? p : 1})`,
-        backgroundColor: props.bgColor
+        backgroundColor: bgColor
       }}
     >
       <Svg
@@ -69,7 +71,7 @@ export default (props, state, children) => {
       >
         <Circle
           style={{ opacity:pMax }}
-          stroke={props.color}
+          stroke={color}
           strokeWidth={2.5}
           strokeDasharray={[r * pMax * 0.6, r * (1 - pMax * 0.6)]}
           strokeDashoffset={-r * (1 - pMax * 0.6)}
@@ -78,14 +80,14 @@ export default (props, state, children) => {
           cy={20}
           r={10}
         />
-        { !refreshing &&
+        { phase !== 'refreshing' &&
             <polygon
               style={{
                 opacity: pMax,
                 transformOrigin: '50% 0%',
                 transform: `scale(${Math.min(pMax, 1)}, ${Math.min(pMax, 1)})`
               }}
-              fill={props.color}
+              fill={color}
               points='30,24 26,20 34,20'
             />
         }
