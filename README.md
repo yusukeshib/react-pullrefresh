@@ -44,18 +44,28 @@ react-native is supported.
 
 export default App
 ```
+#### Behaviour difference between v1/v2
+
+TODO:
 
 #### Props
 
+##### render 
+
+TODO:
+
+
 ##### color 
+
 default: `#787878`
 
 ##### bgColor 
+
 default: `#ffffff`
 
 ##### disabled
 
-Disable component
+disable component
 
 default: `false`
 
@@ -66,9 +76,6 @@ specify css z-index.
 default: `undefined`
 
 ##### onRefresh
-
-pull event will be fired on touchend,mouseup.  
-first argument is callback function, so must be called.  
 
 ```javascript
 async function onRefresh() {

@@ -43,15 +43,6 @@ class App extends Component {
   componentDidMount() {
     this.refs.pull.refresh()
   }
-  renderWaitingComponent(props) {
-    return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
-  }
-  renderPullingComponent(props, step) {
-    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{parseInt(step, 10) + '/' + props.max}</div>
-  }
-  renderPulledComponent(props, step) {
-    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{parseInt(step, 10) + '/' + props.max}</div>
-  }
   render() {
     return (
       <PullRefresh
