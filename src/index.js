@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Spring from './spring'
-import scrollTop from './scrollTop'
 import renderDefault from './component'
 
 const MAX = 100
@@ -45,12 +44,16 @@ export default class PullRefresh extends Component {
     this._y = 0
     this._spring.endValue = this._y
   }
+  onScroll(evt) {
+    this._scrollTop = evt.currentTarget.scrollTop !== undefined
+      ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+  }
   onDown(evt) {
     const { phase } = this.state
     if(this._willRefresh) return
     if(phase === 'refreshed' || phase === 'refreshing') return
     this._down = true
-    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
+    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
     this._py = ey
   }
   async onUp(evt) {
@@ -63,8 +66,8 @@ export default class PullRefresh extends Component {
     const { phase } = this.state
     if(this._willRefresh || !this._down) return
     if(phase === 'refreshed' || phase === 'refreshing') return
-    const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
-    if(scrollTop(this) <= 0) {
+    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
+    if(this._scrollTop <= 0) {
       this._y = this._y + ey - this._py
       this._spring.endValue = this._y
     }
@@ -87,6 +90,7 @@ export default class PullRefresh extends Component {
   }
   componentDidMount() {
     this._y = 0
+    this._scrollTop = 0
     this._spring = new Spring(60, 10)
     this._spring.onUpdate = ::this.onSpringUpdate
   }
@@ -106,6 +110,7 @@ export default class PullRefresh extends Component {
     return (
       <Container
         {...props}
+        onScroll    ={!disabled && ::this.onScroll}
         onMouseDown ={!disabled && ::this.onDown}
         onMouseUp   ={!disabled && ::this.onUp}
         onMouseMove ={!disabled && ::this.onMove}
