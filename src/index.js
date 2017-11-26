@@ -11,7 +11,7 @@ export default class PullRefresh extends Component {
     super(props)
     this.state = {
       y: 0,
-      willRefresh: false,
+      yMax: 0,
       refreshing: false,
       refreshed: false
     }
@@ -24,17 +24,25 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   async onUp(evt) {
-    const { refreshed, refreshing, willRefresh } = this.state
+    const { y, refreshed, refreshing } = this.state
     const { max, onRefresh } = this.props
     if(refreshed || refreshing) return
     this._down = false
-    if(willRefresh) {
+    if(y >= max) {
+      this._willRefresh = true
       this._spring.endValue = max
       await sleep(400)
       this._spring.pause()
-      this.setState({ willRefresh: false, refreshing: true })
+      this._willRefresh = false
+      this.setState({
+        refreshing: true
+      })
       await onRefresh()
-      this.setState({ refreshed: true, refreshing: false })
+      this.setState({
+        yMax: 0,
+        refreshed: true,
+        refreshing: false
+      })
       this._spring.resume()
     }
     if(this._y !== 0) {
@@ -53,15 +61,13 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   onSpringUpdate(spring) {
-    const { willRefresh, refreshing, refreshed } = this.state
-    const { max } = this.props
+    const { yMax, refreshed } = this.state
     const y = spring.currentValue
-    this.setState({ y })
+    this.setState({
+      y,
+      yMax: this._willRefresh ? Math.max(y, yMax) : y
+    })
     if(refreshed && y === 0) this.setState({ refreshed: false })
-    if(!refreshed && !refreshing) {
-      const refresh = y >= max
-      if(refresh !== willRefresh) this.setState({ willRefresh: refresh })
-    }
   }
   componentDidMount() {
     this._y = 0
@@ -69,7 +75,7 @@ export default class PullRefresh extends Component {
     this._spring.onUpdate = ::this.onSpringUpdate
   }
   render() {
-    const { onRefresh, disabled, as, children, ...props } = this.props
+    const { bgColor, color, onRefresh, disabled, as, children, ...props } = this.props
     const Container = as
     return (
       <Container
@@ -92,9 +98,10 @@ PullRefresh.propTypes = {
   onRefresh: PropTypes.func,
   max: PropTypes.number,
   style: PropTypes.object,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  color: PropTypes.string,
+  bgColor: PropTypes.string,
   // offset: PropTypes.number,
-  // color: PropTypes.string,
   // size: PropTypes.number,
   // waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
   // pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
@@ -106,8 +113,9 @@ PullRefresh.defaultProps = {
   as: 'div',
   max: 100,
   style: {},
-  disabled: false
-  // color: '#000000',
+  disabled: false,
+  color: '#787878',
+  bgColor: '#fff',
   // offset: 0,
   // size: 40,
   // waitingComponent: undefined,

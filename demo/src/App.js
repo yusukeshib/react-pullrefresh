@@ -26,6 +26,8 @@ class App extends Component {
   render() {
     return (
       <PullRefresh
+        color='#787878'
+        bgColor='#fff'
         max={100}
         disabled={false}
         onRefresh={this.onRefresh}
