@@ -91,7 +91,17 @@ export default class PullRefresh extends Component {
     this._spring.onUpdate = ::this.onSpringUpdate
   }
   render() {
-    const { render, bgColor, color, onRefresh, disabled, as, children, ...props } = this.props
+    const {
+      zIndex,
+      render,
+      bgColor,
+      color,
+      onRefresh,
+      disabled,
+      as,
+      children,
+      ...props
+    } = this.props
     const Container = as
     return (
       <Container
@@ -116,14 +126,8 @@ PullRefresh.propTypes = {
   disabled: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  render: PropTypes.func
-  // max: PropTypes.number,
-  // offset: PropTypes.number,
-  // size: PropTypes.number,
-  // waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  // pullingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  // pulledComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
-  // supportDesktop: PropTypes.bool
+  render: PropTypes.func,
+  zIndex: PropTypes.number
 }
 
 PullRefresh.defaultProps = {
@@ -132,12 +136,6 @@ PullRefresh.defaultProps = {
   disabled: false,
   color: '#787878',
   bgColor: '#fff',
-  render: renderDefault
-  // max: 100,
-  // offset: 0,
-  // size: 40,
-  // waitingComponent: undefined,
-  // pullingComponent: undefined,
-  // pulledComponent: undefined,
-  // supportDesktop: false
+  render: renderDefault,
+  zIndex: undefined
 }

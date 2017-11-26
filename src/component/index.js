@@ -25,6 +25,7 @@ const dashed = keyframes`
 
 const Component = styled.div`
   position: absolute;
+  z-index: ${props => props.zIndex};
   left: 50%;
   border-radius: 20px;
   width: 40px;
@@ -45,7 +46,7 @@ const DashedCircle = styled.circle`
 
 export default (props, state, children) => {
   const { max, yRefreshing, y, phase } = state
-  const { color, bgColor } = props
+  const { zIndex, color, bgColor } = props
   const p = Math.atan(y / max)
   const pMax = Math.atan(yRefreshing / max)
   const r = Math.PI * 10 * 2
@@ -55,6 +56,7 @@ export default (props, state, children) => {
   return [
     <Component
       key='pull'
+      zIndex={zIndex}
       style={{
         top: Math.max(refreshed ? Math.atan(1) : p, 0) * max - 10,
         transform: `translate(-50%, -100%) scale(${refreshed ? p : 1},${refreshed ? p : 1})`,
