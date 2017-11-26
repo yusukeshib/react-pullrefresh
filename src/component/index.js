@@ -1,80 +1,73 @@
 import React from 'react'
-import { StyleSheet, css } from 'aphrodite'
+import styled, { keyframes } from 'styled-components'
 
-const rotateKey = {
-  '0%': {
-    transform: 'rotate(0deg)'
-  },
-  '100%': {
-    transform: 'rotate(270deg)'
+const rotating = keyframes`
+  0% {
+    transform: rotate(0deg);
   }
-}
-const dashKey = {
-  '0%': {
-    strokeDashoffset: 62
-  },
-  '50%': {
-    strokeDashoffset: 62 / 4,
-    transform: 'rotate(135deg)'
-  },
-  '100%': {
-    strokeDashoffset: 62,
-    transform: 'rotate(450deg)'
+  100% {
+    transform: rotate(270deg);
   }
-}
+`
+const dashed = keyframes`
+  0% {
+    stroke-dashoffset: 62px;
+  }
+  50% {
+    stroke-dashoffset: ${62 / 4}px;
+    transform: rotate(135deg);
+  }
+  100% {
+    stroke-dashoffset: 62px;
+    transform: rotate(450deg);
+  }
+`
 
-const styles = StyleSheet.create({
-  comp: {
-    position: 'absolute',
-    left: '50%',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)'
-  },
-  rotate: {
-    transformOrigin: 'center',
-    animationName: rotateKey,
-    animationDuration: '1400ms',
-    animationTimingFunction: 'linear',
-    animationIterationCount: 'infinite'
-  },
-  dash: {
-    strokeDasharray: 62,
-    transformOrigin: 'center',
-    animationName: dashKey,
-    animationDuration: '1400ms',
-    animationTimingFunction: 'ease-in-out',
-    animationIterationCount: 'infinite'
-  }
-})
+const Component = styled.div`
+  position: absolute;
+  left: 50%;
+  border-radius: 20px;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+`
+
+const RotatingSvg = styled.svg`
+  transform-origin: center;
+  animation: ${rotating} 1.4s linear infinite;
+`
+
+const DashedCircle = styled.circle`
+  stroke-dasharray: 62px;
+  transform-origin: center;
+  animation: ${dashed} 1.4s ease-in-out infinite;
+`
 
 export default (props, state, children) => {
   const { yMax, y, refreshing, refreshed } = state
   const p = Math.atan(y / props.max)
   const pMax = Math.atan(yMax / props.max)
   const r = Math.PI * 10 * 2
+  const Svg = refreshing ? RotatingSvg : 'svg'
+  const Circle = refreshing ? DashedCircle : 'circle'
   return [
-    <div
+    <Component
       key='pull'
-      className={css(styles.comp)}
       style={{
         top: Math.max(refreshed ? Math.atan(1) : p, 0) * props.max - 10,
         transform: `translate(-50%, -100%) scale(${refreshed ? p : 1},${refreshed ? p : 1})`,
         backgroundColor: props.bgColor
       }}
     >
-      <svg
+      <Svg
         style={{
           transform:`rotate(${yMax}deg)`
         }}
-        className={css(refreshing && styles.rotate)}
         width={40}
         height={40}
         viewBox='0 0 40 40'
       >
-        <circle
-          className={css(refreshing && styles.dash)}
+        <Circle
           style={{ opacity:pMax }}
           stroke={props.color}
           strokeWidth={2.5}
@@ -96,8 +89,8 @@ export default (props, state, children) => {
               points='30,24 26,20 34,20'
             />
         }
-      </svg>
-    </div>,
+      </Svg>
+    </Component>,
     children
   ]
 }

@@ -31,7 +31,6 @@
     "react-native-svg": "^5.1.6"
   },
   "devDependencies": {
-    "aphrodite": "^1.2.5",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.2",
     "babel-loader": "^7.1.2",
@@ -52,6 +51,7 @@
     "webpack-node-externals": "^1.6.0"
   },
   "dependencies": {
-    "event-emitter": "^0.3.5"
+    "event-emitter": "^0.3.5",
+    "styled-components": "^2.2.3"
   }
 }
