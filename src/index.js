@@ -4,7 +4,7 @@ import Spring from './spring'
 import scrollTop from './scrollTop'
 import defaultRender from './component'
 
-export const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
+const MAX = 100
 
 export default class PullRefresh extends Component {
   constructor(props) {
@@ -25,13 +25,12 @@ export default class PullRefresh extends Component {
   }
   async onUp(evt) {
     const { y, refreshed, refreshing } = this.state
-    const { max, onRefresh } = this.props
+    const { onRefresh } = this.props
     if(refreshed || refreshing) return
     this._down = false
-    if(y >= max) {
+    if(y >= MAX) {
       this._willRefresh = true
-      this._spring.endValue = max
-      await sleep(400)
+      await this._spring.to(MAX)
       this._spring.pause()
       this._willRefresh = false
       this.setState({
@@ -96,11 +95,11 @@ export default class PullRefresh extends Component {
 PullRefresh.propTypes = {
   as: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
   onRefresh: PropTypes.func,
-  max: PropTypes.number,
   style: PropTypes.object,
   disabled: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
+  // max: PropTypes.number,
   // offset: PropTypes.number,
   // size: PropTypes.number,
   // waitingComponent: PropTypes.oneOfType([ PropTypes.func, PropTypes.bool ]),
@@ -111,11 +110,11 @@ PullRefresh.propTypes = {
 
 PullRefresh.defaultProps = {
   as: 'div',
-  max: 100,
   style: {},
   disabled: false,
   color: '#787878',
   bgColor: '#fff',
+  // max: 100,
   // offset: 0,
   // size: 40,
   // waitingComponent: undefined,
