@@ -1,7 +1,38 @@
 import React, { Component } from 'react'
 import PullRefresh from 'react-pullrefresh'
+import styled from 'styled-components'
 
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
+
+const Comp = styled.div`
+  width: 100%;
+  background-color: gray;
+  overflow: hidden;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const render = (props, state, children) => {
+  const { max, y, willRefresh, refreshed, refreshing } = state
+  const p = Math.atan(y / max)
+  return [
+    <Comp
+      key='pull'
+      style={{
+        backgroundColor: refreshing ? 'blue' : refreshed ? 'green' : 'gray',
+        height: Math.max(p * max, 0)
+      }}
+    >
+      { refreshing && 'refreshing :' }
+      { refreshed && 'refreshed :' }
+      { willRefresh && 'willRefresh :' }
+      { parseInt(y, 10) }
+    </Comp>,
+    children
+  ]
+}
 
 class App extends Component {
   constructor(props) {
@@ -26,6 +57,7 @@ class App extends Component {
   render() {
     return (
       <PullRefresh
+        render={render}
         color='#787878'
         bgColor='#fff'
         max={100}

@@ -44,9 +44,9 @@ const DashedCircle = styled.circle`
 `
 
 export default (props, state, children) => {
-  const { yMax, y, refreshing, refreshed } = state
-  const p = Math.atan(y / props.max)
-  const pMax = Math.atan(yMax / props.max)
+  const { max, yRefreshing, y, refreshing, refreshed } = state
+  const p = Math.atan(y / max)
+  const pMax = Math.atan(yRefreshing / max)
   const r = Math.PI * 10 * 2
   const Svg = refreshing ? RotatingSvg : 'svg'
   const Circle = refreshing ? DashedCircle : 'circle'
@@ -54,14 +54,14 @@ export default (props, state, children) => {
     <Component
       key='pull'
       style={{
-        top: Math.max(refreshed ? Math.atan(1) : p, 0) * props.max - 10,
+        top: Math.max(refreshed ? Math.atan(1) : p, 0) * max - 10,
         transform: `translate(-50%, -100%) scale(${refreshed ? p : 1},${refreshed ? p : 1})`,
         backgroundColor: props.bgColor
       }}
     >
       <Svg
         style={{
-          transform:`rotate(${yMax}deg)`
+          transform:`rotate(${yRefreshing}deg)`
         }}
         width={40}
         height={40}

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Spring from './spring'
 import scrollTop from './scrollTop'
-import defaultRender from './component'
+import renderDefault from './component'
 
 const MAX = 100
 
@@ -11,7 +11,8 @@ export default class PullRefresh extends Component {
     super(props)
     this.state = {
       y: 0,
-      yMax: 0,
+      yRefreshing: 0,
+      max: MAX,
       refreshing: false,
       refreshed: false
     }
@@ -24,21 +25,22 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   async onUp(evt) {
-    const { y, refreshed, refreshing } = this.state
+    const { max, willRefresh, refreshed, refreshing } = this.state
     const { onRefresh } = this.props
     if(refreshed || refreshing) return
     this._down = false
-    if(y >= MAX) {
+    if(willRefresh) {
       this._willRefresh = true
-      await this._spring.to(MAX)
+      await this._spring.to(max)
       this._spring.pause()
       this._willRefresh = false
       this.setState({
+        willRefresh: false,
         refreshing: true
       })
       await onRefresh()
       this.setState({
-        yMax: 0,
+        yRefreshing: 0,
         refreshed: true,
         refreshing: false
       })
@@ -60,11 +62,12 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   onSpringUpdate(spring) {
-    const { yMax, refreshed } = this.state
+    const { max, yRefreshing, refreshed } = this.state
     const y = spring.currentValue
     this.setState({
       y,
-      yMax: this._willRefresh ? Math.max(y, yMax) : y
+      willRefresh: y >= max,
+      yRefreshing: this._willRefresh ? Math.max(y, yRefreshing) : y
     })
     if(refreshed && y === 0) this.setState({ refreshed: false })
   }
@@ -74,7 +77,7 @@ export default class PullRefresh extends Component {
     this._spring.onUpdate = ::this.onSpringUpdate
   }
   render() {
-    const { bgColor, color, onRefresh, disabled, as, children, ...props } = this.props
+    const { render, bgColor, color, onRefresh, disabled, as, children, ...props } = this.props
     const Container = as
     return (
       <Container
@@ -86,7 +89,7 @@ export default class PullRefresh extends Component {
         onTouchEnd  ={!disabled && ::this.onUp}
         onTouchMove ={!disabled && ::this.onMove}
       >
-        { defaultRender(this.props, this.state, children) }
+        { render(this.props, this.state, children) }
       </Container>
     )
   }
@@ -99,6 +102,7 @@ PullRefresh.propTypes = {
   disabled: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
+  render: PropTypes.func,
   // max: PropTypes.number,
   // offset: PropTypes.number,
   // size: PropTypes.number,
@@ -114,6 +118,7 @@ PullRefresh.defaultProps = {
   disabled: false,
   color: '#787878',
   bgColor: '#fff',
+  render: renderDefault,
   // max: 100,
   // offset: 0,
   // size: 40,
