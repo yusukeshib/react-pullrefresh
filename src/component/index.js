@@ -83,7 +83,7 @@ export default (props, state, children) => {
               style={{
                 opacity: pMax,
                 transformOrigin: '50% 0%',
-                transform: `scale(${Math.min(pMax,1)}, ${Math.min(pMax,1)})`
+                transform: `scale(${Math.min(pMax, 1)}, ${Math.min(pMax, 1)})`
               }}
               fill={props.color}
               points='30,24 26,20 34,20'

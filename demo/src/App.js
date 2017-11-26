@@ -57,7 +57,7 @@ class App extends Component {
   render() {
     return (
       <PullRefresh
-        render={render}
+        // render={render}
         color='#787878'
         bgColor='#fff'
         max={100}

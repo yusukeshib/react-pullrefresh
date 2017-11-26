@@ -19,7 +19,7 @@ export default class PullRefresh extends Component {
   }
   onDown(evt) {
     const { refreshed, refreshing } = this.state
-    if(refreshed || refreshing) return
+    if(this._willRefresh || refreshed || refreshing) return
     this._down = true
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
     this._py = ey
@@ -53,7 +53,7 @@ export default class PullRefresh extends Component {
   }
   onMove(evt) {
     const { refreshed, refreshing } = this.state
-    if(!this._down || refreshed || refreshing) return
+    if(this._willRefresh || !this._down || refreshed || refreshing) return
     const ey = evt.touches ? evt.touches[0].pageY : evt.pageY
     if(scrollTop(this) <= 0) {
       this._y = this._y + ey - this._py
@@ -102,7 +102,7 @@ PullRefresh.propTypes = {
   disabled: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  render: PropTypes.func,
+  render: PropTypes.func
   // max: PropTypes.number,
   // offset: PropTypes.number,
   // size: PropTypes.number,
@@ -118,7 +118,7 @@ PullRefresh.defaultProps = {
   disabled: false,
   color: '#787878',
   bgColor: '#fff',
-  render: renderDefault,
+  render: renderDefault
   // max: 100,
   // offset: 0,
   // size: 40,
