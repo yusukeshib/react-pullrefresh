@@ -34,6 +34,7 @@ module.exports = {
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
   entry: [
+    require.resolve('regenerator-runtime/runtime'),
     // Include an alternative client for WebpackDevServer. A client's job is to
     // connect to WebpackDevServer by a socket and get notified about changes.
     // When you save a file, the client will either apply hot updates (in case
@@ -93,7 +94,8 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-      'react-pullrefresh': fs.realpathSync('..')
+      // 'react-pullrefresh': fs.realpathSync('../src')
+      'react-pullrefresh': '../src/react-pullrefresh'
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -132,39 +134,10 @@ module.exports = {
       // When adding a new loader, you must add its `test`
       // as a new entry in the `exclude` list for "file" loader.
 
-      // "file" loader makes sure those assets get served by WebpackDevServer.
-      // When you `import` an asset, you get its (virtual) filename.
-      // In production, they would get copied to the `build` folder.
-      {
-        exclude: [
-          /\.html$/,
-          /\.(js|jsx)$/,
-          /\.css$/,
-          /\.json$/,
-          /\.bmp$/,
-          /\.gif$/,
-          /\.jpe?g$/,
-          /\.png$/,
-        ],
-        loader: require.resolve('file-loader'),
-        options: {
-          name: 'static/media/[name].[hash:8].[ext]',
-        },
-      },
-      // "url" loader works like "file" loader except that it embeds assets
-      // smaller than specified limit in bytes as data URLs to avoid requests.
-      // A missing `test` is equivalent to a match.
-      {
-        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
-        loader: require.resolve('url-loader'),
-        options: {
-          limit: 10000,
-          name: 'static/media/[name].[hash:8].[ext]',
-        },
-      },
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
+        // include: [ paths.appSrc, fs.realpathSync('../src') ],
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         options: {
@@ -173,6 +146,21 @@ module.exports = {
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
           cacheDirectory: true,
+
+          babelrc: false,
+          presets: [
+            [ 'env' , {
+              targets: {
+                browsers: ['last 2 versions', 'safari >= 7']
+              }
+            }],
+            'react'
+          ],
+          plugins: [
+            'transform-regenerator',
+            'transform-function-bind',
+            'transform-object-rest-spread'
+          ]
         },
       },
       // "postcss" loader applies autoprefixer to our CSS.

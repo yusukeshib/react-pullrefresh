@@ -3,7 +3,10 @@ const nodeExternals = require('webpack-node-externals')
 
 module.exports = {
   entry: {
-    index:'./src/index'
+    index: [
+      'regenerator-runtime/runtime',
+      './src/index'
+    ]
   },
   watch: false,
   context: __dirname,
@@ -28,15 +31,17 @@ module.exports = {
         options: {
           babelrc: false,
           presets: [
-            'es2015',
-            'react',
-            'stage-1'
+            [ 'env' , {
+              targets: {
+                browsers: ['last 2 versions', 'safari >= 7']
+              }
+            }],
+            'react'
           ],
-          env: {
-            'development': {
-              'sourceMaps': 'inline'
-            }
-          }
+          plugins: [
+            'transform-function-bind',
+            'transform-object-rest-spread'
+          ]
         }
       },
       {
@@ -48,9 +53,6 @@ module.exports = {
         loader: 'url-loader'
       }
     ]
-  },
-  resolve: {
-    modules: ['node_modules']
   },
   externals: [ nodeExternals() ]
 }

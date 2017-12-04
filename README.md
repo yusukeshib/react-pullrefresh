@@ -5,6 +5,11 @@ react-native is supported.
 
 ![](/2017_03_06_13_09_14.gif?raw=true)
 
+#### Demo
+
+[https://yusukeshibata.github.io/react-pullrefresh/](https://yusukeshibata.github.io/react-pullrefresh/)
+
+
 #### Install
 
   ```sh
@@ -16,64 +21,22 @@ react-native is supported.
   ```javascript
   import PullRefresh from 'react-pullrefresh'
 
-  // custom renderer
-  const renderWaitingComponent = (props) => {
-    return <div style={{backgroundColor:'#00f', color:'#fff'}}>waiting</div>
-  }
-  const renderPullingComponent = (props, step) => {
-    return <div style={{backgroundColor:'#f00', color:'#fff'}}>{step + '/' + props.max}</div>
-  }
-  const renderPulledComponent = (props, step) => {
-    return <div style={{backgroundColor:'#0f0', color:'#fff'}}>{step + '/' + props.max}</div>
-  }
-
   class App extends Component {
-    constructor(props) {
-      super(props)
-        this.state = {
-        }
-      this.onRefresh = this.onRefresh.bind(this)
-    }
-    onRefresh(next) {
-      // some async process...
-      setTimeout(_ => {
-          next()
-          },2000)
+    // onRefresh function canbe async/sync
+    async onRefresh() {
+      await someAsyncFunction()
     }
     // Without children PullRefresh element observe document.body's scroll
     render() {
       return (
-          <div className='App'>
-          <PullRefresh zIndex={10000} size={40} max={100} onRefresh={this.onRefresh}/>
-          {range(100).map(i => {
-              return (
-                  <div key={i} className='row'>{i}</div>
-                  )
-              })}
-          </div>
-          )
-    }
-    // With scrollable element children, observe children's scrolling.
-    render() {
-      return (
           <PullRefresh
-            zIndex={10000}
-            size={40}
-            max={100}
-            waitingComponent={false}
-            pullingComponent={renderPullingComponent}
-            pulledComponent={renderPulledComponent}
-            onRefresh={this.onRefresh}
-            supportDesktop={true}
+            onRefresh={::this.onRefresh}
           >
-          <!-- scrollable child element -->
-          <div className='App' style={{ overflow: 'auto', height: '100%' }}>
-          {range(100).map(i => {
+            {range(100).map(i => {
               return (
                   <div key={i} className='row'>{i}</div>
                   )
-              })}
-          </div>
+            })}
           </PullRefresh>
           )
     }
@@ -81,89 +44,60 @@ react-native is supported.
 
 export default App
 ```
+#### Behaviour difference between v1/v2
+
+TODO:
 
 #### Props
 
-##### offset
-default: 0
+##### render 
 
-Y-Offset for layout.
+TODO:
+
 
 ##### color 
-default: `#000`
+
+default: `#787878`
+
+##### bgColor 
+
+default: `#ffffff`
 
 ##### disabled
+
+disable component
+
 default: `false`
 
-Disable component
-
 ##### zIndex
-default: `undefined`
 
 specify css z-index.
 
-##### size
-default: `40`
-
-indicator size.
-
-##### max
-default: `100`
-
-max pull down distance.
+default: `undefined`
 
 ##### onRefresh
 
-pull event will be fired on touchend,mouseup.  
-first argument is callback function, so must be called.  
-
 ```javascript
-function onRefresh(callback) {
+async function onRefresh() {
   //...some async function
-  callback()
 }
 ```
-
-##### waitingComponent
-
-Specify component you want to render on waiting state.  
-If false is specified, nothing rendered.  
-Component will be layout at the center of 100% width flex-container.
-
-##### pullingComponent
-
-Specify component you want to render on waiting state.  
-If false is specified, nothing rendered.  
-Component will be layout at the center of 100% width flex-container.
-
-##### pulledComponent
-
-Specify component you want to render on state after pulling.  
-If false is specified, nothing rendered.  
-If nothing specified, `pullingComponent` will be used.  
-Component will be layout at the center of 100% width flex-container.
-
-##### supportDesktop
-
-default: `false`
-Enable component on desktop if specified.
 
 ##### style
 
-default:
-```js
-{
-  display: 'flex',
-  flexDirection: 'row',
-  justifyContent: 'center'
-}
-```
-Overried container style.
+container style.
 
-#### Demo
+default: `undefined`
 
-[https://yusukeshibata.github.io/react-pullrefresh/](https://yusukeshibata.github.io/react-pullrefresh/)
+#### Removed props
 
+* size
+* offset
+* max
+* waitingComponent
+* pullingComponent
+* pulledComponent
+* supportDesktop
 
 #### License
 

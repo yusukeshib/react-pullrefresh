@@ -55,7 +55,11 @@ module.exports = {
   // You can exclude the *.map files from the build during deployment.
   devtool: 'source-map',
   // In production, we only want to load the polyfills and the app code.
-  entry: [require.resolve('./polyfills'), paths.appIndexJs],
+  entry: [
+    require.resolve('regenerator-runtime/runtime'),
+    require.resolve('./polyfills'),
+    paths.appIndexJs
+  ],
   output: {
     // The build folder.
     path: paths.appBuild,
@@ -93,7 +97,7 @@ module.exports = {
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web',
-      'react-pullrefresh': fs.realpathSync('..')
+      'react-pullrefresh': '../src/react-pullrefresh'
     },
     plugins: [
       // Prevents users from importing files from outside of src/ (or node_modules/).
@@ -166,8 +170,22 @@ module.exports = {
         include: paths.appSrc,
         loader: require.resolve('babel-loader'),
         options: {
-
           compact: true,
+
+          babelrc: false,
+          presets: [
+            [ 'env' , {
+              targets: {
+                browsers: ['last 2 versions', 'safari >= 7']
+              }
+            }],
+            'react'
+          ],
+          plugins: [
+            'transform-regenerator',
+            'transform-function-bind',
+            'transform-object-rest-spread'
+          ]
         },
       },
       // The notation here is somewhat confusing.
