@@ -111,9 +111,9 @@ const Container = styled(View)`
   border-radius: 20px;
   width: 40px;
   height: 40px;
-  shadow-radius: 6;
-  shadow-offset: { width: 0, height: 3 };
-  shadow-opacity: 0.23;
+  shadow-radius: 2;
+  shadow-offset: { width: 0, height: 2 };
+  shadow-opacity: 0.14;
   shadow-color: #000;
 `
 
