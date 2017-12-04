@@ -80,17 +80,17 @@ export default (props, state, children) => {
           fill='none'
           cx={20}
           cy={20}
-          r={10}
+          r={8.5}
         />
         { phase !== 'refreshing' &&
-            <polygon
+            <path
               style={{
                 opacity: pMax,
                 transformOrigin: '50% 0%',
                 transform: `scale(${Math.min(pMax, 1)}, ${Math.min(pMax, 1)})`
               }}
               fill={color}
-              points='30,24 26,20 34,20'
+              d='M23.5,19l5,5l5-5H23.5z'
             />
         }
       </Svg>

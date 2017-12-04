@@ -109,6 +109,7 @@ export default class PullRefresh extends Component {
     const Container = as
     return (
       <Container
+        ref='container'
         {...props}
         onScroll    ={!disabled && ::this.onScroll}
         onMouseDown ={!disabled && ::this.onDown}
@@ -139,7 +140,7 @@ PullRefresh.defaultProps = {
   as: 'div',
   style: {},
   disabled: false,
-  color: '#787878',
+  color: '#4285f4',
   bgColor: '#fff',
   render: renderDefault,
   zIndex: undefined

@@ -48,9 +48,8 @@ class App extends Component {
       <PullRefresh
         ref='pull'
         // render={render}
-        color='#787878'
-        bgColor='#fff'
-        max={100}
+        // color='#787878'
+        // bgColor='#fff'
         disabled={false}
         onRefresh={this.onRefresh}
         as='div'

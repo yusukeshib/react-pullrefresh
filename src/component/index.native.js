@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Easing, Animated, View } from 'react-native'
-import { Svg as NativeSvg, Circle as NativeCircle, Polygon as NativePolygon } from 'react-native-svg'
+import { Svg as NativeSvg, Circle as NativeCircle, Path as NativePath } from 'react-native-svg'
 
 class RotatingSvg extends Component {
   constructor(props) {
@@ -161,10 +161,10 @@ export default (props, state, children) => {
           fill='none'
           cx={20}
           cy={20}
-          r={10}
+          r={8.5}
         />
         { phase !== 'refreshing' &&
-            <NativePolygon
+            <NativePath
               style={{
                 opacity: pMax,
                 transform: [
@@ -172,7 +172,7 @@ export default (props, state, children) => {
                 ]
               }}
               fill={color}
-              points='30,24 26,20 34,20'
+              d='M23.5,19l5,5l5-5H23.5z'
             />
         }
       </Svg>
