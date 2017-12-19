@@ -44,7 +44,7 @@ const DashedCircle = styled.circle`
   animation: ${dashed} 1.4s ease-in-out infinite;
 `
 
-export default (props, state, children) => {
+export default (props, state) => {
   const { max, yRefreshing, y, phase } = state
   const { zIndex, color, bgColor } = props
   const p = Math.atan(y / max)
@@ -53,7 +53,7 @@ export default (props, state, children) => {
   const Svg = phase === 'refreshing' ? RotatingSvg : 'svg'
   const Circle = phase === 'refreshing' ? DashedCircle : 'circle'
   const refreshed = phase === 'refreshed'
-  return [
+  return (
     <Component
       key='pull'
       zIndex={zIndex}
@@ -94,9 +94,8 @@ export default (props, state, children) => {
             />
         }
       </Svg>
-    </Component>,
-    children
-  ]
+    </Component>
+  )
 }
 
 
