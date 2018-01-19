@@ -140,7 +140,7 @@ export default class PullRefresh extends Component {
 
 PullRefresh.propTypes = {
   typeName: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
-  as: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
+  as: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]),
   onRefresh: PropTypes.func,
   style: PropTypes.object,
   disabled: PropTypes.bool,
