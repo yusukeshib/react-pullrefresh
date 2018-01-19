@@ -102,14 +102,16 @@ export default class PullRefresh extends Component {
       color,
       onRefresh,
       disabled,
+      typeName,
       as,
       children,
       ...props
     } = this.props
     const PullRefreshComponent = render
     const Container = as
+    const Wraper = typeName === null ? React.Fragment : typeName
     return (
-      <div>
+      <Wraper>
         <Container
           ref='container'
           {...props}
@@ -124,12 +126,13 @@ export default class PullRefresh extends Component {
           { children }
         </Container>
         { render(this.props, this.state) }
-      </div>
+      </Wraper>
     )
   }
 }
 
 PullRefresh.propTypes = {
+  typeName: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
   as: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
   onRefresh: PropTypes.func,
   style: PropTypes.object,
@@ -141,6 +144,7 @@ PullRefresh.propTypes = {
 }
 
 PullRefresh.defaultProps = {
+  typeName: 'div',
   as: 'div',
   style: {},
   disabled: false,
