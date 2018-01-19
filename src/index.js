@@ -105,6 +105,13 @@ export default class PullRefresh extends Component {
       typeName,
       as,
       children,
+      onScroll,
+      onMouseDown,
+      onMouseUp,
+      onMouseMove,
+      onTouchStart,
+      onTouchEnd,
+      onTouchMove,
       ...props
     } = this.props
     const PullRefreshComponent = render
@@ -115,13 +122,13 @@ export default class PullRefresh extends Component {
         <Container
           ref='container'
           {...props}
-          onScroll    ={!disabled && ::this.onScroll}
-          onMouseDown ={!disabled && ::this.onDown}
-          onMouseUp   ={!disabled && ::this.onUp}
-          onMouseMove ={!disabled && ::this.onMove}
-          onTouchStart={!disabled && ::this.onDown}
-          onTouchEnd  ={!disabled && ::this.onUp}
-          onTouchMove ={!disabled && ::this.onMove}
+          onScroll    ={(!disabled && ::this.onScroll) || onScroll}
+          onMouseDown ={(!disabled && ::this.onDown) || onMouseDown}
+          onMouseUp   ={(!disabled && ::this.onUp) || onMouseUp}
+          onMouseMove ={(!disabled && ::this.onMove) || onMouseMove}
+          onTouchStart={(!disabled && ::this.onDown) || onTouchStart}
+          onTouchEnd  ={(!disabled && ::this.onUp) || onTouchEnd}
+          onTouchMove ={(!disabled && ::this.onMove) || onTouchMove}
         >
           { children }
         </Container>
