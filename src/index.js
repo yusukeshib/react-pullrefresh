@@ -91,7 +91,7 @@ export default class PullRefresh extends Component {
   }
   onMouseMove(evt) {
     this.onMove(evt)
-    if (this.onMouseMove) {
+    if (this.props.onMouseMove) {
       this.props.onMouseMove(evt)
     }
   }
