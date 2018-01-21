@@ -15,6 +15,14 @@ export default class PullRefresh extends Component {
       max: MAX,
       phase: ''
     }
+    this.onScroll = this.onScroll.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseUp = this.onMouseUp.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onTouchStart = this.onTouchStart.bind(this)
+    this.onTouchEnd = this.onTouchEnd.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this)
+    this.onSpringUpdate = this.onSpringUpdate.bind(this)
   }
   async refresh() {
     this.setState({
@@ -45,14 +53,16 @@ export default class PullRefresh extends Component {
     this._spring.endValue = this._y
   }
   onScroll(evt) {
-    this._scrollTop = evt.currentTarget.scrollTop !== undefined
-      ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+    if (!this.props.disabled) {
+      this._scrollTop = evt.currentTarget.scrollTop !== undefined
+        ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+    }
     if (this.props.scroll) {
       this.props.onScroll(evt)
     }
   }
   onMouseDown(evt) {
-    if (!this.props.disableMouse) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       this.onDown(evt)
     }
     if (this.props.onMouseDown) {
@@ -60,7 +70,7 @@ export default class PullRefresh extends Component {
     }
   }
   onTouchStart(evt) {
-    if (!this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableTouch) {
       this.onDown(evt)
     }
     if (this.props.onTouchStart) {
@@ -76,7 +86,7 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   async onMouseUp(evt) {
-    if (!this.props.disableMouse) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       await this.onUp(evt)
     }
     if (this.props.onMouseUp) {
@@ -84,7 +94,7 @@ export default class PullRefresh extends Component {
     }
   }
   async onTouchEnd(evt) {
-    if (!this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableTouch) {
       await this.onUp(evt)
     }
     if (this.props.onTouchEnd) {
@@ -98,7 +108,7 @@ export default class PullRefresh extends Component {
     await this._refresh()
   }
   onMouseMove(evt) {
-    if (!this.props.disableMouse) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       this.onMove(evt)
     }
     if (this.props.onMouseMove) {
@@ -106,7 +116,7 @@ export default class PullRefresh extends Component {
     }
   }
   onTouchMove(evt) {
-    if (!this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableTouch) {
       this.onMove(evt)
     }
     if (this.props.onTouchMove) {
@@ -143,7 +153,7 @@ export default class PullRefresh extends Component {
     this._y = 0
     this._scrollTop = 0
     this._spring = new Spring(60, 10)
-    this._spring.onUpdate = ::this.onSpringUpdate
+    this._spring.onUpdate = this.onSpringUpdate
   }
   render() {
     const {
@@ -175,13 +185,13 @@ export default class PullRefresh extends Component {
         <Container
           ref='container'
           {...props}
-          onScroll    ={!disabled && ::this.onScroll}
-          onMouseDown ={!disabled && ::this.onMouseDown}
-          onMouseUp   ={!disabled && ::this.onMouseUp}
-          onMouseMove ={!disabled && ::this.onMouseMove}
-          onTouchStart={!disabled && ::this.onTouchStart}
-          onTouchEnd  ={!disabled && ::this.onTouchEnd}
-          onTouchMove ={!disabled && ::this.onTouchMove}
+          onScroll    ={this.onScroll}
+          onMouseDown ={this.onMouseDown}
+          onMouseUp   ={this.onMouseUp}
+          onMouseMove ={this.onMouseMove}
+          onTouchStart={this.onTouchStart}
+          onTouchEnd  ={this.onTouchEnd}
+          onTouchMove ={this.onTouchMove}
         >
           { children }
         </Container>
