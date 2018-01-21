@@ -47,6 +47,21 @@ export default class PullRefresh extends Component {
   onScroll(evt) {
     this._scrollTop = evt.currentTarget.scrollTop !== undefined
       ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+    if (this.props.scroll) {
+      this.props.onScroll(evt)
+    }
+  }
+  onMouseDown(evt) {
+    this.onDown(evt)
+    if (this.props.onMouseDown) {
+      this.props.onMouseDown(evt)
+    }
+  }
+  onTouchStart(evt) {
+    this.onDown(evt)
+    if (this.props.onTouchStart) {
+      this.props.onTouchStart(evt)
+    }
   }
   onDown(evt) {
     const { phase } = this.state
@@ -56,11 +71,35 @@ export default class PullRefresh extends Component {
     const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
     this._py = ey
   }
+  async onMouseUp(evt) {
+    await this.onUp(evt)
+    if (this.props.onMouseUp) {
+      this.props.onMouseUp(evt)
+    }
+  }
+  async onTouchEnd(evt) {
+    await this.onUp(evt)
+    if (this.props.onTouchEnd) {
+      this.props.onTouchEnd(evt)
+    }
+  }
   async onUp(evt) {
     const { phase } = this.state
     if(phase === 'refreshed' || phase === 'refreshing') return
     this._down = false
     await this._refresh()
+  }
+  onMouseMove(evt) {
+    this.onMove(evt)
+    if (this.onMouseMove) {
+      this.props.onMouseMove(evt)
+    }
+  }
+  onTouchMove(evt) {
+    this.onMove(evt)
+    if (this.props.onTouchMove) {
+      this.props.onTouchMove(evt)
+    }
   }
   onMove(evt) {
     const { phase } = this.state
@@ -122,13 +161,13 @@ export default class PullRefresh extends Component {
         <Container
           ref='container'
           {...props}
-          onScroll    ={(!disabled && ::this.onScroll) || onScroll}
-          onMouseDown ={(!disabled && ::this.onDown) || onMouseDown}
-          onMouseUp   ={(!disabled && ::this.onUp) || onMouseUp}
-          onMouseMove ={(!disabled && ::this.onMove) || onMouseMove}
-          onTouchStart={(!disabled && ::this.onDown) || onTouchStart}
-          onTouchEnd  ={(!disabled && ::this.onUp) || onTouchEnd}
-          onTouchMove ={(!disabled && ::this.onMove) || onTouchMove}
+          onScroll    ={!disabled && ::this.onScroll}
+          onMouseDown ={!disabled && ::this.onMouseDown}
+          onMouseUp   ={!disabled && ::this.onMouseUp}
+          onMouseMove ={!disabled && ::this.onMouseMove}
+          onTouchStart={!disabled && ::this.onTouchStart}
+          onTouchEnd  ={!disabled && ::this.onTouchEnd}
+          onTouchMove ={!disabled && ::this.onTouchMove}
         >
           { children }
         </Container>
