@@ -52,13 +52,17 @@ export default class PullRefresh extends Component {
     }
   }
   onMouseDown(evt) {
-    this.onDown(evt)
+    if (!this.props.disableMouse) {
+      this.onDown(evt)
+    }
     if (this.props.onMouseDown) {
       this.props.onMouseDown(evt)
     }
   }
   onTouchStart(evt) {
-    this.onDown(evt)
+    if (!this.props.disableTouch) {
+      this.onDown(evt)
+    }
     if (this.props.onTouchStart) {
       this.props.onTouchStart(evt)
     }
@@ -72,13 +76,17 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   async onMouseUp(evt) {
-    await this.onUp(evt)
+    if (!this.props.disableMouse) {
+      await this.onUp(evt)
+    }
     if (this.props.onMouseUp) {
       this.props.onMouseUp(evt)
     }
   }
   async onTouchEnd(evt) {
-    await this.onUp(evt)
+    if (!this.props.disableTouch) {
+      await this.onUp(evt)
+    }
     if (this.props.onTouchEnd) {
       this.props.onTouchEnd(evt)
     }
@@ -90,13 +98,17 @@ export default class PullRefresh extends Component {
     await this._refresh()
   }
   onMouseMove(evt) {
-    this.onMove(evt)
+    if (!this.props.disableMouse) {
+      this.onMove(evt)
+    }
     if (this.props.onMouseMove) {
       this.props.onMouseMove(evt)
     }
   }
   onTouchMove(evt) {
-    this.onMove(evt)
+    if (!this.props.disableTouch) {
+      this.onMove(evt)
+    }
     if (this.props.onTouchMove) {
       this.props.onTouchMove(evt)
     }
@@ -183,6 +195,8 @@ PullRefresh.propTypes = {
   onRefresh: PropTypes.func,
   style: PropTypes.object,
   disabled: PropTypes.bool,
+  disableMouse: PropTypes.bool,
+  disableTouch: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
   render: PropTypes.func,
@@ -194,6 +208,8 @@ PullRefresh.defaultProps = {
   as: 'div',
   style: {},
   disabled: false,
+  disableMouse: false,
+  disableTouch: false,
   color: '#4285f4',
   bgColor: '#fff',
   render: renderDefault,
