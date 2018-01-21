@@ -57,7 +57,7 @@ export default class PullRefresh extends Component {
       this._scrollTop = evt.currentTarget.scrollTop !== undefined
         ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
     }
-    if (this.props.scroll) {
+    if (this.props.onScroll) {
       this.props.onScroll(evt)
     }
   }
