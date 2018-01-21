@@ -53,28 +53,28 @@ export default class PullRefresh extends Component {
     this._spring.endValue = this._y
   }
   onScroll(evt) {
+    if (this.props.onScroll) {
+      this.props.onScroll(evt)
+    }
     if (!this.props.disabled) {
       this._scrollTop = evt.currentTarget.scrollTop !== undefined
         ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
     }
-    if (this.props.onScroll) {
-      this.props.onScroll(evt)
-    }
   }
   onMouseDown(evt) {
-    if (!this.props.disabled && !this.props.disableMouse) {
-      this.onDown(evt)
-    }
     if (this.props.onMouseDown) {
       this.props.onMouseDown(evt)
     }
-  }
-  onTouchStart(evt) {
-    if (!this.props.disabled && !this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       this.onDown(evt)
     }
+  }
+  onTouchStart(evt) {
     if (this.props.onTouchStart) {
       this.props.onTouchStart(evt)
+    }
+    if (!this.props.disabled && !this.props.disableTouch) {
+      this.onDown(evt)
     }
   }
   onDown(evt) {
@@ -86,19 +86,19 @@ export default class PullRefresh extends Component {
     this._py = ey
   }
   async onMouseUp(evt) {
-    if (!this.props.disabled && !this.props.disableMouse) {
-      await this.onUp(evt)
-    }
     if (this.props.onMouseUp) {
       this.props.onMouseUp(evt)
     }
-  }
-  async onTouchEnd(evt) {
-    if (!this.props.disabled && !this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       await this.onUp(evt)
     }
+  }
+  async onTouchEnd(evt) {
     if (this.props.onTouchEnd) {
       this.props.onTouchEnd(evt)
+    }
+    if (!this.props.disabled && !this.props.disableTouch) {
+      await this.onUp(evt)
     }
   }
   async onUp(evt) {
@@ -108,19 +108,19 @@ export default class PullRefresh extends Component {
     await this._refresh()
   }
   onMouseMove(evt) {
-    if (!this.props.disabled && !this.props.disableMouse) {
-      this.onMove(evt)
-    }
     if (this.props.onMouseMove) {
       this.props.onMouseMove(evt)
     }
-  }
-  onTouchMove(evt) {
-    if (!this.props.disabled && !this.props.disableTouch) {
+    if (!this.props.disabled && !this.props.disableMouse) {
       this.onMove(evt)
     }
+  }
+  onTouchMove(evt) {
     if (this.props.onTouchMove) {
       this.props.onTouchMove(evt)
+    }
+    if (!this.props.disabled && !this.props.disableTouch) {
+      this.onMove(evt)
     }
   }
   onMove(evt) {
