@@ -153,6 +153,8 @@ export default class PullRefresh extends Component {
       color,
       onRefresh,
       disabled,
+      disableMouse,
+      disableTouch,
       typeName,
       as,
       children,
