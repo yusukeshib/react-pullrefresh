@@ -1,6 +1,14 @@
 import EventEmitter from 'event-emitter'
 
-const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
+const sleep = msec => {
+  return new Promise(resolve => {
+    if (requestAnimationFrame) {
+      requestAnimationFrame(resolve)
+    } else {
+      setTimeout(resolve, msec)
+    }
+  })
+}
 const loop = async promise => {
   const proc = async () => await promise() && await proc()
   await proc()
