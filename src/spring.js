@@ -67,7 +67,7 @@ export default class Spring {
       await sleep(1000 / 60)
       if(this._paused) return true
       // TODO: dummy -> use tention,friction
-      const dv = (this._endValue - this._value) / 5
+      const dv = (this._endValue - this._value) / 2
       this.setValue(this._value + dv)
       return Math.abs(dv) > 0.2
     })
