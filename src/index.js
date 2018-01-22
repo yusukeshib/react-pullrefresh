@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+
 import Spring from './spring'
-import renderDefault from './component'
+import Indicator from './component'
 
 const MAX = 100
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
@@ -174,11 +175,29 @@ class PullRefresh extends Component {
     this._spring.onUpdate = this.onSpringUpdate
   }
   render() {
-    return this.props.render(this.props, this.state)
+    const { zIndex, color, bgColor } = this.props
+    const { max, yRefreshing, y, phase } = this.state
+    const indicatorProps = {
+      zIndex,
+      color,
+      bgColor,
+      max,
+      yRefreshing,
+      y,
+      phase
+    }
+    const { IndicatorComponent } = this.props
+    return <IndicatorComponent {...indicatorProps} />
   }
 }
 
 PullRefresh.propTypes = {
+  wraperComponent: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.object,
+    PropTypes.string
+  ]),
+  component: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   onRefresh: PropTypes.func,
   style: PropTypes.object,
   disabled: PropTypes.bool,
@@ -186,7 +205,7 @@ PullRefresh.propTypes = {
   disableTouch: PropTypes.bool,
   color: PropTypes.string,
   bgColor: PropTypes.string,
-  render: PropTypes.func,
+  IndicatorComponent: PropTypes.func,
   zIndex: PropTypes.number
 }
 
@@ -197,11 +216,11 @@ PullRefresh.defaultProps = {
   disableTouch: false,
   color: '#4285f4',
   bgColor: '#fff',
-  render: renderDefault,
+  IndicatorComponent: Indicator,
   zIndex: undefined
 }
 
-export default class PullRefreshConvertProps extends Component {
+class PullRefreshConvertProps extends Component {
   constructor(props) {
     super(props)
     this.setPullRefreshRef = this.setPullRefreshRef.bind(this)
@@ -239,17 +258,6 @@ export default class PullRefreshConvertProps extends Component {
   }
   render() {
     const {
-      zIndex,
-      render,
-      bgColor,
-      color,
-      onRefresh,
-      disabled,
-      disableMouse,
-      disableTouch,
-      typeName,
-      as,
-      children,
       onScroll,
       onMouseDown,
       onMouseUp,
@@ -257,14 +265,46 @@ export default class PullRefreshConvertProps extends Component {
       onTouchStart,
       onTouchEnd,
       onTouchMove,
-      ...props
+      pullRefreshProps,
+      ...componentProps
     } = this.props
-    const Container = as
-    const Wraper = typeName === null ? React.Fragment : typeName
+    const {
+      zIndex,
+      render,
+      bgColor,
+      color,
+      onRefresh,
+      disabled,
+      disableMouse,
+      disableTouch
+    } = this.props
+    const _pullRefreshProps =
+      pullRefreshProps !== null && typeof pullRefreshProps === 'object'
+        ? pullRefreshProps
+        : {
+            zIndex,
+            render,
+            bgColor,
+            color,
+            onRefresh,
+            disabled,
+            disableMouse,
+            disableTouch
+          }
+    const { wraperComponent, component } = _pullRefreshProps
+    const Component = component || 'div'
+    let Wraper
+    if (wraperComponent === null) {
+      Wraper = React.Fragment
+    } else if (!wraperComponent) {
+      Wraper = 'div'
+    } else {
+      Wraper = wraperComponent
+    }
     return (
       <Wraper>
-        <Container
-          {...props}
+        <Component
+          {...componentProps}
           onScroll={this.onScroll}
           onMouseDown={this.onMouseDown}
           onMouseUp={this.onMouseUp}
@@ -272,19 +312,14 @@ export default class PullRefreshConvertProps extends Component {
           onTouchStart={this.onTouchStart}
           onTouchEnd={this.onTouchEnd}
           onTouchMove={this.onTouchMove}
-        >
-          {children}
-        </Container>
+        />
         <PullRefresh
           ref={this.setPullRefreshRef}
-          zIndex={zIndex}
-          render={render}
-          bgColor={bgColor}
-          color={color}
-          onRefresh={onRefresh}
-          disabled={disabled}
-          disableMouse={disableMouse}
-          disableTouch={disableTouch}
+          {..._pullRefreshProps}
+          // for check propType
+          component={Component}
+          wraperComponent={Wraper}
+          // end
           onScroll={onScroll}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
@@ -299,23 +334,11 @@ export default class PullRefreshConvertProps extends Component {
 }
 
 PullRefreshConvertProps.propTypes = {
-  typeName: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
-  as: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-  onRefresh: PropTypes.func,
-  style: PropTypes.object,
-  disabled: PropTypes.bool,
-  disableMouse: PropTypes.bool,
-  disableTouch: PropTypes.bool,
-  color: PropTypes.string,
-  bgColor: PropTypes.string,
-  render: PropTypes.func,
-  zIndex: PropTypes.number
+  pullRefreshProps: PropTypes.object
 }
 
 PullRefreshConvertProps.defaultProps = {
-  typeName: 'div',
-  as: 'div',
-  render: renderDefault
+  pullRefreshProps: null
 }
 
-export { renderDefault }
+export { PullRefreshConvertProps as default, Indicator, PullRefresh }

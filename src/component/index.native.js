@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Easing, Animated, View } from 'react-native'
-import { Svg as NativeSvg, Circle as NativeCircle, Path as NativePath } from 'react-native-svg'
+import {
+  Svg as NativeSvg,
+  Circle as NativeCircle,
+  Path as NativePath
+} from 'react-native-svg'
 
 class RotatingSvg extends Component {
   constructor(props) {
@@ -12,14 +16,16 @@ class RotatingSvg extends Component {
     }
   }
   componentDidMount() {
-    this.state.r.addListener((r) => {
+    this.state.r.addListener(r => {
       this.setState({ value: r.value })
     })
-    this._animated = Animated.loop(Animated.timing(this.state.r, {
-      easing: Easing.linear,
-      toValue: 270,
-      duration: 1400,
-    }))
+    this._animated = Animated.loop(
+      Animated.timing(this.state.r, {
+        easing: Easing.linear,
+        toValue: 270,
+        duration: 1400
+      })
+    )
     this._animated.start()
   }
   componentWillUnmount() {
@@ -31,11 +37,8 @@ class RotatingSvg extends Component {
     return (
       <NativeSvg
         style={{
-          ...style||{},
-          transform: [
-            ...style.transform||[],
-            { rotate: `${value}deg` }
-          ]
+          ...(style || {}),
+          transform: [...(style.transform || []), { rotate: `${value}deg` }]
         }}
         {...props}
       />
@@ -48,7 +51,7 @@ class DashedCircle extends Component {
     super(props)
     this.state = {
       rotate: new Animated.Value(0),
-      dash: new Animated.Value(62),
+      dash: new Animated.Value(62)
     }
   }
   componentDidMount() {
@@ -58,28 +61,30 @@ class DashedCircle extends Component {
     this.state.dash.addListener(d => {
       this.setState({ d: d.value })
     })
-    this._animated = Animated.loop(Animated.parallel([
-      Animated.sequence([
-        Animated.timing(this.state.rotate, {
-          toValue: 135,
-          duration: 700,
-        }),
-        Animated.timing(this.state.rotate, {
-          toValue: 450,
-          duration: 700
-        }),
-      ]),
-      Animated.sequence([
-        Animated.timing(this.state.dash, {
-          toValue: 62/4,
-          duration: 700
-        }),
-        Animated.timing(this.state.dash, {
-          toValue: 62,
-          duration: 700
-        }),
+    this._animated = Animated.loop(
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(this.state.rotate, {
+            toValue: 135,
+            duration: 700
+          }),
+          Animated.timing(this.state.rotate, {
+            toValue: 450,
+            duration: 700
+          })
+        ]),
+        Animated.sequence([
+          Animated.timing(this.state.dash, {
+            toValue: 62 / 4,
+            duration: 700
+          }),
+          Animated.timing(this.state.dash, {
+            toValue: 62,
+            duration: 700
+          })
+        ])
       ])
-    ]))
+    )
     this._animated.start()
   }
   componentWillUnmount() {
@@ -90,15 +95,12 @@ class DashedCircle extends Component {
     const { strokeDasharray, style, ...props } = this.props
     return (
       <NativeCircle
-        {...props }
+        {...props}
         strokeDashoffset={d}
         strokeDasharray={[62]}
         style={{
-          ...style||{},
-          transform: [
-            ...style.transform||[],
-            { rotate: `${r}deg` }
-          ]
+          ...(style || {}),
+          transform: [...(style.transform || []), { rotate: `${r}deg` }]
         }}
       />
     )
@@ -117,9 +119,8 @@ const Container = styled(View)`
   shadow-color: #000;
 `
 
-export default (props, state, children) => {
-  const { max, yRefreshing, y, phase } = state
-  const { color, bgColor } = props
+export default (props, children) => {
+  const { color, bgColor, max, yRefreshing, y, phase } = props
   const p = Math.atan(y / max)
   const pMax = Math.atan(yRefreshing / max)
   const r = Math.PI * 10 * 2
@@ -129,7 +130,7 @@ export default (props, state, children) => {
   return [
     children,
     <Container
-      key='pull'
+      key="pull"
       style={{
         top: Math.max(refreshed ? Math.atan(1) : p, 0) * max - 10,
         transform: [
@@ -143,41 +144,37 @@ export default (props, state, children) => {
       <Svg
         style={{
           transform: [
-            { rotate: `${yRefreshing * 0.05 }deg)` },
+            { rotate: `${yRefreshing * 0.05}deg)` },
             // 0 270
-            { rotate: `${yRefreshing * 0.05 }deg)` }
+            { rotate: `${yRefreshing * 0.05}deg)` }
           ]
         }}
         width={40}
         height={40}
-        viewBox='0 0 40 40'
+        viewBox="0 0 40 40"
       >
         <Circle
-          style={{ opacity:pMax }}
+          style={{ opacity: pMax }}
           stroke={color}
           strokeWidth={2.5}
           strokeDasharray={[r * pMax * 0.6, r * (1 - pMax * 0.6)]}
           strokeDashoffset={-r * (1 - pMax * 0.6)}
-          fill='none'
+          fill="none"
           cx={20}
           cy={20}
           r={8.5}
         />
-        { phase !== 'refreshing' &&
-            <NativePath
-              style={{
-                opacity: pMax,
-                transform: [
-                  { scale: Math.min(pMax, 1) }
-                ]
-              }}
-              fill={color}
-              d='M23.5,19l5,5l5-5H23.5z'
-            />
-        }
+        {phase !== 'refreshing' && (
+          <NativePath
+            style={{
+              opacity: pMax,
+              transform: [{ scale: Math.min(pMax, 1) }]
+            }}
+            fill={color}
+            d="M23.5,19l5,5l5-5H23.5z"
+          />
+        )}
       </Svg>
     </Container>
   ]
 }
-
-
