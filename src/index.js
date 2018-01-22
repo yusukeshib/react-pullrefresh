@@ -113,13 +113,13 @@ export default class PullRefresh extends Component {
         <Container
           ref='container'
           {...props}
-          onScroll    ={!disabled && ::this.onScroll}
-          onMouseDown ={!disabled && ::this.onDown}
-          onMouseUp   ={!disabled && ::this.onUp}
-          onMouseMove ={!disabled && ::this.onMove}
-          onTouchStart={!disabled && ::this.onDown}
-          onTouchEnd  ={!disabled && ::this.onUp}
-          onTouchMove ={!disabled && ::this.onMove}
+          onScroll    ={disabled ? undefined : ::this.onScroll}
+          onMouseDown ={disabled ? undefined : ::this.onDown}
+          onMouseUp   ={disabled ? undefined : ::this.onUp}
+          onMouseMove ={disabled ? undefined : ::this.onMove}
+          onTouchStart={disabled ? undefined : ::this.onDown}
+          onTouchEnd  ={disabled ? undefined : ::this.onUp}
+          onTouchMove ={disabled ? undefined : ::this.onMove}
         >
           { children }
         </Container>
