@@ -318,7 +318,7 @@ class PullRefreshConvertProps extends Component {
           {..._pullRefreshProps}
           // for check propType
           component={Component}
-          wraperComponent={Wraper}
+          wraperComponent={wraperComponent || null}
           // end
           onScroll={onScroll}
           onMouseDown={onMouseDown}

@@ -55,13 +55,19 @@ export default class Spring {
     this._emit('start')
     this._loop = true
 
+    const _rafTimeout = (proc) => {
+      setTimeout(proc, 1000 / 60)
+    }
+
+    const raf = requestAnimationFrame ? requestAnimationFrame : _rafTimeout
+
     const loop = () => {
       if (this._paused) return true
       // TODO: dummy -> use tention,friction
       const dv = (this._endValue - this._value) / 2
       this.setValue(this._value + dv)
       if (Math.abs(dv) > 0.5) {
-        requestAnimationFrame(loop)
+        raf(loop)
       } else {
         this.setValue(this._endValue)
 
@@ -69,6 +75,6 @@ export default class Spring {
         this._emit('end')
       }
     }
-    requestAnimationFrame(loop)
+    raf(loop)
   }
 }
