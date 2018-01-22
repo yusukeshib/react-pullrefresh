@@ -51,24 +51,31 @@ import PullRefresh, { Indicator } from 'react-pullrefresh'
 
 const PortalIncidator = PortalHoc(Indicator)
 // control props namespace for List component.
-// add extra onRefresh and pullFreshProps prop that not conflict with List Component.
+// add extra onRequestMore and pullFreshProps prop that not conflict with List Component.
 function PullRefreshHoc(AnotherComponent) {
   return class _PullRefreshHoc extends React.Component {
+    handleRefresh = () => {
+      if (typeof this.props.onRequestMore === 'function') {
+        const reason = "pullRefresh"
+        return this.props.onRequestMore(reason)
+      }
+    }
+
     render() {
       // use pullFreshProps props namespace.
-      const { onRefresh, pullFreshProps, ...otherProps  } = this.props;
+      const { pullFreshProps, onRequestMore, ...otherProps  } = this.props;
       const defautWraperComponent = React.Fragment
-      // pullFreshProps never override AnotherComponent.
-      // change default wraperComponent to React.Fragment.
       const _pullFreshProps = Object.assign(
+        // change default wraperComponent to React.Fragment.
         {
           wraperComponent: defautWraperComponent
           IndicatorComponent: PortalIncidator
         },
         pullFreshProps,
+        // pullFreshProps should never override AnotherComponent.
         {
           component: AnotherComponent,
-          onRefresh
+          onRefresh: this.handleRefresh
       })
       return (
         <PullRefresh
@@ -76,31 +83,49 @@ function PullRefreshHoc(AnotherComponent) {
           pullFreshProps={_pullFreshProps}
           // otherProps will pass to AnotherComponent
           {...otherProps}
+          // if other HOCs(like infinite load) take onRequestMore prop
+          // then pass it.
+          // else ignore it
+          onRequestMore={onRequestMore}
           />
       )
     }
   }
 }
 
-// EnhancedList get extra two prop(onRefresh, pullFreshProps)
+
+// EnhancedList get extra two prop(onRequestMore, pullFreshProps)
 // for pull refresh feature.
+export const EnhancedList = PullRefreshHoc(List)
 
-const enhance = compose(FlipMoveHoc, LazyLoadHoc, ...OtherFeatureHocs)
+// or more enhance
+const enhance = compose(FlipMoveHoc, InfiniteLoadHoc, ...OtherFeatureHocs)
+export const MulitiEnhancedList = enhance(EnhancedList)
 
-export const EnhancedList = enhance(PullRefreshHoc(List))
+
+const handleRequestMore = async (reason) => {
+  if (reason === 'pullRefresh') {
+    await fetchData({page: 1})
+  } else if (reason === 'bottomInfiniteLoad') {
+    await fetchData({page: getNextPage()})
+  }
+}
 
 // List's prop disabled and component not conflict with pullRefresh props.
+const pullRefreshProps = {
+  color: "#ff0000",
+  disabled: false,
+  zIndex: 20
+}
 const list = (
-<EnhancedList
- disabled={true}
- onRefresh={yourOnFresh}
- component="ul"
- pullRefreshProps={
-   {color: "#ff0000",
-    disabled: false,
-    zIndex: 20}}>
- {listItems}
-</EnhancedList>)
+  <EnhancedList
+    disabled={true}
+    component="ul"
+    onRequestMore={handleRequestMore}
+    pullRefreshProps={pullRefreshProps}>
+    {listItems}
+  </EnhancedList>
+)
 ```
 
 #### Behaviour difference between v1/v2
