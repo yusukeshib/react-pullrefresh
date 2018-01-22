@@ -6,7 +6,7 @@ import renderDefault from './component'
 const MAX = 100
 const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 
-export default class PullRefresh extends Component {
+class PullRefresh extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -34,7 +34,7 @@ export default class PullRefresh extends Component {
   async _refresh() {
     const { max, phase } = this.state
     const { onRefresh } = this.props
-    if(phase === 'willRefresh') {
+    if (phase === 'willRefresh') {
       this._willRefresh = true
       await this._spring.to(max)
       this._spring.pause()
@@ -57,8 +57,10 @@ export default class PullRefresh extends Component {
       this.props.onScroll(evt)
     }
     if (!this.props.disabled) {
-      this._scrollTop = evt.currentTarget.scrollTop !== undefined
-        ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+      this._scrollTop =
+        evt.currentTarget.scrollTop !== undefined
+          ? evt.currentTarget.scrollTop
+          : evt.nativeEvent.contentOffset.y
     }
   }
   onMouseDown(evt) {
@@ -79,11 +81,17 @@ export default class PullRefresh extends Component {
   }
   onDown(evt) {
     const { phase } = this.state
-    if(this._willRefresh) return
-    if(phase === 'refreshed' || phase === 'refreshing') return
+    if (this._willRefresh) return
+    if (phase === 'refreshed' || phase === 'refreshing') return
     this._down = true
-    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
+    const ey = evt.nativeEvent.touches
+      ? evt.nativeEvent.touches[0].pageY
+      : evt.pageY
+    const ex = evt.nativeEvent.touches
+      ? evt.nativeEvent.touches[0].pageX
+      : evt.pageX
     this._py = ey
+    this._px = ex
   }
   async onMouseUp(evt) {
     if (this.props.onMouseUp) {
@@ -103,7 +111,7 @@ export default class PullRefresh extends Component {
   }
   async onUp(evt) {
     const { phase } = this.state
-    if(phase === 'refreshed' || phase === 'refreshing') return
+    if (phase === 'refreshed' || phase === 'refreshing') return
     this._down = false
     await this._refresh()
   }
@@ -125,14 +133,24 @@ export default class PullRefresh extends Component {
   }
   onMove(evt) {
     const { phase } = this.state
-    if(this._willRefresh || !this._down) return
-    if(phase === 'refreshed' || phase === 'refreshing') return
-    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
-    if(this._scrollTop <= 0) {
-      this._y = this._y + ey - this._py
-      this._spring.endValue = this._y
+    if (this._willRefresh || !this._down) return
+    if (phase === 'refreshed' || phase === 'refreshing') return
+    const ey = evt.nativeEvent.touches
+      ? evt.nativeEvent.touches[0].pageY
+      : evt.pageY
+    const ex = evt.nativeEvent.touches
+      ? evt.nativeEvent.touches[0].pageX
+      : evt.pageX
+    const vy = ey - this._py
+    const vx = ex - this._px
+    if (this._scrollTop <= 0 && Math.abs(vy) > Math.abs(vx)) {
+      if (vy >= 10 || vy < 0) {
+        this._y = this._y + vy
+        this._spring.endValue = this._y
+      }
     }
     this._py = ey
+    this._px = ex
   }
   onSpringUpdate(spring) {
     const { max, yRefreshing, phase } = this.state
@@ -141,11 +159,11 @@ export default class PullRefresh extends Component {
       y,
       yRefreshing: this._willRefresh ? Math.max(y, yRefreshing) : y
     })
-    if(phase !== 'refreshed' && phase !== 'refreshing') {
-      const newPhase =  y >= max ? 'willRefresh' : ''
-      if(phase !== newPhase) this.setState({ phase: newPhase })
+    if (phase !== 'refreshed' && phase !== 'refreshing') {
+      const newPhase = y >= max ? 'willRefresh' : ''
+      if (phase !== newPhase) this.setState({ phase: newPhase })
     }
-    if(phase === 'refreshed' && y === 0) {
+    if (phase === 'refreshed' && y === 0) {
       this.setState({ phase: '' })
     }
   }
@@ -154,6 +172,70 @@ export default class PullRefresh extends Component {
     this._scrollTop = 0
     this._spring = new Spring(60, 10)
     this._spring.onUpdate = this.onSpringUpdate
+  }
+  render() {
+    return this.props.render(this.props, this.state)
+  }
+}
+
+PullRefresh.propTypes = {
+  onRefresh: PropTypes.func,
+  style: PropTypes.object,
+  disabled: PropTypes.bool,
+  disableMouse: PropTypes.bool,
+  disableTouch: PropTypes.bool,
+  color: PropTypes.string,
+  bgColor: PropTypes.string,
+  render: PropTypes.func,
+  zIndex: PropTypes.number
+}
+
+PullRefresh.defaultProps = {
+  style: {},
+  disabled: false,
+  disableMouse: false,
+  disableTouch: false,
+  color: '#4285f4',
+  bgColor: '#fff',
+  render: renderDefault,
+  zIndex: undefined
+}
+
+export default class PullRefreshConvertProps extends Component {
+  constructor(props) {
+    super(props)
+    this.setPullRefreshRef = this.setPullRefreshRef.bind(this)
+    this.onScroll = this.onScroll.bind(this)
+    this.onMouseDown = this.onMouseDown.bind(this)
+    this.onMouseUp = this.onMouseUp.bind(this)
+    this.onMouseMove = this.onMouseMove.bind(this)
+    this.onTouchStart = this.onTouchStart.bind(this)
+    this.onTouchEnd = this.onTouchEnd.bind(this)
+    this.onTouchMove = this.onTouchMove.bind(this)
+  }
+  setPullRefreshRef(pr) {
+    this.pr = pr
+  }
+  onScroll(e) {
+    this.pr.onScroll(e)
+  }
+  onMouseDown(e) {
+    this.pr.onMouseDown(e)
+  }
+  onMouseUp(e) {
+    this.pr.onMouseUp(e)
+  }
+  onMouseMove(e) {
+    this.pr.onMouseMove(e)
+  }
+  onTouchStart(e) {
+    this.pr.onTouchStart(e)
+  }
+  onTouchEnd(e) {
+    this.pr.onTouchEnd(e)
+  }
+  onTouchMove(e) {
+    this.pr.onTouchMove(e)
   }
   render() {
     const {
@@ -177,33 +259,48 @@ export default class PullRefresh extends Component {
       onTouchMove,
       ...props
     } = this.props
-    const PullRefreshComponent = render
     const Container = as
     const Wraper = typeName === null ? React.Fragment : typeName
     return (
       <Wraper>
         <Container
-          ref='container'
           {...props}
-          onScroll    ={this.onScroll}
-          onMouseDown ={this.onMouseDown}
-          onMouseUp   ={this.onMouseUp}
-          onMouseMove ={this.onMouseMove}
+          onScroll={this.onScroll}
+          onMouseDown={this.onMouseDown}
+          onMouseUp={this.onMouseUp}
+          onMouseMove={this.onMouseMove}
           onTouchStart={this.onTouchStart}
-          onTouchEnd  ={this.onTouchEnd}
-          onTouchMove ={this.onTouchMove}
+          onTouchEnd={this.onTouchEnd}
+          onTouchMove={this.onTouchMove}
         >
-          { children }
+          {children}
         </Container>
-        { render(this.props, this.state) }
+        <PullRefresh
+          ref={this.setPullRefreshRef}
+          zIndex={zIndex}
+          render={render}
+          bgColor={bgColor}
+          color={color}
+          onRefresh={onRefresh}
+          disabled={disabled}
+          disableMouse={disableMouse}
+          disableTouch={disableTouch}
+          onScroll={onScroll}
+          onMouseDown={onMouseDown}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          onTouchMove={onTouchMove}
+        />
       </Wraper>
     )
   }
 }
 
-PullRefresh.propTypes = {
-  typeName: PropTypes.oneOfType([ PropTypes.object, PropTypes.string ]),
-  as: PropTypes.oneOfType([ PropTypes.func, PropTypes.string ]),
+PullRefreshConvertProps.propTypes = {
+  typeName: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  as: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
   onRefresh: PropTypes.func,
   style: PropTypes.object,
   disabled: PropTypes.bool,
@@ -215,15 +312,10 @@ PullRefresh.propTypes = {
   zIndex: PropTypes.number
 }
 
-PullRefresh.defaultProps = {
+PullRefreshConvertProps.defaultProps = {
   typeName: 'div',
   as: 'div',
-  style: {},
-  disabled: false,
-  disableMouse: false,
-  disableTouch: false,
-  color: '#4285f4',
-  bgColor: '#fff',
-  render: renderDefault,
-  zIndex: undefined
+  render: renderDefault
 }
+
+export { renderDefault }

@@ -1,16 +1,8 @@
 import EventEmitter from 'event-emitter'
 
-const sleep = msec => {
-  return new Promise(resolve => {
-    if (requestAnimationFrame) {
-      requestAnimationFrame(resolve)
-    } else {
-      setTimeout(resolve, msec)
-    }
-  })
-}
+const sleep = msec => new Promise(resolve => setTimeout(resolve, msec))
 const loop = async promise => {
-  const proc = async () => await promise() && await proc()
+  const proc = async () => (await promise()) && (await proc())
   await proc()
 }
 
@@ -46,7 +38,7 @@ export default class Spring {
     return this._value
   }
   setValue(value) {
-    if(this._value !== value) {
+    if (this._value !== value) {
       this._value = value
       this._onUpdate(this)
     }
@@ -57,23 +49,26 @@ export default class Spring {
   async _wait(type) {
     await new Promise(resolve => this._emitter.once(type, resolve))
   }
-  async loop() {
-    if(this._loop) return
+  loop() {
+    if (this._loop) return
 
     this._emit('start')
     this._loop = true
 
-    await loop(async () => {
-      await sleep(1000 / 60)
-      if(this._paused) return true
+    const loop = () => {
+      if (this._paused) return true
       // TODO: dummy -> use tention,friction
       const dv = (this._endValue - this._value) / 2
       this.setValue(this._value + dv)
-      return Math.abs(dv) > 0.2
-    })
-    this.setValue(this._endValue)
+      if (Math.abs(dv) > 0.5) {
+        requestAnimationFrame(loop)
+      } else {
+        this.setValue(this._endValue)
 
-    this._loop = false
-    this._emit('end')
+        this._loop = false
+        this._emit('end')
+      }
+    }
+    requestAnimationFrame(loop)
   }
 }
