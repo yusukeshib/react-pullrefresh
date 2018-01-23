@@ -83,7 +83,7 @@ function PullRefreshHoc(AnotherComponent) {
           pullFreshProps={_pullFreshProps}
           // otherProps will pass to AnotherComponent
           {...otherProps}
-          // if other HOCs(like infinite load) take onRequestMore prop
+          // if other HOCs(like infinite load) take onRequestMore prop(you can check by Component.propTypes)
           // then pass it.
           // else ignore it
           onRequestMore={onRequestMore}
