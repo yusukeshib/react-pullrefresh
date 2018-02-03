@@ -1,6 +1,7 @@
-test/
-demo/
+/test/
+/demo/
 *.gif
 *.tgz
-webpack.config.js
 .babelrc
+/src/
+*.md
