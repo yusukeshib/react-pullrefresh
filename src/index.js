@@ -111,7 +111,6 @@ export default class PullRefresh extends Component {
     return (
       <div>
         <Container
-          ref='container'
           {...props}
           onScroll    ={!disabled && ::this.onScroll}
           onMouseDown ={!disabled && ::this.onDown}
