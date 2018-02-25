@@ -45,15 +45,17 @@ export default class PullRefresh extends Component {
     this._spring.endValue = this._y
   }
   onScroll(evt) {
+    const nativeEvent = evt.nativeEvent || evt
     this._scrollTop = evt.currentTarget.scrollTop !== undefined
-      ? evt.currentTarget.scrollTop : evt.nativeEvent.contentOffset.y
+      ? evt.currentTarget.scrollTop : nativeEvent.contentOffset.y
   }
   onDown(evt) {
     const { phase } = this.state
     if(this._willRefresh) return
     if(phase === 'refreshed' || phase === 'refreshing') return
     this._down = true
-    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
+    const nativeEvent = evt.nativeEvent || evt
+    const ey = nativeEvent.touches ? nativeEvent.touches[0].pageY : evt.pageY
     this._py = ey
   }
   async onUp(evt) {
@@ -66,7 +68,8 @@ export default class PullRefresh extends Component {
     const { phase } = this.state
     if(this._willRefresh || !this._down) return
     if(phase === 'refreshed' || phase === 'refreshing') return
-    const ey = evt.nativeEvent.touches ? evt.nativeEvent.touches[0].pageY : evt.pageY
+    const nativeEvent = evt.nativeEvent || evt
+    const ey = nativeEvent.touches ? nativeEvent.touches[0].pageY : evt.pageY
     if(this._scrollTop <= 0) {
       this._y = this._y + ey - this._py
       this._spring.endValue = this._y
