@@ -1,6 +1,6 @@
 {
   "name": "react-pullrefresh",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0",
   "description": "react component pull to refresh navigation",
   "main": "index.js",
   "scripts": {
@@ -25,25 +25,25 @@
   },
   "homepage": "https://github.com/yusukeshibata/react-pullrefresh#readme",
   "peerDependencies": {
-    "react": "^16.1.1",
+    "react": "^16.8.4",
     "react-native": "^0.42.3",
     "react-native-svg": "^5.1.6"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.2",
-    "babel-plugin-transform-function-bind": "^6.22.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-react": "^6.24.1",
-    "eslint": "^4.11.0",
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-function-bind": "^7.2.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.4.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4"
   },
   "dependencies": {
     "event-emitter": "^0.3.5",
-    "styled-components": "^2.2.3"
+    "styled-components": "^4.1.3"
   }
 }
